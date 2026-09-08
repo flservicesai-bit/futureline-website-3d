@@ -13,6 +13,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 type LenisLike = {
   scrollTo: (target: string | number | HTMLElement, opts?: Record<string, unknown>) => void
+  /** Pause/resume smooth scrolling — used to freeze the page behind the mobile menu. */
+  stop?: () => void
+  start?: () => void
 }
 
 declare global {

@@ -22,6 +22,21 @@ import { LocaleSwitcher } from '@/components/ui/LocaleSwitcher';
 import { scrollToHash } from '@/lib/scroll';
 import { AccountMenu } from '@/components/AccountMenu';
 
+/**
+ * Freeze the document while the mobile menu is open. Lenis owns scrolling when
+ * motion is allowed (stop() also toggles its own `lenis-stopped` overflow rule);
+ * under prefers-reduced-motion there is no Lenis and native scroll owns the
+ * page — so lock <html> overflow as well. Both helpers are idempotent.
+ */
+function lockPageScroll() {
+  window.__flLenis?.stop?.();
+  document.documentElement.style.overflow = 'hidden';
+}
+function unlockPageScroll() {
+  document.documentElement.style.overflow = '';
+  window.__flLenis?.start?.();
+}
+
 export default function Header() {
   const { data: session } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -50,6 +65,21 @@ export default function Header() {
     };
   }, []);
 
+  // Lock the page behind the open mobile menu; the cleanup unlocks on close or
+  // unmount. Without this the page kept scrolling under the (previously
+  // transparent) menu, so page text and menu items overlapped.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    lockPageScroll();
+    return unlockPageScroll;
+  }, [mobileOpen]);
+
+  // Any route change (link, back/forward, programmatic) closes the menu, so it
+  // can't be left open — and the page left locked — on the next page.
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   // Anchors point at home-page sections; absolute so they work from any route.
   // '/get-started' and '/faq' are real routes (no anchor field), not
   // same-page anchors — the 3 options and the FAQ live off the home page.
@@ -65,8 +95,14 @@ export default function Header() {
     { href: '/faq', label: t('faq') },
   ];
 
+  // `fl-light` is what defines the glass variables (--fl-glass-*), and they are
+  // deliberately scoped to it rather than :root (see globals.css). Pages opt in
+  // on their <main>, but this header is a sibling of <main>, not a child — so
+  // without opting in here, `.fl-glass-strong` resolved to a transparent bar
+  // with no blur: the desktop header had no frost when scrolled, and the open
+  // mobile menu was fully see-through.
   const headerClass = [
-    'sticky top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500',
+    'fl-light sticky top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500',
     scrolled || mobileOpen
       ? 'fl-glass-strong border-b border-hairline'
       : overDarkHero
@@ -87,7 +123,17 @@ export default function Header() {
     if (window.location.pathname.replace(/^\/(en|ar)(?=\/|$)/, '') !== '') return;
     e.preventDefault();
     setMobileOpen(false);
-    scrollToHash(anchor);
+    // Two things must happen before scrolling, and neither has by the time this
+    // handler runs: (1) the lock effect's cleanup restarts Lenis only after React
+    // commits, and scrollTo on a stopped Lenis is a no-op; (2) the open menu makes
+    // the header ~370px tall, so measuring the target now and then collapsing the
+    // menu shifts the page ~300px and lands past the section (was a 243px
+    // overshoot on mobile). Defer one frame so the menu has closed, then release
+    // the lock and scroll against the real layout.
+    requestAnimationFrame(() => {
+      unlockPageScroll();
+      scrollToHash(anchor);
+    });
   };
 
   return (
