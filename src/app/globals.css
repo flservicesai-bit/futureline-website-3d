@@ -366,3 +366,22 @@ select.fl-input > option {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+/* ---------------------------------------------------------------------------
+   Arabic typography — applies under html[dir="rtl"], which the root layout
+   sets for /ar.
+
+   No letter-spacing on Arabic. Arabic is a connected script: the tracked mono
+   eyebrows and form labels (tracking-[0.2em]…[0.4em], .fl-label) pulled the
+   joined letters apart so words read as loose glyphs ("ابدأ الآن",
+   "ما الذي تودّ تقييمه؟"), and tracking-tight headings crushed the joins.
+   One rule neutralises every tracking utility under RTL, so no component
+   needs an rtl: variant. Latin fragments on Arabic pages (wordmark, prices)
+   lose their tracking too — accepted, it is barely visible at those sizes.
+   Specificity (0,2,0) beats the (0,1,0) utilities, including responsive
+   md:tracking-* variants, so no !important is needed.
+   --------------------------------------------------------------------------- */
+[dir='rtl'] [class*='tracking-'],
+[dir='rtl'] .fl-label {
+  letter-spacing: 0;
+}
