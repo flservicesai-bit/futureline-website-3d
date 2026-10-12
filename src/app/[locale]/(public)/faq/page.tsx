@@ -1,17 +1,7 @@
-import type { Metadata } from 'next';
+import { metadataFor } from '@/lib/seo';
 import { FaqAccordion } from '@/components/sections/FaqAccordion';
 
-export const metadata: Metadata = {
-  title: 'FAQ — FutureLine.ai',
-  description:
-    "Answers to common questions about FutureLine's AI consulting, applications, and training.",
-  openGraph: {
-    title: 'FAQ — FutureLine.ai',
-    description: "Common questions about FutureLine's AI consulting, applications, and training.",
-    type: 'website',
-    url: '/faq',
-  },
-};
+export const generateMetadata = metadataFor('faq', '/faq');
 
 // Moved out of the home page so it gets its own page instead of stacking
 // at the bottom of everything else — see HANDOFF.md and the Header/Footer

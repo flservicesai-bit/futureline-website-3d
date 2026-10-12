@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { KeyRound } from 'lucide-react';
+import { PASSWORD_MIN_LENGTH } from '@/lib/password';
 
 export default function ChangePasswordForm() {
   const t = useTranslations('changePassword');
@@ -85,7 +86,7 @@ export default function ChangePasswordForm() {
             onChange={(e) => setNewPassword(e.target.value)}
             className={inputClass}
             required
-            minLength={6}
+            minLength={PASSWORD_MIN_LENGTH}
           />
         </div>
         <div>
@@ -96,7 +97,7 @@ export default function ChangePasswordForm() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             className={inputClass}
             required
-            minLength={6}
+            minLength={PASSWORD_MIN_LENGTH}
           />
         </div>
         <button

@@ -33,6 +33,11 @@ const nextConfig = {
     }
   },
   async headers() {
+    // Public media is served with max-age=0 by default, so every visit
+    // re-checked the 3.7 MB hero video. A week of caching, then a background
+    // refresh; a day for share images and posters, which change more often.
+    const mediaCache = 'public, max-age=604800, stale-while-revalidate=86400';
+    const imageCache = 'public, max-age=86400, stale-while-revalidate=604800';
     return [
       {
         source: '/(.*)',
@@ -40,6 +45,10 @@ const nextConfig = {
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
         ],
       },
+      { source: '/:file(.*\\.mp4)', headers: [{ key: 'Cache-Control', value: mediaCache }] },
+      { source: '/og/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
+      { source: '/hero/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
+      { source: '/images/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
     ];
   },
 };

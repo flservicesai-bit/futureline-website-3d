@@ -385,3 +385,13 @@ select.fl-input > option {
 [dir='rtl'] .fl-label {
   letter-spacing: 0;
 }
+
+/* Mono labels on Arabic pages. Geist Mono has no Arabic glyphs, and its
+   variable's own fallback stack ends in Courier New, whose fixed-width Arabic
+   stretches every letter to the same width ("قائمة الدورات" read as spaced-out
+   glyphs). Name Geist Mono's face directly, then the self-hosted Arabic face,
+   skipping that fallback stack: Latin and digits stay in Geist Mono, Arabic
+   letters join properly in Noto Sans Arabic. */
+[dir='rtl'] .font-mono {
+  font-family: 'GeistMono', 'Noto Sans Arabic', ui-monospace, monospace;
+}

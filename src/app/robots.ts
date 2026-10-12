@@ -1,21 +1,25 @@
 import { MetadataRoute } from 'next';
+import { routing } from '@/i18n/routing';
+import { SITE_URL } from '@/lib/seo';
 
-const BASE_URL = process.env.NEXTAUTH_URL || 'https://futureline.ai';
+// Public pages are allowed by default. Portals sit under /en/... and /ar/...
+// (localePrefix: 'always'), so each private area is listed for both locales
+// as well as bare, which only redirects.
+const PRIVATE_AREAS = ['/admin', '/instructor', '/dashboard'];
 
 export default function robots(): MetadataRoute.Robots {
+  const prefixes = ['', ...routing.locales.map((l) => `/${l}`)];
   return {
     rules: [
       {
         userAgent: '*',
-        allow: ['/', '/courses', '/courses/*', '/services', '/services/*', '/ai'],
+        allow: '/',
         disallow: [
-          '/admin', '/admin/*',
-          '/instructor', '/instructor/*',
-          '/dashboard', '/dashboard/*',
-          '/api/*',
+          '/api/',
+          ...prefixes.flatMap((p) => PRIVATE_AREAS.map((area) => `${p}${area}`)),
         ],
       },
     ],
-    sitemap: `${BASE_URL}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

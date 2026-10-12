@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import { pageMetadata } from '@/lib/seo';
 import AuditEnquiryForm from '@/components/AuditEnquiryForm';
 import { AnimatedText } from '@/components/ui/AnimatedText';
 import { BrandedHeading } from '@/components/ui/BrandedHeading';
@@ -7,12 +8,19 @@ import { FadeUp } from '@/components/motion/FadeUp';
 import { SectionEyebrow } from '@/components/ui/SectionEyebrow';
 import { CheckCircle2 } from 'lucide-react';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('audit');
-  return {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'audit' });
+  return pageMetadata({
+    locale,
+    path: '/audit',
     title: t('metaTitle'),
     description: t('metaDescription'),
-  };
+  });
 }
 
 export default async function AuditPage() {

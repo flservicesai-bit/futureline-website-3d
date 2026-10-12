@@ -27,12 +27,13 @@ export async function FaqAccordion() {
           <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal">
             {t('eyebrow')}
           </p>
-          <h2
+          {/* h1: this section is the whole /faq page and its only heading. */}
+          <h1
             id="faq-heading"
             className="font-display text-4xl font-bold tracking-tight text-navy md:text-5xl"
           >
             {t('heading')}
-          </h2>
+          </h1>
         </div>
 
         <div className="space-y-3">

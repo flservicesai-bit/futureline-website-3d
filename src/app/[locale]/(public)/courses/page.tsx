@@ -1,12 +1,13 @@
 import { Link } from '@/i18n/routing';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { prisma } from '@/lib/prisma';
 import { Search, ArrowRight, Clock, Check, X, Layers } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import CourseEnquiryForm from '@/components/CourseEnquiryForm';
 import { AnimatedText } from '@/components/ui/AnimatedText';
 import { FadeUp } from '@/components/motion/FadeUp';
-import type { Metadata } from 'next';
+import { metadataFor } from '@/lib/seo';
+import { courseDeliveryLabel, courseLevelLabel } from '@/lib/course-labels';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { SectionEyebrow } from '@/components/ui/SectionEyebrow';
@@ -14,17 +15,7 @@ import { BrandedHeading } from '@/components/ui/BrandedHeading';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: 'FL Academy — Courses | FutureLine',
-  description:
-    'AI, cybersecurity, cloud, data — taught by practitioners. Online, in-person, and hybrid courses built so you actually finish.',
-  openGraph: {
-    title: 'FL Academy — Courses',
-    description: 'Professional and technical courses taught by practitioners.',
-    type: 'website',
-    url: '/courses',
-  },
-};
+export const generateMetadata = metadataFor('courses', '/courses');
 
 const PILL_CLASS =
   'rounded-full border px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.25em] transition-colors';
@@ -48,6 +39,7 @@ export default async function CoursesPage({
 }) {
   const session = await getServerSession(authOptions);
   const t = await getTranslations('coursesPage');
+  const locale = await getLocale();
   const params = await searchParams;
   const activeTab = params.tab || 'all';
 
@@ -186,12 +178,16 @@ export default async function CoursesPage({
             >
               <div className="flex flex-col gap-6">
                 {/* Search */}
-                <form method="GET" action="/courses" className="w-full">
+                {/* Locale-prefixed action: a bare /courses redirects to the
+                    default locale, which sent Arabic searches to /en. */}
+                <form method="GET" action={`/${locale}/courses`} className="w-full" role="search">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" size={14} />
                     <input
+                      type="search"
                       name="search"
                       defaultValue={params.search}
+                      aria-label={t('searchPlaceholder')}
                       placeholder={t('searchPlaceholder')}
                       className="fl-input w-full !py-2 !pl-9 !text-xs"
                     />
@@ -344,17 +340,22 @@ export default async function CoursesPage({
                       <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-academy">{num}</span>
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-muted">
-                          {course.level}
+                          {courseLevelLabel(t, course.level)}
                         </span>
                         <span className="rounded-full border border-academy/30 bg-academy/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-academy">
-                          {course.deliveryType.replace('_', ' ')}
+                          {courseDeliveryLabel(t, course.deliveryType)}
                         </span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-semibold leading-[1.15] tracking-[-0.01em] text-navy transition-colors group-hover:text-academy-light">
+                    {/* Course copy is English-only in the database for now;
+                        dir="auto" keeps it in reading order on /ar. */}
+                    <h3
+                      dir="auto"
+                      className="text-xl font-semibold leading-[1.15] tracking-[-0.01em] text-navy transition-colors group-hover:text-academy-light"
+                    >
                       {course.title}
                     </h3>
-                    <p className="mt-4 text-sm leading-relaxed text-ink-muted line-clamp-3">
+                    <p dir="auto" className="mt-4 text-sm leading-relaxed text-ink-muted line-clamp-3">
                       {course.shortDescription}
                     </p>
                     {/* Instructor strip — shows "Taught by [name]" when an
