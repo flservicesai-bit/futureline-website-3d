@@ -8,6 +8,7 @@ import { AuthShell } from '@/components/auth/AuthShell';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { signIn } from 'next-auth/react';
+import { PASSWORD_MIN_LENGTH } from '@/lib/password';
 
 export default function RegisterPage() {
   const t = useTranslations('auth');
@@ -137,7 +138,7 @@ export default function RegisterPage() {
           value={password}
           onChange={setPassword}
           autoComplete="new-password"
-          minLength={6}
+          minLength={PASSWORD_MIN_LENGTH}
           showLabelText={t('login.showPassword')}
           hideLabelText={t('login.hidePassword')}
         />
@@ -148,7 +149,7 @@ export default function RegisterPage() {
           value={confirmPassword}
           onChange={setConfirmPassword}
           autoComplete="new-password"
-          minLength={6}
+          minLength={PASSWORD_MIN_LENGTH}
           showLabelText={t('login.showPassword')}
           hideLabelText={t('login.hidePassword')}
         />

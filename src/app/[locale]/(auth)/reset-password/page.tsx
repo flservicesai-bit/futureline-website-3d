@@ -5,6 +5,7 @@ import { Link } from '@/i18n/routing';
 import { AuthShell } from '@/components/auth/AuthShell';
 import { useTranslations } from 'next-intl';
 import { PasswordInput } from '@/components/auth/PasswordInput';
+import { PASSWORD_MIN_LENGTH } from '@/lib/password';
 
 function ResetPasswordForm() {
   const t = useTranslations('auth');
@@ -36,7 +37,7 @@ function ResetPasswordForm() {
     e.preventDefault();
     setError('');
 
-    if (password.length < 6) {
+    if (password.length < PASSWORD_MIN_LENGTH) {
       setError(t('reset.errorTooShort'));
       return;
     }
@@ -100,7 +101,7 @@ function ResetPasswordForm() {
           onChange={setPassword}
           autoComplete="new-password"
           placeholder={t('reset.newPasswordPlaceholder')}
-          minLength={6}
+          minLength={PASSWORD_MIN_LENGTH}
           showLabelText={t('login.showPassword')}
           hideLabelText={t('login.hidePassword')}
         />
@@ -111,7 +112,7 @@ function ResetPasswordForm() {
           onChange={setConfirmPassword}
           autoComplete="new-password"
           placeholder={t('reset.confirmPasswordPlaceholder')}
-          minLength={6}
+          minLength={PASSWORD_MIN_LENGTH}
           showLabelText={t('login.showPassword')}
           hideLabelText={t('login.hidePassword')}
         />

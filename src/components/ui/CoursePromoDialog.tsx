@@ -16,11 +16,12 @@
  * be a sign-in button and you would have no idea who wanted the course. Anyone
  * already signed in skips Google and goes straight there.
  *
- * Deliberately restrained about when it shows: once per session
- * (sessionStorage, mirroring SplashIntro), never on the auth screens, the
- * get-started funnel or the portals — interrupting someone mid sign-in or
- * mid-checkout costs more than the ad gains — and never on the course page it
- * is advertising.
+ * Deliberately restrained about when it shows: once closed or joined it stays
+ * away for SNOOZE_MS on that device (localStorage — sessionStorage alone
+ * brought it back on every new visit and every new tab), never on the auth
+ * screens, the get-started funnel or the portals — interrupting someone mid
+ * sign-in or mid-checkout costs more than the ad gains — and never on the
+ * course pages, which already sell the course it is advertising.
  *
  * Accessibility: real modal semantics, focus moves in and is restored on
  * close, Escape and backdrop dismiss, Tab is trapped, entrance animation is
@@ -35,12 +36,43 @@ import { useRouter } from 'next/navigation';
 import { usePathname } from '@/i18n/routing';
 import { X, ArrowRight, ArrowLeft, Check, Loader2 } from 'lucide-react';
 
-const STORAGE_KEY = 'fl.promo.vibe-coding.seen';
+const STORAGE_KEY = 'fl.promo.vibe-coding.closedAt';
+/** Older per-tab flag; still honoured so nobody sees it twice in one visit. */
+const SESSION_KEY = 'fl.promo.vibe-coding.seen';
+const SNOOZE_MS = 14 * 24 * 60 * 60 * 1000;
 const DELAY_MS = 8000;
 const COURSE_PATH = '/courses/vibe-coding';
 
-/** Route prefixes where a promo would interrupt real work. */
+function rememberClosed() {
+  try {
+    localStorage.setItem(STORAGE_KEY, String(Date.now()));
+  } catch {
+    /* storage blocked — fall back to the per-tab flag below */
+  }
+  try {
+    sessionStorage.setItem(SESSION_KEY, '1');
+  } catch {
+    /* private mode — it just shows again next navigation */
+  }
+}
+
+function closedRecently(): boolean {
+  try {
+    if (sessionStorage.getItem(SESSION_KEY) === '1') return true;
+  } catch {
+    /* ignore */
+  }
+  try {
+    const closedAt = Number(localStorage.getItem(STORAGE_KEY));
+    return closedAt > 0 && Date.now() - closedAt < SNOOZE_MS;
+  } catch {
+    return false;
+  }
+}
+
+/** Route prefixes where a promo would interrupt real work or repeat the page. */
 const SUPPRESSED = [
+  '/courses',
   '/login',
   '/register',
   '/forgot-password',
@@ -63,26 +95,17 @@ export function CoursePromoDialog() {
   const panelRef = useRef<HTMLDivElement>(null);
   const restoreFocusTo = useRef<HTMLElement | null>(null);
 
-  const suppressed =
-    pathname === COURSE_PATH || SUPPRESSED.some((p) => pathname.startsWith(p));
+  const suppressed = SUPPRESSED.some((p) => pathname.startsWith(p));
 
   const close = useCallback(() => {
     setOpen(false);
-    try {
-      sessionStorage.setItem(STORAGE_KEY, '1');
-    } catch {
-      /* private mode — it just shows again next navigation */
-    }
+    rememberClosed();
     restoreFocusTo.current?.focus?.();
   }, []);
 
   async function join() {
     setJoining(true);
-    try {
-      sessionStorage.setItem(STORAGE_KEY, '1');
-    } catch {
-      /* ignore */
-    }
+    rememberClosed();
 
     // next-intl's router silently drops a query string off a string href, and
     // the ?waitlist= parameter is the whole point — so this uses the plain
@@ -110,12 +133,7 @@ export function CoursePromoDialog() {
   }
 
   useEffect(() => {
-    if (suppressed) return;
-    try {
-      if (sessionStorage.getItem(STORAGE_KEY) === '1') return;
-    } catch {
-      /* storage unavailable — fall through and show once */
-    }
+    if (suppressed || closedRecently()) return;
     // setTimeout, not rAF: rAF is suspended in a background tab and would fire
     // the promo the instant someone switches back.
     const id = window.setTimeout(() => setOpen(true), DELAY_MS);

@@ -17,38 +17,40 @@ import { AnimatedText } from '@/components/ui/AnimatedText';
 import { BrandedHeading } from '@/components/ui/BrandedHeading';
 import { FadeUp } from '@/components/motion/FadeUp';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import { pageMetadata } from '@/lib/seo';
+import { courseDeliveryLabel, courseLevelLabel } from '@/lib/course-labels';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: 'meta' });
   const course = await prisma.course.findUnique({
     where: { slug },
     select: { title: true, shortDescription: true, slug: true },
   });
-  if (!course) return { title: 'Course Not Found — FutureLine' };
-  return {
-    title: `${course.title} — FL Academy | FutureLine`,
-    description: course.shortDescription || `Learn ${course.title} with FutureLine.`,
-    openGraph: {
-      title: course.title,
-      description: course.shortDescription || `Learn ${course.title} with FutureLine.`,
-      type: 'website',
-      url: `/courses/${course.slug}`,
-    },
-  };
+  if (!course) return { title: t('courseNotFound'), robots: { index: false, follow: true } };
+  return pageMetadata({
+    locale,
+    path: `/courses/${course.slug}`,
+    title: t('courseTitle', { title: course.title }),
+    description: course.shortDescription || t('courseFallbackDescription', { title: course.title }),
+  });
 }
 
 export default async function CourseDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: 'courseDetail' });
+  const tc = await getTranslations({ locale, namespace: 'coursesPage' });
   const course = await prisma.course.findUnique({
     where: { slug },
     include: {
@@ -59,7 +61,17 @@ export default async function CourseDetailPage({
 
   if (!course || course.status !== 'PUBLISHED') return notFound();
 
-  const priceLabel = course.price > 0 ? formatPrice(course.discountPrice ?? course.price) : 'Free';
+  const priceLabel = course.price > 0 ? formatPrice(course.discountPrice ?? course.price) : t('free');
+  const levelLabel = courseLevelLabel(tc, course.level);
+  const deliveryLabel = courseDeliveryLabel(tc, course.deliveryType);
+  // Latin digits keep numbers consistent with prices and the rest of /ar.
+  const dateLocale = locale === 'ar' ? 'ar-OM-u-nu-latn' : 'en-GB';
+  const formatDate = (d: Date) =>
+    new Date(d).toLocaleDateString(dateLocale, { day: 'numeric', month: 'short', year: 'numeric' });
+  // Counts render as plain strings so Arabic keeps Latin digits too.
+  const count = (n: number) => ({ count: n, n: String(n) });
+  const enrolled = course._count.enrollments;
+  const lessons = course._count.lessons;
 
   return (
     <main className="bg-canvas">
@@ -79,20 +91,23 @@ export default async function CourseDetailPage({
             data-cursor="hover"
             className="mb-10 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.3em] text-ink-muted transition-colors hover:text-academy"
           >
-            <ChevronLeft size={13} /> Course catalog
+            <ChevronLeft size={13} className="rtl:rotate-180" /> {t('backToCatalog')}
           </Link>
 
           <div className="flex flex-wrap items-center gap-2 mb-6">
             <span className="rounded-full border border-academy/30 bg-academy/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-academy">
-              {course.level}
+              {levelLabel}
             </span>
             {course.category && (
-              <span className="rounded-full border border-hairline bg-canvas-card px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-ink">
+              <span
+                dir="auto"
+                className="rounded-full border border-hairline bg-canvas-card px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-ink"
+              >
                 {course.category}
               </span>
             )}
             <span className="rounded-full border border-hairline bg-canvas-card px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-ink">
-              {course.deliveryType.replace('_', ' ')}
+              {deliveryLabel}
             </span>
           </div>
 
@@ -106,14 +121,16 @@ export default async function CourseDetailPage({
             className="mt-8 max-w-2xl text-lg leading-relaxed text-ink md:text-xl"
             delay={0.15}
           >
-            {course.shortDescription || `Learn ${course.title} with FutureLine.`}
+            {course.shortDescription || t('fallbackDescription', { title: course.title })}
           </AnimatedText>
 
           <FadeUp delay={0.3}>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[11px] uppercase tracking-[0.25em] text-ink-muted">
-              <span className="flex items-center gap-2">
-                <Clock size={13} /> {course.durationHours}h of content
-              </span>
+              {course.durationHours > 0 && (
+                <span className="flex items-center gap-2">
+                  <Clock size={13} /> {t('hoursOfContent', count(course.durationHours))}
+                </span>
+              )}
               {course.instructor && (
                 <span className="flex items-center gap-2">
                   <Users size={13} /> {course.instructor.firstName} {course.instructor.lastName}
@@ -127,22 +144,17 @@ export default async function CourseDetailPage({
               {course.startDate && (
                 <span className="flex items-center gap-2">
                   <Calendar size={13} />
-                  {new Date(course.startDate).toLocaleDateString('en-GB', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                  {course.endDate &&
-                    ` – ${new Date(course.endDate).toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}`}
+                  {formatDate(course.startDate)}
+                  {course.endDate && ` – ${formatDate(course.endDate)}`}
                 </span>
               )}
-              <span className="flex items-center gap-2">
-                <Users size={13} /> {course._count.enrollments} enrolled
-              </span>
+              {/* Counters are hidden at zero: "0 enrolled" reads as an
+                  empty course, not a new one. */}
+              {enrolled > 0 && (
+                <span className="flex items-center gap-2">
+                  <Users size={13} /> {t('studentsEnrolled', count(enrolled))}
+                </span>
+              )}
             </div>
           </FadeUp>
         </div>
@@ -158,7 +170,7 @@ export default async function CourseDetailPage({
                 <FadeUp>
                   <div>
                     <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.3em] text-academy">
-                      Preview
+                      {t('preview')}
                     </p>
                     <div className="aspect-video overflow-hidden rounded-md border border-hairline bg-black">
                       <iframe
@@ -175,7 +187,7 @@ export default async function CourseDetailPage({
                               }`
                             : course.marketingVideoUrl
                         }
-                        title="Course preview"
+                        title={t('previewTitle')}
                         className="h-full w-full"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
@@ -189,12 +201,17 @@ export default async function CourseDetailPage({
                 <FadeUp>
                   <div>
                     <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.3em] text-academy">
-                      About this course
+                      {t('aboutEyebrow')}
                     </p>
                     <BrandedHeading as="h2" size="md">
-                      What you&apos;ll learn.
+                      {t('aboutHeading')}
                     </BrandedHeading>
-                    <p className="mt-6 whitespace-pre-line text-base leading-relaxed text-ink md:text-lg">
+                    {/* Course copy comes from the database and is English-only
+                        for now; dir="auto" keeps it readable on /ar. */}
+                    <p
+                      dir="auto"
+                      className="mt-6 whitespace-pre-line text-base leading-relaxed text-ink md:text-lg"
+                    >
                       {course.fullDescription}
                     </p>
                   </div>
@@ -209,18 +226,21 @@ export default async function CourseDetailPage({
                   <BookOpen className="text-ink-muted" size={36} />
                   <div className="absolute bottom-3 left-3 flex items-center gap-2">
                     <span className="rounded-full border border-academy/30 bg-academy/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-academy">
-                      {course.level}
+                      {levelLabel}
                     </span>
-                    <span className="rounded-full border border-hairline bg-canvas-card px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-ink backdrop-blur-md">
-                      {course.durationHours}h
-                    </span>
+                    {course.durationHours > 0 && (
+                      <span className="rounded-full border border-hairline bg-canvas-card px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-ink backdrop-blur-md">
+                        {course.durationHours}
+                        {tc('hoursSuffix')}
+                      </span>
+                    )}
                   </div>
                 </div>
 
                 <div className="space-y-6 p-6">
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-muted">
-                      Price
+                      {t('price')}
                     </p>
                     <div className="mt-2 flex items-baseline gap-3">
                       <span className="text-4xl font-semibold tracking-tight text-navy">
@@ -241,19 +261,26 @@ export default async function CourseDetailPage({
                   />
 
                   <div className="space-y-2.5 border-t border-hairline pt-5 font-mono text-[11px] uppercase tracking-[0.25em] text-ink-muted">
-                    <div className="flex items-center gap-2">
-                      <Clock size={12} /> {course.durationHours} hours of content
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <BookOpen size={12} /> {course._count.lessons} lessons
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users size={12} /> {course._count.enrollments} students enrolled
-                    </div>
-                    {course.seatCapacity && (
+                    {course.durationHours > 0 && (
+                      <div className="flex items-center gap-2">
+                        <Clock size={12} /> {t('hoursOfContent', count(course.durationHours))}
+                      </div>
+                    )}
+                    {lessons > 0 && (
+                      <div className="flex items-center gap-2">
+                        <BookOpen size={12} /> {t('lessons', count(lessons))}
+                      </div>
+                    )}
+                    {enrolled > 0 && (
+                      <div className="flex items-center gap-2">
+                        <Users size={12} /> {t('studentsEnrolled', count(enrolled))}
+                      </div>
+                    )}
+                    {/* "0 seats left" stays visible: it tells people the cohort is full. */}
+                    {course.seatCapacity != null && course.seatCapacity > 0 && (
                       <div className="flex items-center gap-2 text-academy">
                         <CheckCircle size={12} />
-                        {Math.max(0, course.seatCapacity - course._count.enrollments)} seats left
+                        {t('seatsLeft', count(Math.max(0, course.seatCapacity - enrolled)))}
                       </div>
                     )}
                   </div>

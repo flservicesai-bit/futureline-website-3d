@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import InactivityWatcher from '@/components/InactivityWatcher';
@@ -5,7 +6,8 @@ import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvide
 import { SplashIntro } from '@/components/ui/SplashIntro';
 import { CoursePromoDialog } from '@/components/ui/CoursePromoDialog';
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default async function PublicLayout({ children }: { children: React.ReactNode }) {
+  const t = await getTranslations('common');
   return (
     <SmoothScrollProvider>
       <SplashIntro />
@@ -15,7 +17,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-navy focus:px-4 focus:py-2 focus:font-display focus:text-sm focus:font-semibold focus:text-white"
       >
-        Skip to main content
+        {t('skipToContent')}
       </a>
       <Header />
       <div id="main-content" className="min-h-screen">

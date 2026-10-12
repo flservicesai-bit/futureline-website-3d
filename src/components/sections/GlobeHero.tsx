@@ -82,12 +82,15 @@ export async function GlobeHero() {
           the start, and the hand holds still while the light plays out.
           mix-blend-lighten keeps the robot/scene solid while the neon network
           behind glows through the night sky. */}
+      {/* poster = the video's first frame, so the hero isn't empty while the
+          3.7 MB video downloads on a slow connection. */}
       <video
         aria-hidden
         autoPlay
         muted
         playsInline
         preload="auto"
+        poster="/hero/hero-poster.jpg"
         className="pointer-events-none absolute inset-0 z-[1] h-full w-full object-cover mix-blend-lighten opacity-30"
       >
         <source src="/hero-test.mp4" type="video/mp4" />

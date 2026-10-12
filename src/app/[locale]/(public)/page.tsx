@@ -1,4 +1,5 @@
-import type { Metadata } from 'next';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { jsonLdScript, metadataFor, organizationJsonLd } from '@/lib/seo';
 import { AmbientMesh } from '@/components/ui/AmbientMesh';
 import { GlobeHero } from '@/components/sections/GlobeHero';
 import { ThreeActStory } from '@/components/sections/ThreeActStory';
@@ -32,22 +33,19 @@ import { WhoWeServe } from '@/components/sections/WhoWeServe';
 // Header/Footer "Vision" links point at the story section, which is
 // where the vision copy now lives.
 
-export const metadata: Metadata = {
-  title: 'FutureLine.ai — AI Consulting · Applications · Training',
-  description:
-    'An Omani company turning AI from talk into practice — we advise, we build, and we train. AI consulting, custom applications and AI agents, and applied training including the Vibe Coding programme. Muscat, Sultanate of Oman.',
-  openGraph: {
-    title: 'FutureLine.ai — Making everyone a leader in AI',
-    description:
-      'AI consulting, applications and training. Muscat, Sultanate of Oman.',
-    type: 'website',
-    url: '/',
-  },
-};
+export const generateMetadata = metadataFor('home', '');
 
-export default function Home() {
+export default async function Home() {
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: 'meta' });
   return (
     <main className="fl-light relative bg-canvas text-ink">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdScript(organizationJsonLd(locale, t('home.description'))),
+        }}
+      />
       <AmbientMesh />
 
       <div className="relative z-10">

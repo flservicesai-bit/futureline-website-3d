@@ -10,6 +10,15 @@
  * whole. Cheaper for body copy; never has the word-break risk.
  *
  * Respects prefers-reduced-motion (instant reveal, no transition).
+ *
+ * Bidi: every token is an inline-block, and the browser orders inline-blocks
+ * by the paragraph direction. On /ar that is RTL, which reversed the word
+ * order of any English string (DB course copy, brand names). The container
+ * gets an explicit dir from its own text: rtl if it contains any Arabic,
+ * otherwise ltr. (dir="auto" would misread Arabic copy that opens with a
+ * Latin brand name such as "FutureLine".) Arabic text also never splits into
+ * chars: per-letter boxes break Arabic letter joining, so it falls back to
+ * word masks.
  */
 'use client'
 
@@ -24,6 +33,9 @@ import {
 
 type Variant = 'chars' | 'words'
 
+// Scripts whose letters join (Arabic, Syriac, …) or read right-to-left.
+const RTL_SCRIPT = /[֐-ࣿיִ-﷿ﹰ-﻿]/
+
 interface AnimatedTextProps {
   children: string
   variant?: Variant
@@ -37,7 +49,7 @@ interface AnimatedTextProps {
 
 export function AnimatedText({
   children,
-  variant = 'chars',
+  variant: requestedVariant = 'chars',
   as = 'span',
   className = '',
   delay = 0,
@@ -46,6 +58,8 @@ export function AnimatedText({
   start = 'top 88%',
 }: AnimatedTextProps) {
   const ref = useRef<HTMLElement>(null)
+  const isRtl = RTL_SCRIPT.test(children)
+  const variant: Variant = isRtl ? 'words' : requestedVariant
 
   useEffect(() => {
     const el = ref.current
@@ -191,6 +205,7 @@ export function AnimatedText({
     {
       ref,
       className,
+      dir: isRtl ? 'rtl' : 'ltr',
       'aria-label': children,
     },
     renderedTokens,

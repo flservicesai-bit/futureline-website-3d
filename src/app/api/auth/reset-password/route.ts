@@ -5,10 +5,11 @@ import { prisma } from '@/lib/prisma';
 import { rateLimit, getRateLimitHeaders } from '@/lib/rateLimit';
 import { notifyPasswordChanged } from '@/lib/notifications';
 import { z } from 'zod';
+import { PASSWORD_MIN_LENGTH } from '@/lib/password';
 
 const resetPasswordSchema = z.object({
   token: z.string().min(1, 'Token is required'),
-  password: z.string().min(6, 'Password must be at least 6 characters').max(100),
+  password: z.string().min(PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters`).max(100),
 });
 
 export async function POST(req: Request) {

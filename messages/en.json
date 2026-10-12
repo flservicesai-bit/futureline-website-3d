@@ -439,13 +439,13 @@
       "signIn": "Sign In",
       "newPasswordLabel": "New Password",
       "confirmPasswordLabel": "Confirm Password",
-      "newPasswordPlaceholder": "At least 6 characters",
+      "newPasswordPlaceholder": "At least 10 characters",
       "confirmPasswordPlaceholder": "Repeat your password",
       "submit": "Reset Password",
       "submitting": "Resetting...",
       "backToSignIn": "Back to Sign In",
       "loading": "Loading...",
-      "errorTooShort": "Password must be at least 6 characters.",
+      "errorTooShort": "Password must be at least 10 characters.",
       "errorMismatch": "Passwords do not match.",
       "errorFailed": "Failed to reset password.",
       "errorGeneric": "Something went wrong. Please try again.",
@@ -1647,7 +1647,7 @@
   "coursesPage": {
     "eyebrow": "FL · Academy",
     "heading": "Learn Future AI Skills, Today.",
-    "subhead": "Cohort-paced courses in AI, cybersecurity, cloud, and data. Taught by people shipping the systems they teach — so what you learn is what you can actually use.",
+    "subhead": "Applied AI courses, starting with Vibe Coding. Taught by people shipping the systems they teach — so what you learn is what you can actually use.",
     "searchPlaceholder": "Search courses…",
     "filterAll": "All",
     "levelLabel": "Level",
@@ -2008,7 +2008,7 @@
       "eyebrow": "Legal",
       "title": "Terms of Service",
       "updatedLabel": "Last updated",
-      "updated": "25 August 2026",
+      "updated": "12 October 2026",
       "intro": "These Terms of Service govern your use of futureline.ai and the services offered through it, including our course platform, enquiry forms, and the public FL Lab demo tools. FutureLine is a company established in the Sultanate of Oman providing AI consulting, custom application development, and training. Please read these terms carefully — they set out what you can expect from us and what we expect from you.",
       "contactNote": "Questions about these terms? Write to us at",
       "sections": [
@@ -2024,7 +2024,7 @@
           "heading": "Accounts, Eligibility and Security",
           "body": [
             "You need an account to enrol in a course or access course material. You may register with your name, email address, and a password, or sign in with a Google account where that option is enabled. You must provide accurate information and use an email address you control. If you are under 18, you may only use the platform with the consent and supervision of a parent or guardian.",
-            "Passwords must be at least six characters. We store passwords hashed and never in readable form, but a six-character minimum is a floor, not a recommendation — choose a strong, unique password. You are responsible for keeping your credentials confidential and for all activity that occurs under your account.",
+            "Passwords must be at least ten characters. We store passwords hashed and never in readable form, but a ten-character minimum is a floor, not a recommendation — choose a strong, unique password. You are responsible for keeping your credentials confidential and for all activity that occurs under your account.",
             "Tell us at flservices.ai@gmail.com if you believe your account has been accessed without your permission. Do not share your login, and do not use another person's account."
           ]
         },
@@ -2179,5 +2179,75 @@
     "joinedBody": "We have your place at OMR 99. Dates go to the waitlist first — watch your inbox.",
     "joinErrorTitle": "We couldn't save your place",
     "joinErrorBody": "Something went wrong on our side. Email flservices.ai@gmail.com and we will add you by hand."
+  },
+  "meta": {
+    "home": {
+      "title": "FutureLine.ai — AI Consulting · Applications · Training",
+      "description": "An Omani company turning AI from talk into practice — we advise, we build, and we train. AI consulting, custom applications and AI agents, and applied training including the Vibe Coding programme. Muscat, Sultanate of Oman."
+    },
+    "getStarted": {
+      "title": "Get Started — FutureLine.ai",
+      "description": "Pick where you need FutureLine most — consulting, building applications, or training."
+    },
+    "courses": {
+      "title": "Courses — FutureLine.ai",
+      "description": "Applied AI courses from FutureLine, starting with Vibe Coding: take an idea to a real, published product with no coding background. Live online cohorts in English or Arabic."
+    },
+    "faq": {
+      "title": "FAQ — FutureLine.ai",
+      "description": "Answers to common questions about FutureLine's AI consulting, applications, and training."
+    },
+    "privacy": {
+      "title": "Privacy Policy — FutureLine.ai",
+      "description": "How FutureLine collects, uses, stores and protects personal information across its website, courses and services."
+    },
+    "terms": {
+      "title": "Terms of Service — FutureLine.ai",
+      "description": "The terms governing use of the FutureLine website, courses, and services."
+    },
+    "login": {
+      "title": "Sign in — FutureLine.ai",
+      "description": "Sign in to your FutureLine account."
+    },
+    "register": {
+      "title": "Create an account — FutureLine.ai",
+      "description": "Create a FutureLine account to join a course."
+    },
+    "forgotPassword": {
+      "title": "Forgot your password? — FutureLine.ai",
+      "description": "Get a link to reset your FutureLine password."
+    },
+    "resetPassword": {
+      "title": "Choose a new password — FutureLine.ai",
+      "description": "Set a new password for your FutureLine account."
+    },
+    "notFound": {
+      "title": "Page not found — FutureLine.ai",
+      "description": "The page you are looking for does not exist or has been moved."
+    },
+    "courseTitle": "{title} — FutureLine.ai",
+    "courseFallbackDescription": "Learn {title} with FutureLine.",
+    "courseNotFound": "Course not found — FutureLine.ai"
+  },
+  "notFound": {
+    "eyebrow": "FutureLine",
+    "title": "Page not found",
+    "body": "The page you are looking for does not exist or has been moved.",
+    "home": "Back to home",
+    "courses": "Browse courses"
+  },
+  "courseDetail": {
+    "backToCatalog": "Course catalog",
+    "preview": "Preview",
+    "previewTitle": "Course preview",
+    "aboutEyebrow": "About this course",
+    "aboutHeading": "What you'll learn.",
+    "price": "Price",
+    "free": "Free",
+    "hoursOfContent": "{count, plural, one {{n} hour of content} other {{n} hours of content}}",
+    "lessons": "{count, plural, one {{n} lesson} other {{n} lessons}}",
+    "studentsEnrolled": "{count, plural, one {{n} student enrolled} other {{n} students enrolled}}",
+    "seatsLeft": "{count, plural, =0 {No seats left} one {{n} seat left} other {{n} seats left}}",
+    "fallbackDescription": "Learn {title} with FutureLine."
   }
 }

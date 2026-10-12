@@ -16,6 +16,7 @@ import { getLocale } from 'next-intl/server';
 import './globals.css';
 import { Providers } from '@/components/Providers';
 import { localeDirection, type Locale } from '@/i18n/routing';
+import { SITE_NAME, SITE_URL, shareImage } from '@/lib/seo';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
@@ -38,9 +39,20 @@ const notoArabic = Noto_Sans_Arabic({
   display: 'swap',
 });
 
+// Defaults for any page without its own metadata. metadataBase turns the
+// relative canonical/og:url/og:image paths that pages emit into absolute
+// https://futureline.ai URLs, which link previews and search engines need.
 export const metadata: Metadata = {
-  title: 'FutureLine — Systems Built for Scale',
-  description: 'AI-driven solutions, professional training, and intelligent digital services.',
+  metadataBase: new URL(SITE_URL),
+  title: 'FutureLine.ai — AI Consulting · Applications · Training',
+  description:
+    'An Omani company turning AI from talk into practice — we advise, we build, and we train. Muscat, Sultanate of Oman.',
+  openGraph: {
+    siteName: SITE_NAME,
+    type: 'website',
+    images: [shareImage('en')],
+  },
+  twitter: { card: 'summary_large_image', images: [shareImage('en').url] },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

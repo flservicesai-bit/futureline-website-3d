@@ -1,17 +1,7 @@
-import type { Metadata } from 'next';
+import { metadataFor } from '@/lib/seo';
 import { LegalDocument } from '@/components/legal/LegalDocument';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy — FutureLine.ai',
-  description:
-    'How FutureLine collects, uses, stores and protects personal information across its website, courses and services.',
-  openGraph: {
-    title: 'Privacy Policy — FutureLine.ai',
-    description: 'How FutureLine handles and protects your personal information.',
-    type: 'website',
-    url: '/privacy',
-  },
-};
+export const generateMetadata = metadataFor('privacy', '/privacy');
 
 export default function PrivacyPage() {
   return <LegalDocument namespace="privacy" />;
