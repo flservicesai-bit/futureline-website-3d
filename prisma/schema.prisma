@@ -26,6 +26,15 @@ model User {
   // Copied into each session token at sign-in. Bumping it (password reset or
   // change) signs the user out everywhere: older tokens no longer match.
   sessionVersion   Int                 @default(0)
+  // When the owner proved they control the address: a verification link, a
+  // password-reset link or Google sign-in. Null means never proved, so Google
+  // sign-in with this email takes the account over (see lib/google-account).
+  emailVerified    DateTime?
+  // Indexed, not @unique: adding a unique constraint makes `prisma db push`
+  // (run by deploy.sh) stop with a data-loss warning. Tokens are 256-bit
+  // random, so collisions aren't a concern.
+  verifyToken      String?
+  verifyExpiry     DateTime?
   createdAt        DateTime            @default(now())
   courses          Course[]            @relation("InstructorCourses")
   enrollments      Enrollment[]
@@ -33,6 +42,8 @@ model User {
   assignedLeads    Lead[]              @relation("AssignedLeads")
   leadNotes        LeadNote[]          @relation("LeadNotes")
   orders           Order[]
+
+  @@index([verifyToken])
 }
 
 model Course {

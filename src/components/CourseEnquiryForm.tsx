@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Send, CheckCircle } from 'lucide-react';
+import { Honeypot, HONEYPOT_FIELD, honeypotValue } from '@/components/Honeypot';
 
 export default function CourseEnquiryForm() {
   const t = useTranslations('courseEnquiry');
@@ -14,14 +15,15 @@ export default function CourseEnquiryForm() {
   });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const trap = honeypotValue(e.currentTarget);
     setStatus('sending');
     try {
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, source: 'FL Courses' }),
+        body: JSON.stringify({ ...form, source: 'FL Courses', [HONEYPOT_FIELD]: trap }),
       });
       if (res.ok) {
         setStatus('sent');
@@ -124,6 +126,8 @@ export default function CourseEnquiryForm() {
           placeholder={t('messagePlaceholder')}
         />
       </div>
+
+      <Honeypot />
 
       <button
         type="submit"

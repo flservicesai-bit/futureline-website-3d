@@ -85,6 +85,20 @@ an empty database, and change those passwords immediately if you do. It
 deletes all existing data first, so it refuses to run once any user exists;
 `SEED_FORCE=yes npm run seed` overrides that for local resets only.
 
+### Once, after deploying case-insensitive emails
+
+Emails are now stored lower-case. Older rows may not be; login still finds
+them, but lower-casing them keeps things tidy and lets the database catch
+duplicates:
+
+```bash
+npm run normalize-emails            # dry run: lists what would change
+npm run normalize-emails -- --apply # apply it
+```
+
+Accounts whose emails differ only by case are listed as duplicates and left
+alone, for an admin to merge by hand.
+
 ### 4. nginx
 
 ```nginx

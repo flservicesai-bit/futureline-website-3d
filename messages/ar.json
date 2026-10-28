@@ -457,6 +457,19 @@
       "errorFailed": "فشلت إعادة تعيين كلمة المرور.",
       "errorGeneric": "حدث خطأ ما. يُرجى المحاولة مرة أخرى.",
       "eyebrow": "كلمة مرور جديدة"
+    },
+    "verify": {
+      "eyebrow": "تأكيد البريد الإلكتروني",
+      "title": "أكّد بريدك الإلكتروني",
+      "subtitle": "أكّد أن هذا العنوان يخصّك للحفاظ على أمان حسابك.",
+      "confirm": "تأكيد بريدي الإلكتروني",
+      "confirming": "جارٍ التأكيد…",
+      "doneTitle": "تم تأكيد البريد الإلكتروني",
+      "doneBody": "شكرًا لك. تم تأكيد عنوان بريدك الإلكتروني.",
+      "continue": "متابعة",
+      "invalidTitle": "انتهت صلاحية هذا الرابط",
+      "invalidBody": "رابط التأكيد غير صالح أو سبق استخدامه. سجّل الدخول للمتابعة.",
+      "signIn": "تسجيل الدخول"
     }
   },
   "courseEnquiry": {
@@ -2237,7 +2250,11 @@
     },
     "courseTitle": "{title} — FutureLine.ai",
     "courseFallbackDescription": "تعلّم {title} مع FutureLine.",
-    "courseNotFound": "الدورة غير موجودة — FutureLine.ai"
+    "courseNotFound": "الدورة غير موجودة — FutureLine.ai",
+    "verifyEmail": {
+      "title": "أكّد بريدك الإلكتروني — FutureLine.ai",
+      "description": "أكّد عنوان البريد الإلكتروني لحسابك في FutureLine."
+    }
   },
   "notFound": {
     "eyebrow": "FutureLine",

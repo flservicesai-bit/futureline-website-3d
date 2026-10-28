@@ -4,6 +4,9 @@ import { prisma } from '@/lib/prisma';
 import { registerSchema, formatZodError } from '@/lib/validations';
 import { rateLimit, getRateLimitHeaders, getClientIp } from '@/lib/rateLimit';
 import { notifyWelcome } from '@/lib/notifications';
+import { findUserByEmail } from '@/lib/user-email';
+import { issueVerifyToken } from '@/lib/email-verification';
+import { siteLink } from '@/lib/site-link';
 
 export async function POST(req: Request) {
   try {
@@ -23,7 +26,8 @@ export async function POST(req: Request) {
     }
     const { firstName, lastName, email, password } = parsed.data;
 
-    const existing = await prisma.user.findUnique({ where: { email } });
+    // `email` is already lower-case; this also catches older mixed-case rows.
+    const existing = await findUserByEmail(email);
     if (existing) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
     }
@@ -33,7 +37,8 @@ export async function POST(req: Request) {
       data: { firstName, lastName, email, password: hashedPassword, role: 'CUSTOMER' },
     });
 
-    notifyWelcome({ name: `${user.firstName} ${user.lastName}`.trim(), email: user.email }).catch((err) =>
+    const verifyUrl = siteLink(req, `/verify-email?token=${await issueVerifyToken(user.id)}`);
+    notifyWelcome({ name: `${user.firstName} ${user.lastName}`.trim(), email: user.email }, verifyUrl).catch((err) =>
       console.error('[Register] Failed to send welcome email:', err)
     );
 

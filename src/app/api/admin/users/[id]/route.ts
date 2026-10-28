@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { parseCommissionRate } from '@/lib/validations';
+import { findUserByEmail, normalizeEmail } from '@/lib/user-email';
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -16,12 +17,23 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     if (data.commissionRate !== undefined && parseCommissionRate(data.commissionRate) === null) {
       return NextResponse.json({ error: 'Commission rate must be a number from 0 to 100' }, { status: 400 });
     }
+    const email = typeof data.email === 'string' ? normalizeEmail(data.email) : undefined;
+    let emailChanged = false;
+    if (email) {
+      const owner = await findUserByEmail(email);
+      if (owner && owner.id !== id) {
+        return NextResponse.json({ error: 'A user with that email already exists.' }, { status: 409 });
+      }
+      emailChanged = !owner;
+    }
     const user = await prisma.user.update({
       where: { id: id },
       data: {
         firstName: data.firstName,
         lastName: data.lastName,
-        email: data.email,
+        email,
+        // Nobody has proved they own a new address yet.
+        ...(emailChanged ? { emailVerified: null, verifyToken: null, verifyExpiry: null } : {}),
         role: data.role,
         ...(data.commissionRate !== undefined ? { commissionRate: data.commissionRate } : {}),
       },

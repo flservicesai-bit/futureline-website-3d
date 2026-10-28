@@ -2,10 +2,10 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
-import { randomBytes } from 'crypto';
 import { prisma } from './prisma';
 import { rateLimit } from './rateLimit';
-import { notifyWelcome } from './notifications';
+import { linkGoogleAccount } from './google-account';
+import { findUserByEmail, normalizeEmail } from './user-email';
 
 // Default to the production origin only in production. In dev, leaving this
 // unset lets NextAuth infer the URL from the request host (localhost), so the
@@ -45,16 +45,15 @@ providers.push(
           return null;
         }
 
-        const rl = await rateLimit(`login:${credentials.email}`, 5, 60 * 1000);
+        const email = normalizeEmail(credentials.email);
+        const rl = await rateLimit(`login:${email}`, 5, 60 * 1000);
         if (!rl.success) {
-          console.warn(`[AUTH] Rate limit exceeded for ${credentials.email}`);
+          console.warn(`[AUTH] Rate limit exceeded for ${email}`);
           return null;
         }
 
         try {
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email },
-          });
+          const user = await findUserByEmail(email);
 
           if (!user) return null;
           if (!user.isActive) return null;
@@ -103,48 +102,16 @@ export const authOptions: NextAuthOptions = {
     error: '/get-started/signin',
   },
   callbacks: {
-    // Persist Google (OAuth) sign-ins to the User table. There is no NextAuth
-    // adapter (jwt strategy), so without this a Google user would have a
-    // session whose id is the Google `sub` — matching no User row — and every
-    // downstream prisma.user lookup (checkout, change-password, enrolment)
-    // would fail. Upsert by email links to an existing credentials account of
-    // the same email rather than creating a duplicate.
-    async signIn({ user, account }) {
+    // Google (OAuth) sign-ins are tied to a real User row; see
+    // linkGoogleAccount for how an existing account with that email is handled.
+    async signIn({ user, account, profile }) {
       if (account?.provider !== 'google') return true;
-      const email = user.email;
-      if (!email) return false;
-
-      const existing = await prisma.user.findUnique({
-        where: { email },
-        select: { isActive: true },
+      return linkGoogleAccount({
+        email: user.email,
+        name: user.name,
+        image: (user as any).image,
+        emailVerifiedByGoogle: (profile as { email_verified?: boolean } | undefined)?.email_verified === true,
       });
-      if (existing && !existing.isActive) return false; // deactivated account
-
-      if (!existing) {
-        const nameParts = (user.name ?? '').trim().split(/\s+/).filter(Boolean);
-        // Random password — Google users authenticate via OAuth, never with a
-        // password, but the column is required and credentials login must fail.
-        const randomPassword = await bcrypt.hash(randomBytes(24).toString('hex'), 12);
-        await prisma.user.create({
-          data: {
-            email,
-            firstName: nameParts[0] ?? '',
-            lastName: nameParts.slice(1).join(' '),
-            image: (user as any).image ?? null,
-            password: randomPassword,
-            role: 'CUSTOMER',
-          },
-        });
-
-        // Credentials sign-up sends a welcome from /api/auth/register; Google
-        // sign-up had no equivalent, so first-time Google users received
-        // nothing at all. Fire-and-forget so a mail failure can't block login.
-        notifyWelcome({
-          name: `${nameParts[0] ?? ''} ${nameParts.slice(1).join(' ')}`.trim() || 'there',
-          email,
-        }).catch((err) => console.error('[AUTH] Welcome email failed:', err));
-      }
-      return true;
     },
     async jwt({ token, user, account }) {
       if (user) {
@@ -152,10 +119,7 @@ export const authOptions: NextAuthOptions = {
         // signIn callback) so session.user.id is a valid User id, not the
         // Google `sub`.
         if (account?.provider === 'google' && user.email) {
-          const dbUser = await prisma.user.findUnique({
-            where: { email: user.email },
-            select: { id: true, role: true, firstName: true, lastName: true, sessionVersion: true },
-          });
+          const dbUser = await findUserByEmail(user.email);
           if (dbUser) {
             token.id = dbUser.id;
             token.role = dbUser.role;

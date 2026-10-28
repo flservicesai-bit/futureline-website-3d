@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { HONEYPOT_FIELD } from '@/components/Honeypot';
 import { leadSchema, formatZodError } from '@/lib/validations';
 import { rateLimit, getRateLimitHeaders, getClientIp } from '@/lib/rateLimit';
 import { notifyLeadConfirmation, notifyAdminNewLead } from '@/lib/notifications';
@@ -16,6 +19,15 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
+
+    // A filled honeypot means a bot. Answer as if it worked so it doesn't
+    // adapt, but save nothing and send nothing.
+    const trap = body?.[HONEYPOT_FIELD];
+    if (typeof trap === 'string' && trap.trim() !== '') {
+      console.warn(`Lead dropped: honeypot filled (ip ${ip})`);
+      return NextResponse.json({ success: true });
+    }
+
     const parsed = leadSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: formatZodError(parsed.error) }, { status: 400 });
@@ -45,16 +57,22 @@ export async function POST(req: Request) {
       },
     });
 
-    // Auto-reply to the person, quoting their own topic and request back to
-    // them. Sent for every enquiry route, including the get-started flow —
-    // which reaches here after the visitor signs in with Google or email.
-    notifyLeadConfirmation({
-      name: firstName,
-      email,
-      topic: tourType || undefined,
-      message,
-      source: source || 'Website',
-    });
+    // Auto-reply to the address on the form. Anyone can type any address, so
+    // one address gets at most two of these an hour (the lead is still saved
+    // and the team still told), and the request is quoted back only to
+    // someone signed in as that address, as in the get-started flow.
+    // Otherwise the form would send any text to any inbox from our domain.
+    const reply = await rateLimit(`lead-reply:${email}`, 2, 60 * 60 * 1000);
+    if (reply.success) {
+      const session = await getServerSession(authOptions);
+      notifyLeadConfirmation({
+        name: firstName,
+        email,
+        topic: tourType || undefined,
+        message: session?.user?.email?.toLowerCase() === email ? message : undefined,
+        source: source || 'Website',
+      });
+    }
 
     notifyAdminNewLead({
       name: `${firstName} ${lastName}`,
