@@ -29,13 +29,20 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    await requireInstructorOwnership(id);
+    const { course } = await requireInstructorOwnership(id);
+    if (course.status === 'DELETED') {
+      return NextResponse.json({ error: 'Archived courses can only be restored by an admin' }, { status: 403 });
+    }
     const data = await req.json();
     delete data.instructorId;
     delete data.approvalStatus;
+    const fields = normalizeCourseData(data);
+    // Admin-only fields: featuring, and the reviewer's rejection note.
+    delete fields.featuredSlot;
+    delete fields.rejectionReason;
     const updated = await prisma.course.update({
       where: { id: id },
-      data: { ...normalizeCourseData(data), approvalStatus: 'PENDING' },
+      data: { ...fields, approvalStatus: 'PENDING' },
     });
     return NextResponse.json(updated);
   } catch (error: any) {

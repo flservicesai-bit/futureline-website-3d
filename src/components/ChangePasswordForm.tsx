@@ -1,11 +1,13 @@
 'use client';
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { signOut } from 'next-auth/react';
+import { useLocale, useTranslations } from 'next-intl';
 import { KeyRound } from 'lucide-react';
 import { PASSWORD_MIN_LENGTH } from '@/lib/password';
 
 export default function ChangePasswordForm() {
   const t = useTranslations('changePassword');
+  const locale = useLocale();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -37,6 +39,9 @@ export default function ChangePasswordForm() {
         setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
+        // The change ended every session, this one included. Give the
+        // message a moment to be read, then go to sign-in.
+        setTimeout(() => signOut({ callbackUrl: `/${locale}/login` }), 2500);
       }
     } catch {
       setMessage({ type: 'error', text: t('somethingWentWrong') });

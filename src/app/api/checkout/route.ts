@@ -12,8 +12,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const ip = req.headers.get('x-forwarded-for') || session.user.id;
-    const rl = await rateLimit(`checkout:${ip}`, 10, 60 * 1000);
+    const rl = await rateLimit(`checkout:${session.user.id}`, 10, 60 * 1000);
     if (!rl.success) {
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
@@ -23,7 +22,8 @@ export async function POST(req: Request) {
 
     const { courseId, paymentMethod } = await req.json();
     const course = await prisma.course.findUnique({ where: { id: courseId } });
-    if (!course) {
+    // Only courses the public can see can be bought: published AND approved.
+    if (!course || course.status !== 'PUBLISHED' || course.approvalStatus !== 'APPROVED') {
       return NextResponse.json({ error: 'Course not found' }, { status: 404 });
     }
 

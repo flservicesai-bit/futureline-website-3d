@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { registerSchema, formatZodError } from '@/lib/validations';
-import { rateLimit, getRateLimitHeaders } from '@/lib/rateLimit';
+import { rateLimit, getRateLimitHeaders, getClientIp } from '@/lib/rateLimit';
 import { notifyWelcome } from '@/lib/notifications';
 
 export async function POST(req: Request) {
   try {
-    const ip = req.headers.get('x-forwarded-for') || 'unknown';
+    const ip = getClientIp(req);
     const rl = await rateLimit(`register:${ip}`, 5, 60 * 1000);
     if (!rl.success) {
       return NextResponse.json(

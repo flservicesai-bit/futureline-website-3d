@@ -21,6 +21,10 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const { course } = await requireInstructorOwnership(id);
     const { status } = await req.json();
 
+    if (course.status === 'DELETED') {
+      return NextResponse.json({ error: 'Archived courses can only be restored by an admin' }, { status: 403 });
+    }
+
     if (!['DRAFT', 'PUBLISHED', 'ARCHIVED'].includes(status)) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }

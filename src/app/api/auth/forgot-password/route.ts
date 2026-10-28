@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { sendEmail } from '@/lib/notifications';
-import { rateLimit, getRateLimitHeaders } from '@/lib/rateLimit';
+import { rateLimit, getRateLimitHeaders, getClientIp } from '@/lib/rateLimit';
 import { z } from 'zod';
 
 const forgotPasswordSchema = z.object({
@@ -11,7 +11,7 @@ const forgotPasswordSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const ip = req.headers.get('x-forwarded-for') || 'unknown';
+    const ip = getClientIp(req);
     const rl = await rateLimit(`forgot-password:${ip}`, 3, 60 * 1000);
     if (!rl.success) {
       return NextResponse.json(

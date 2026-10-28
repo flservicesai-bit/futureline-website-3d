@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { leadSchema, formatZodError } from '@/lib/validations';
-import { rateLimit, getRateLimitHeaders } from '@/lib/rateLimit';
+import { rateLimit, getRateLimitHeaders, getClientIp } from '@/lib/rateLimit';
 import { notifyLeadConfirmation, notifyAdminNewLead } from '@/lib/notifications';
 
 export async function POST(req: Request) {
   try {
-    const ip = req.headers.get('x-forwarded-for') || 'unknown';
+    const ip = getClientIp(req);
     const rl = await rateLimit(`leads:${ip}`, 5, 60 * 1000);
     if (!rl.success) {
       return NextResponse.json(

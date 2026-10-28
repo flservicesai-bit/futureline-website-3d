@@ -73,6 +73,7 @@ providers.push(
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
+            sessionVersion: user.sessionVersion,
           };
         } catch (error) {
           console.error('[AUTH DEBUG] Error in authorize:', error);
@@ -86,7 +87,9 @@ export const authOptions: NextAuthOptions = {
   providers,
   session: {
     strategy: 'jwt',
-    maxAge: 60 * 60 * 2, // 2 hours absolute session limit
+    // 2 hours of inactivity. Not absolute: each session read re-issues the
+    // cookie, so an active user stays signed in.
+    maxAge: 60 * 60 * 2,
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
@@ -151,13 +154,14 @@ export const authOptions: NextAuthOptions = {
         if (account?.provider === 'google' && user.email) {
           const dbUser = await prisma.user.findUnique({
             where: { email: user.email },
-            select: { id: true, role: true, firstName: true, lastName: true },
+            select: { id: true, role: true, firstName: true, lastName: true, sessionVersion: true },
           });
           if (dbUser) {
             token.id = dbUser.id;
             token.role = dbUser.role;
             token.firstName = dbUser.firstName;
             token.lastName = dbUser.lastName;
+            token.sessionVersion = dbUser.sessionVersion;
             return token;
           }
         }
@@ -167,19 +171,27 @@ export const authOptions: NextAuthOptions = {
         token.role = (user as any).role ?? token.role ?? 'CUSTOMER';
         token.firstName = (user as any).firstName ?? nameParts[0] ?? '';
         token.lastName = (user as any).lastName ?? nameParts.slice(1).join(' ') ?? '';
+        token.sessionVersion = user.sessionVersion ?? 0;
       } else if (token.id) {
-        // C1: Re-verify role from DB on refresh to prevent stale admin sessions
+        // Re-check the account on every session read, so role changes apply
+        // at once and revoked sessions end at once.
+        let dbUser;
         try {
-          const dbUser = await prisma.user.findUnique({
+          dbUser = await prisma.user.findUnique({
             where: { id: token.id as string },
-            select: { role: true },
+            select: { role: true, isActive: true, sessionVersion: true },
           });
-          if (dbUser) {
-            token.role = dbUser.role;
-          }
         } catch (error) {
-          console.error('[AUTH] Failed to refresh token role:', error);
+          // Database unreachable: keep the session rather than sign everyone out.
+          console.error('[AUTH] Failed to refresh token:', error);
+          return token;
         }
+        // Deactivated, deleted, or password reset/changed since this token was
+        // issued. Throwing makes NextAuth clear the cookie and report no session.
+        if (!dbUser || !dbUser.isActive || dbUser.sessionVersion !== (token.sessionVersion ?? 0)) {
+          throw new Error('Session revoked');
+        }
+        token.role = dbUser.role;
       }
       return token;
     },

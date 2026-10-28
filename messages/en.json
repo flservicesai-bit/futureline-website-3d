@@ -1847,7 +1847,7 @@
     "updating": "Updating…",
     "passwordsDoNotMatch": "New passwords do not match",
     "failedToUpdate": "Failed to update password",
-    "updatedSuccessfully": "Password updated successfully",
+    "updatedSuccessfully": "Password updated. For security you've been signed out everywhere. Taking you to sign in…",
     "somethingWentWrong": "Something went wrong. Please try again."
   },
   "enroll": {
@@ -2240,6 +2240,7 @@
     "backToCatalog": "Course catalog",
     "preview": "Preview",
     "previewTitle": "Course preview",
+    "awaitingApproval": "Preview only: this course is waiting for admin approval and isn't visible to the public yet.",
     "aboutEyebrow": "About this course",
     "aboutHeading": "What you'll learn.",
     "price": "Price",

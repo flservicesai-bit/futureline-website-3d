@@ -19,19 +19,26 @@
  *    in dev. Production on serverless needs swapping for cloud
  *    storage; see the upload-image endpoint for the same caveat.
  *
- * Cleanup: not implemented in MVP — admin can run a manual rm on
- * the uploads dir periodically. Production should add a cron.
+ * Access: signed-in users only, one job at a time, rate-limited per
+ * account. Cleanup: files older than an hour are deleted before each job.
  */
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir, unlink } from 'fs/promises';
+import { writeFile, mkdir, unlink, readdir, stat } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { randomBytes } from 'crypto';
 import { spawn } from 'child_process';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { rateLimit, getRateLimitHeaders } from '@/lib/rateLimit';
 
 const MAX_BYTES = 50 * 1024 * 1024; // 50 MB
 const FFMPEG_TIMEOUT_MS = 60_000; // 60s — hard upper bound
+const OUTPUT_TTL_MS = 60 * 60 * 1000; // processed files are kept for 1 hour
+// One encode at a time: the server has 2 GB of RAM. Module state is enough
+// because production runs a single Node process (PM2 fork mode).
+const MAX_CONCURRENT_JOBS = 1;
+let activeJobs = 0;
 
 // Preset → FFmpeg filter graph. Each is one chain of filters applied
 // in sequence to the input video. All produce H.264 MP4 output.
@@ -80,19 +87,40 @@ const PRESETS: Record<string, { label: string; filter: string }> = {
 };
 
 export async function POST(req: Request) {
+  // Signed-in users only: each job is an expensive ffmpeg encode that
+  // writes to disk, so anonymous access let anyone exhaust the server.
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: 'Sign in to use the video lab.' }, { status: 401 });
+  }
+
+  const rl = await rateLimit(`video-effects:${session.user.id}`, 5, 5 * 60 * 1000);
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again in a few minutes.' },
+      { status: 429, headers: getRateLimitHeaders(rl.remaining, rl.resetIn) },
+    );
+  }
+
+  // Refuse oversized uploads before buffering them (1 MB allows for the
+  // multipart framing around the file).
+  if (Number(req.headers.get('content-length') ?? 0) > MAX_BYTES + 1024 * 1024) {
+    return NextResponse.json(
+      { error: `Video too large. Max ${MAX_BYTES / 1024 / 1024} MB.` },
+      { status: 413 },
+    );
+  }
+
+  if (activeJobs >= MAX_CONCURRENT_JOBS) {
+    return NextResponse.json(
+      { error: 'The lab is busy with another video. Please try again in a minute.' },
+      { status: 503, headers: { 'Retry-After': '30' } },
+    );
+  }
+
+  activeJobs++;
   let inputPath = '';
   try {
-    // Public endpoint (powers the /lab/video-effects demo), but ffmpeg is
-    // expensive and writes to disk — rate-limit per IP to curb abuse.
-    const ip = req.headers.get('x-forwarded-for') || 'unknown';
-    const rl = await rateLimit(`video-effects:${ip}`, 5, 5 * 60 * 1000);
-    if (!rl.success) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again in a few minutes.' },
-        { status: 429, headers: getRateLimitHeaders(rl.remaining, rl.resetIn) },
-      );
-    }
-
     const formData = await req.formData();
     const file = formData.get('file');
     const preset = String(formData.get('preset') ?? 'glow');
@@ -109,7 +137,8 @@ export async function POST(req: Request) {
     if (!file.type.startsWith('video/')) {
       return NextResponse.json({ error: 'File must be a video.' }, { status: 400 });
     }
-    const config = PRESETS[preset];
+    // Own keys only: a bare lookup accepts inherited names like "constructor".
+    const config = Object.hasOwn(PRESETS, preset) ? PRESETS[preset] : undefined;
     if (!config) {
       return NextResponse.json(
         { error: `Unknown effect "${preset}". Pick one of: ${Object.keys(PRESETS).join(', ')}` },
@@ -120,6 +149,7 @@ export async function POST(req: Request) {
     // Write input to a temp slot the FFmpeg subprocess can read.
     const dir = join(process.cwd(), 'public', 'uploads', 'video-effects');
     await mkdir(dir, { recursive: true });
+    await removeOldOutputs(dir);
     const id = randomBytes(8).toString('hex');
     inputPath = join(dir, `${id}-in.mp4`);
     const outputPath = join(dir, `${id}-${preset}.mp4`);
@@ -170,13 +200,30 @@ export async function POST(req: Request) {
   } catch (err: any) {
     // Best-effort cleanup of partial input.
     if (inputPath) await unlink(inputPath).catch(() => {});
+    // ffmpeg's stderr includes server paths: log it, don't send it.
     // eslint-disable-next-line no-console
     console.error('Video effects processing failed:', err);
     return NextResponse.json(
-      { error: err?.message ?? 'Processing failed' },
+      { error: 'Processing failed. Try a shorter clip or a different format.' },
       { status: 500 },
     );
+  } finally {
+    activeJobs--;
   }
+}
+
+// Delete results older than OUTPUT_TTL_MS. Runs before each job, so the
+// folder never holds more than about an hour of output.
+async function removeOldOutputs(dir: string) {
+  const cutoff = Date.now() - OUTPUT_TTL_MS;
+  const names = await readdir(dir).catch(() => [] as string[]);
+  await Promise.all(
+    names.map(async (name) => {
+      const path = join(dir, name);
+      const info = await stat(path).catch(() => null);
+      if (info && info.mtimeMs < cutoff) await unlink(path).catch(() => {});
+    }),
+  );
 }
 
 // Spawn FFmpeg with a hard timeout. Resolves on clean exit (code 0),

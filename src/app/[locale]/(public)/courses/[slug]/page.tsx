@@ -1,4 +1,6 @@
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import {
@@ -23,6 +25,11 @@ import { courseDeliveryLabel, courseLevelLabel } from '@/lib/course-labels';
 
 export const dynamic = 'force-dynamic';
 
+/** Same rule as the catalog and sitemap: published AND approved by an admin. */
+function isPublic(course: { status: string; approvalStatus: string }) {
+  return course.status === 'PUBLISHED' && course.approvalStatus === 'APPROVED';
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -32,9 +39,11 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: 'meta' });
   const course = await prisma.course.findUnique({
     where: { slug },
-    select: { title: true, shortDescription: true, slug: true },
+    select: { title: true, shortDescription: true, slug: true, status: true, approvalStatus: true },
   });
-  if (!course) return { title: t('courseNotFound'), robots: { index: false, follow: true } };
+  if (!course || !isPublic(course)) {
+    return { title: t('courseNotFound'), robots: { index: false, follow: true } };
+  }
   return pageMetadata({
     locale,
     path: `/courses/${course.slug}`,
@@ -61,6 +70,18 @@ export default async function CourseDetailPage({
 
   if (!course || course.status !== 'PUBLISHED') return notFound();
 
+  // Unapproved courses stay hidden from the public. The admin's "Preview
+  // course" link and the course's own instructor can still open them.
+  let awaitingApproval = false;
+  if (!isPublic(course)) {
+    const session = await getServerSession(authOptions);
+    const canPreview =
+      session?.user.role === 'ADMIN' ||
+      (!!session?.user.id && session.user.id === course.instructorId);
+    if (!canPreview) return notFound();
+    awaitingApproval = true;
+  }
+
   const priceLabel = course.price > 0 ? formatPrice(course.discountPrice ?? course.price) : t('free');
   const levelLabel = courseLevelLabel(tc, course.level);
   const deliveryLabel = courseDeliveryLabel(tc, course.deliveryType);
@@ -78,6 +99,15 @@ export default async function CourseDetailPage({
       {/* Records anyone arriving from the promo's "Join the waitlist"
           button, which returns here after Google sign-in. */}
       <WaitlistRecorder slug={course.slug} />
+
+      {awaitingApproval && (
+        <p
+          role="status"
+          className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-center text-sm font-medium text-amber-900"
+        >
+          {t('awaitingApproval')}
+        </p>
+      )}
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden border-b border-hairline">

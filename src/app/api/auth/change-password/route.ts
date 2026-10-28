@@ -46,7 +46,15 @@ export async function POST(req: Request) {
     const hashedPassword = await bcrypt.hash(newPassword, 12);
     await prisma.user.update({
       where: { id: user.id },
-      data: { password: hashedPassword },
+      // Bumping sessionVersion signs this account out everywhere, this
+      // browser included; the form sends the user back to sign in. Any
+      // outstanding reset link stops working too.
+      data: {
+        password: hashedPassword,
+        sessionVersion: { increment: 1 },
+        resetToken: null,
+        resetTokenExpiry: null,
+      },
     });
 
     notifyPasswordChanged({ name: `${user.firstName} ${user.lastName}`.trim(), email: user.email }).catch((err) =>

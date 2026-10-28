@@ -23,6 +23,9 @@ model User {
   isActive         Boolean             @default(true)
   resetToken       String?             @unique
   resetTokenExpiry DateTime?
+  // Copied into each session token at sign-in. Bumping it (password reset or
+  // change) signs the user out everywhere: older tokens no longer match.
+  sessionVersion   Int                 @default(0)
   createdAt        DateTime            @default(now())
   courses          Course[]            @relation("InstructorCourses")
   enrollments      Enrollment[]

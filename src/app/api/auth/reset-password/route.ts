@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
-import { rateLimit, getRateLimitHeaders } from '@/lib/rateLimit';
+import { rateLimit, getRateLimitHeaders, getClientIp } from '@/lib/rateLimit';
 import { notifyPasswordChanged } from '@/lib/notifications';
 import { z } from 'zod';
 import { PASSWORD_MIN_LENGTH } from '@/lib/password';
@@ -14,7 +14,7 @@ const resetPasswordSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const ip = req.headers.get('x-forwarded-for') || 'unknown';
+    const ip = getClientIp(req);
     const rl = await rateLimit(`reset-password:${ip}`, 5, 60 * 1000);
     if (!rl.success) {
       return NextResponse.json(
@@ -57,6 +57,8 @@ export async function POST(req: Request) {
         password: hashedPassword,
         resetToken: null,
         resetTokenExpiry: null,
+        // Sign out every existing session, in case one was stolen.
+        sessionVersion: { increment: 1 },
       },
     });
 
