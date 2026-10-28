@@ -73,6 +73,11 @@ function closedRecently(): boolean {
 /** Route prefixes where a promo would interrupt real work or repeat the page. */
 const SUPPRESSED = [
   '/courses',
+  // Pages built around a form or upload: the audit request, the service
+  // enquiry forms and the video lab.
+  '/audit',
+  '/services',
+  '/lab',
   '/login',
   '/register',
   '/forgot-password',

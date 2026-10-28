@@ -75,7 +75,7 @@ function LoginForm() {
         <>
           {t('login.noAccount')}{' '}
           <Link
-            href="/register"
+            href={{ pathname: '/register', query: callbackUrl ? { callbackUrl } : {} }}
             className="font-semibold text-teal transition-colors hover:text-teal-dark"
           >
             {t('login.createOne')}

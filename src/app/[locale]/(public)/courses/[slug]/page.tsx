@@ -12,7 +12,7 @@ import {
   CheckCircle,
   ChevronLeft,
 } from 'lucide-react';
-import EnrollButton from '@/components/EnrollButton';
+import EnrollButton, { type EnrollState } from '@/components/EnrollButton';
 import { WaitlistRecorder } from '@/components/courses/WaitlistRecorder';
 import { formatPrice } from '@/lib/utils';
 import { AnimatedText } from '@/components/ui/AnimatedText';
@@ -70,16 +70,34 @@ export default async function CourseDetailPage({
 
   if (!course || course.status !== 'PUBLISHED') return notFound();
 
+  const session = await getServerSession(authOptions);
+
   // Unapproved courses stay hidden from the public. The admin's "Preview
   // course" link and the course's own instructor can still open them.
   let awaitingApproval = false;
   if (!isPublic(course)) {
-    const session = await getServerSession(authOptions);
     const canPreview =
       session?.user.role === 'ADMIN' ||
       (!!session?.user.id && session.user.id === course.instructorId);
     if (!canPreview) return notFound();
     awaitingApproval = true;
+  }
+
+  // Enrolled visitors get "Go to course"; a bank transfer awaiting approval
+  // shows as pending instead of offering to pay again.
+  let enrollState: EnrollState = 'none';
+  if (session?.user.id) {
+    const [enrollment, pendingOrder] = await Promise.all([
+      prisma.enrollment.findUnique({
+        where: { userId_courseId: { userId: session.user.id, courseId: course.id } },
+        select: { id: true },
+      }),
+      prisma.order.findFirst({
+        where: { userId: session.user.id, courseId: course.id, paymentStatus: 'PENDING' },
+        select: { id: true },
+      }),
+    ]);
+    enrollState = enrollment ? 'enrolled' : pendingOrder ? 'pending' : 'none';
   }
 
   const priceLabel = course.price > 0 ? formatPrice(course.discountPrice ?? course.price) : t('free');
@@ -288,6 +306,7 @@ export default async function CourseDetailPage({
                     courseId={course.id}
                     slug={course.slug}
                     price={course.discountPrice ?? course.price}
+                    state={enrollState}
                   />
 
                   <div className="space-y-2.5 border-t border-hairline pt-5 font-mono text-[11px] uppercase tracking-[0.25em] text-ink-muted">
