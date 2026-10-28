@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { quizProblem, withScheme } from '@/lib/validations';
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -16,11 +17,13 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       lessonTitle: data.lessonTitle,
       lessonType: data.lessonType || 'CONTENT',
       orderIndex: data.orderIndex,
-      videoUrl: data.videoUrl || null,
+      videoUrl: withScheme(data.videoUrl) || null,
       content: data.content || null,
       resources: data.resources || null,
       questions: data.questions || null,
     };
+    const problem = quizProblem(updateData.lessonType, updateData.questions);
+    if (problem) return NextResponse.json({ error: problem }, { status: 400 });
     if (data.courseId) updateData.courseId = data.courseId;
     const lesson = await prisma.lesson.update({ where: { id: id }, data: updateData });
     return NextResponse.json(lesson);

@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Search, Edit, Trash2, Check, X } from 'lucide-react';
+import { fetchList } from '@/lib/fetch-list';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -14,8 +15,7 @@ export default function AdminUsersPage() {
   useEffect(() => { fetchUsers(); }, []);
 
   const fetchUsers = async () => {
-    const res = await fetch('/api/admin/users');
-    setUsers(await res.json());
+    setUsers(await fetchList('/api/admin/users'));
   };
 
   const updateRole = async (id: string) => {
@@ -32,11 +32,17 @@ export default function AdminUsersPage() {
   const updateCommissionRate = async (id: string) => {
     setSavingRate(true);
     const user = users.find(u => u.id === id);
-    await fetch(`/api/admin/users/${id}`, {
+    const res = await fetch(`/api/admin/users/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...user, commissionRate: parseFloat(editRateValue) }),
     });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Could not save the commission rate.');
+      setSavingRate(false);
+      return;
+    }
     setEditingRateId(null);
     setSavingRate(false);
     fetchUsers();

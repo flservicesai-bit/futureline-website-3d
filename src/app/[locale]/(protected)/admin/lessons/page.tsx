@@ -18,6 +18,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { fetchList } from '@/lib/fetch-list';
 
 interface Question {
   question: string;
@@ -380,7 +381,7 @@ export default function AdminLessonsPage() {
   );
 
   useEffect(() => {
-    fetch('/api/admin/courses').then(r => r.json()).then(setCourses);
+    fetchList('/api/admin/courses').then(setCourses);
   }, []);
 
   const fetchLessons = useCallback(async () => {
@@ -524,18 +525,23 @@ export default function AdminLessonsPage() {
       videoUrl: lesson.lessonType === 'CONTENT' ? lesson.videoUrl : null,
     };
 
-    if (lesson.id) {
-      await fetch(`/api/admin/lessons/${lesson.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-    } else {
-      await fetch('/api/admin/lessons', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
+    const res = lesson.id
+      ? await fetch(`/api/admin/lessons/${lesson.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+      : await fetch('/api/admin/lessons', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+    if (!res.ok) {
+      // Keep the form open so nothing typed is lost, and say why.
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Could not save the lesson. Check the fields and try again.');
+      setSaving(false);
+      return;
     }
 
     await fetchLessons();

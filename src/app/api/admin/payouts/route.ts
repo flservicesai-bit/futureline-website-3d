@@ -18,8 +18,10 @@ export async function GET() {
         lastName: true,
         email: true,
         commissionRate: true,
+        // Every course, archived ones included: completed orders are owed
+        // whatever happens to the course later, and the instructor's own
+        // earnings page counts them too.
         courses: {
-          where: { status: { not: 'DELETED' } },
           select: {
             id: true,
             title: true,

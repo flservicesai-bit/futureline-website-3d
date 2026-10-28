@@ -41,8 +41,18 @@ export const courseSchema = z.object({
   thumbnail: z.string().url().optional().nullable().or(z.literal('')),
   marketingVideoUrl: z.string().url().optional().nullable().or(z.literal('')),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED', 'DELETED']).optional(),
+  // Undeclared keys are stripped by zod, so these must be listed or the
+  // admin's choice of instructor, format and schedule is silently lost.
+  instructorId: z.string().min(1).optional().nullable().or(z.literal('')),
+  courseFormat: z.enum(['COHORT', 'SELF_PACED', 'WORKSHOP']).optional().or(z.literal('')),
+  scheduleStatus: z.enum(['SCHEDULED', 'TBC', 'COMPLETED']).optional().or(z.literal('')),
   // Featured slot on the home-page NeuralPathway. 1–3 = featured; null = not featured.
-  featuredSlot: z.coerce.number().int().min(1).max(3).optional().nullable(),
+  // The form's "None" option sends '', which must mean null: coercing it gave
+  // 0, failed min(1), and blocked creating any course that wasn't featured.
+  featuredSlot: z.preprocess(
+    (v) => (v === '' ? null : v),
+    z.coerce.number().int().min(1).max(3).nullable().optional(),
+  ),
   // "What you'll learn" overrides — used when the course is featured.
   // All optional; falls back to NeuralPathway's slot defaults if absent.
   highlightStatValue: z.string().max(40).optional().nullable().or(z.literal('')),
@@ -58,12 +68,43 @@ export const courseSchema = z.object({
   path: ["endDate"],
 });
 
+/**
+ * Adds https:// to a pasted link that has no scheme ("youtu.be/abc",
+ * "www.youtube.com/..."). Without it the URL check failed and the builder
+ * threw away the whole lesson the instructor had typed.
+ */
+export function withScheme(value: unknown) {
+  if (typeof value !== 'string') return value;
+  const v = value.trim();
+  return v && !/^[a-z][a-z0-9+.-]*:/i.test(v) ? `https://${v}` : value;
+}
+
+/**
+ * Why a quiz could not be completed as saved, or null when it can. Learners
+ * finish a quiz by answering every question correctly, so each question needs
+ * text, at least two options and a correct option that isn't blank.
+ */
+export function quizProblem(lessonType: unknown, questions: unknown): string | null {
+  if (lessonType !== 'QUIZ') return null;
+  if (!Array.isArray(questions) || questions.length === 0) {
+    return 'Add at least one question to the quiz.';
+  }
+  for (const [i, q] of questions.entries()) {
+    const options: unknown[] = Array.isArray(q?.options) ? q.options : [];
+    const filled = (o: unknown) => typeof o === 'string' && o.trim().length > 0;
+    if (!filled(q?.question)) return `Question ${i + 1} needs text.`;
+    if (options.filter(filled).length < 2) return `Question ${i + 1} needs at least two answer options.`;
+    if (!filled(options[q.correctIndex])) return `Question ${i + 1}: the correct answer can't be blank.`;
+  }
+  return null;
+}
+
 export const lessonSchema = z.object({
   courseId: z.string().min(1),
   moduleTitle: z.string().min(1, 'Module title is required').max(200),
   lessonTitle: z.string().min(1, 'Lesson title is required').max(200),
   lessonType: z.enum(['CONTENT', 'QUIZ']).optional(),
-  videoUrl: z.string().url().optional().nullable().or(z.literal('')),
+  videoUrl: z.preprocess(withScheme, z.string().url().optional().nullable().or(z.literal(''))),
   content: z.string().max(50000).optional().nullable(),
   resources: z.string().max(5000).optional().nullable(),
   questions: z.any().optional().nullable(),
@@ -84,6 +125,17 @@ export const templateSchema = z.object({
   variables: z.string().max(1000).optional().nullable(),
   isActive: z.boolean().optional(),
 });
+
+/**
+ * An instructor's commission share in percent, or null when the value is not
+ * a number from 0 to 100. An emptied input arrives as null (NaN in JSON), and
+ * Number(null) silently saved 0%.
+ */
+export function parseCommissionRate(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 100
+    ? value
+    : null;
+}
 
 export function formatZodError(error: z.ZodError): string {
   return error.issues.map(e => e.message).join(', ');
@@ -119,6 +171,8 @@ export function normalizeCourseData(data: any) {
   if (typeof normalized.endDate === 'string' && normalized.endDate) {
     normalized.endDate = new Date(normalized.endDate);
   }
+  // "No instructor" arrives as '' from a <select>; the column needs null.
+  if (normalized.instructorId === '') normalized.instructorId = null;
   // courseFormat / scheduleStatus — drop empty strings so the DB
   // defaults kick in. Both are enums on the Prisma side; sending an
   // empty string would fail enum validation.

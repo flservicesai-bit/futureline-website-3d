@@ -70,6 +70,18 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
 
     // If already in archive/deleted, permanent delete
     if (course.status === 'DELETED') {
+      // Orders and payouts are financial records: deleting them changed
+      // revenue and what instructors are owed. Such a course stays archived.
+      const [orders, earnings] = await Promise.all([
+        prisma.order.count({ where: { courseId: id } }),
+        prisma.instructorEarning.count({ where: { courseId: id } }),
+      ]);
+      if (orders > 0 || earnings > 0) {
+        return NextResponse.json(
+          { error: 'This course has orders or payout records, so it stays in the archive and cannot be permanently deleted.' },
+          { status: 409 },
+        );
+      }
       await prisma.$transaction([
         prisma.lesson.deleteMany({ where: { courseId: id } }),
         prisma.enrollment.deleteMany({ where: { courseId: id } }),

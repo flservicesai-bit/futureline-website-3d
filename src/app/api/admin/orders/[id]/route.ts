@@ -22,19 +22,52 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
+    // Only a pending order can be decided. Approving twice re-sent the
+    // enrolment email; rejecting a completed order kept the learner enrolled
+    // while removing the revenue from payouts.
+    if (order.paymentStatus !== 'PENDING') {
+      return NextResponse.json(
+        { error: `This order is already ${order.paymentStatus.toLowerCase()}.` },
+        { status: 409 },
+      );
+    }
 
     if (action === 'approve') {
-      const [updatedOrder] = await prisma.$transaction([
-        prisma.order.update({
-          where: { id },
+      // Paid courses honour the seat limit too (free enrolment already did).
+      const limits = await prisma.course.findUnique({
+        where: { id: order.courseId },
+        select: { seatCapacity: true },
+      });
+      if (limits?.seatCapacity) {
+        const [taken, alreadyEnrolled] = await Promise.all([
+          prisma.enrollment.count({ where: { courseId: order.courseId } }),
+          prisma.enrollment.findUnique({
+            where: { userId_courseId: { userId: order.userId, courseId: order.courseId } },
+            select: { id: true },
+          }),
+        ]);
+        if (!alreadyEnrolled && taken >= limits.seatCapacity) {
+          return NextResponse.json({ error: 'This course is full.' }, { status: 409 });
+        }
+      }
+
+      const updatedOrder = await prisma.$transaction(async (tx) => {
+        // Conditional update: a second, simultaneous approval finds nothing to change.
+        const { count } = await tx.order.updateMany({
+          where: { id, paymentStatus: 'PENDING' },
           data: { paymentStatus: 'COMPLETED' },
-        }),
-        prisma.enrollment.upsert({
+        });
+        if (count === 0) return null;
+        await tx.enrollment.upsert({
           where: { userId_courseId: { userId: order.userId, courseId: order.courseId } },
           create: { userId: order.userId, courseId: order.courseId },
           update: {},
-        }),
-      ]);
+        });
+        return tx.order.findUnique({ where: { id } });
+      });
+      if (!updatedOrder) {
+        return NextResponse.json({ error: 'This order was already handled.' }, { status: 409 });
+      }
 
       const [user, course] = await Promise.all([
         prisma.user.findUnique({ where: { id: order.userId }, select: { firstName: true, lastName: true, email: true } }),
@@ -51,10 +84,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       return NextResponse.json(updatedOrder);
     }
 
-    const updated = await prisma.order.update({
-      where: { id },
+    const { count } = await prisma.order.updateMany({
+      where: { id, paymentStatus: 'PENDING' },
       data: { paymentStatus: 'FAILED' },
     });
+    if (count === 0) {
+      return NextResponse.json({ error: 'This order was already handled.' }, { status: 409 });
+    }
+    const updated = await prisma.order.findUnique({ where: { id } });
 
     const [user, course] = await Promise.all([
       prisma.user.findUnique({ where: { id: order.userId }, select: { firstName: true, lastName: true, email: true } }),

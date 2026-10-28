@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { slugify } from '@/lib/utils';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from '@/i18n/routing';
+import { fetchList } from '@/lib/fetch-list';
 
 const labelClass = 'block text-xs font-bold text-ink-muted uppercase tracking-widest mb-2';
 const selectClass = 'input-field [&>option]:bg-canvas-alt';
@@ -31,7 +32,7 @@ export default function NewCoursePage() {
   });
 
   useEffect(() => {
-    fetch('/api/admin/users?role=INSTRUCTOR').then(r => r.json()).then(setInstructors);
+    fetchList('/api/admin/users?role=INSTRUCTOR').then(setInstructors);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 import { BookOpen, CheckCircle, Play, FileText, ChevronDown, ChevronRight, Download, StickyNote, HelpCircle, CircleDot } from 'lucide-react';
 
 interface Question {
@@ -70,6 +71,23 @@ function parseResources(resources: string): { name: string; url: string }[] {
       return { name: line.trim(), url: '' };
     }
   });
+}
+
+/**
+ * Questions a learner can actually pass: a prompt, at least two options and
+ * a correct option that isn't blank. A quiz saved with none of these used to
+ * render nothing and had no Mark Complete button, so the course could never
+ * be finished.
+ */
+function playableQuestions(questions: Question[] | null): Question[] {
+  if (!Array.isArray(questions)) return [];
+  return questions.filter(
+    (q) =>
+      q?.question?.trim() &&
+      Array.isArray(q.options) &&
+      q.options.filter((o) => o?.trim()).length >= 2 &&
+      q.options[q.correctIndex]?.trim(),
+  );
 }
 
 function QuizView({ questions, onComplete }: { questions: Question[]; onComplete: () => void }) {
@@ -155,19 +173,16 @@ function QuizView({ questions, onComplete }: { questions: Question[]; onComplete
 export default function LessonViewer({
   lessons,
   enrollmentId,
-  progressPercentage,
-  totalLessons,
+  completedLessonIds,
 }: {
   lessons: Lesson[];
   enrollmentId: string;
-  progressPercentage: number;
-  totalLessons: number;
+  /** Lessons this learner has completed, from the server. */
+  completedLessonIds: string[];
 }) {
   const t = useTranslations('lessonViewer');
-  const completedCount = Math.floor((progressPercentage / 100) * totalLessons);
-  const [completed, setCompleted] = useState<Set<string>>(
-    new Set(lessons.slice(0, completedCount).map((l) => l.id))
-  );
+  const router = useRouter();
+  const [completed, setCompleted] = useState<Set<string>>(new Set(completedLessonIds));
   const [activeLesson, setActiveLesson] = useState<string | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
 
@@ -194,15 +209,25 @@ export default function LessonViewer({
   };
 
   const markComplete = async (lessonId: string) => {
-    const newCompleted = new Set(completed);
-    newCompleted.add(lessonId);
-    setCompleted(newCompleted);
-    const newProgress = (newCompleted.size / totalLessons) * 100;
-    await fetch('/api/enrollment/progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ enrollmentId, progressPercentage: newProgress }),
-    });
+    if (completed.has(lessonId)) return;
+    setCompleted((prev) => new Set(prev).add(lessonId));
+    try {
+      const res = await fetch('/api/enrollment/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enrollmentId, lessonId }),
+      });
+      if (!res.ok) throw new Error(`Progress not saved: ${res.status}`);
+      // The progress bar above is rendered on the server.
+      router.refresh();
+    } catch {
+      // Not saved: untick so the learner can try again.
+      setCompleted((prev) => {
+        const next = new Set(prev);
+        next.delete(lessonId);
+        return next;
+      });
+    }
   };
 
   const moduleNames = Object.keys(modules);
@@ -245,6 +270,9 @@ export default function LessonViewer({
                 {moduleLessons.map((lesson) => {
                   const isActive = activeLesson === lesson.id;
                   const isQuiz = lesson.lessonType === 'QUIZ';
+                  const quizQuestions = isQuiz ? playableQuestions(lesson.questions) : [];
+                  // A quiz with no usable question is completed like a normal lesson.
+                  const hasQuiz = quizQuestions.length > 0;
 
                   return (
                     <div key={lesson.id}>
@@ -319,10 +347,10 @@ export default function LessonViewer({
                           )}
 
                           {/* Quiz */}
-                          {isQuiz && lesson.questions && lesson.questions.length > 0 && (
+                          {hasQuiz && (
                             <div className="mb-6">
                               <QuizView
-                                questions={lesson.questions}
+                                questions={quizQuestions}
                                 onComplete={() => markComplete(lesson.id)}
                               />
                             </div>
@@ -359,7 +387,7 @@ export default function LessonViewer({
                           )}
 
                           {/* Mark complete / completed state */}
-                          {!isQuiz && (
+                          {!hasQuiz && (
                             <div className="flex items-center justify-between pt-4 border-t border-hairline">
                               {completed.has(lesson.id) ? (
                                 <span className="flex items-center gap-2 text-teal-400 font-bold text-sm">
@@ -376,7 +404,7 @@ export default function LessonViewer({
                             </div>
                           )}
 
-                          {isQuiz && completed.has(lesson.id) && (
+                          {hasQuiz && completed.has(lesson.id) && (
                             <div className="flex items-center gap-2 text-teal-400 font-bold text-sm pt-4 border-t border-hairline">
                               <CheckCircle size={15} /> {t('completed')}
                             </div>

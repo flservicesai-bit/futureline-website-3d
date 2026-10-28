@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { lessonSchema, formatZodError } from '@/lib/validations';
+import { lessonSchema, formatZodError, quizProblem } from '@/lib/validations';
 
 async function requireInstructor() {
   const session = await getServerSession(authOptions);
@@ -49,6 +49,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: formatZodError(parsed.error) }, { status: 400 });
     }
 
+    const problem = quizProblem(parsed.data.lessonType, parsed.data.questions);
+    if (problem) return NextResponse.json({ error: problem }, { status: 400 });
     await verifyCourseBelongsToInstructor(parsed.data.courseId, session.user.id);
 
     const lesson = await prisma.lesson.create({ data: parsed.data });

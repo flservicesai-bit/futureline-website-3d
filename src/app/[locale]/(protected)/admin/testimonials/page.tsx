@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Star } from 'lucide-react';
+import { fetchList } from '@/lib/fetch-list';
 
 export default function AdminTestimonialsPage() {
   const [testimonials, setTestimonials] = useState<any[]>([]);
@@ -11,15 +12,20 @@ export default function AdminTestimonialsPage() {
   useEffect(() => { fetchTestimonials(); }, []);
 
   const fetchTestimonials = async () => {
-    const res = await fetch('/api/admin/testimonials');
-    setTestimonials(await res.json());
+    setTestimonials(await fetchList('/api/admin/testimonials'));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const url = editing ? `/api/admin/testimonials/${editing.id}` : '/api/admin/testimonials';
     const method = editing ? 'PUT' : 'POST';
-    await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, rating: Number(form.rating) }) });
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, rating: Number(form.rating) }) });
+    if (!res.ok) {
+      // Keep the form open so nothing typed is lost, and say why.
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Could not save. Please check the fields and try again.');
+      return;
+    }
     setShowForm(false);
     setEditing(null);
     setForm({ name: '', role: '', content: '', rating: 5, featured: false });

@@ -104,15 +104,6 @@ export async function notifyPasswordChanged(user: { name: string; email: string 
   });
 }
 
-export async function notifyLeadStageChange(lead: { name: string; email: string; stage: string }, oldStage: string, newStage: string) {
-  await sendEmail({
-    to: lead.email,
-    subject: `Update on your enquiry - ${lead.name}`,
-    body: `Dear ${lead.name},\n\nYour enquiry status has been updated from ${oldStage} to ${newStage}.\n\nThank you for your interest.\n\nBest regards,\nFutureLine Team`,
-    metadata: { type: 'lead_stage_change', oldStage, newStage },
-  });
-}
-
 export async function notifyNewEnrollment(user: { name: string; email: string }, course: { title: string; slug: string }) {
   await sendEmail({
     to: user.email,

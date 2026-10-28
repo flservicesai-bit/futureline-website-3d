@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { parseCommissionRate } from '@/lib/validations';
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -12,6 +13,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     }
 
     const data = await req.json();
+    if (data.commissionRate !== undefined && parseCommissionRate(data.commissionRate) === null) {
+      return NextResponse.json({ error: 'Commission rate must be a number from 0 to 100' }, { status: 400 });
+    }
     const user = await prisma.user.update({
       where: { id: id },
       data: {
@@ -19,7 +23,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         lastName: data.lastName,
         email: data.email,
         role: data.role,
-        ...(data.commissionRate !== undefined ? { commissionRate: Number(data.commissionRate) } : {}),
+        ...(data.commissionRate !== undefined ? { commissionRate: data.commissionRate } : {}),
       },
       select: { id: true, firstName: true, lastName: true, email: true, role: true, commissionRate: true },
     });

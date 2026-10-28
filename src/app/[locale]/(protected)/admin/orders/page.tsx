@@ -19,6 +19,8 @@ export default function AdminOrdersPage() {
   useEffect(() => { fetchOrders(); }, []);
 
   const handleAction = async (orderId: string, action: 'approve' | 'reject') => {
+    // Rejecting can't be undone and emails the customer.
+    if (action === 'reject' && !confirm('Reject this order? The customer will be emailed.')) return;
     setActionLoading(`${orderId}-${action}`);
     try {
       const res = await fetch(`/api/admin/orders/${orderId}`, {
@@ -29,7 +31,9 @@ export default function AdminOrdersPage() {
       if (res.ok) {
         fetchOrders();
       } else {
-        alert('Action failed. Please try again.');
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Action failed. Please try again.');
+        fetchOrders(); // e.g. another admin already handled it
       }
     } catch {
       alert('An error occurred.');

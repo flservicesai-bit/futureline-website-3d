@@ -1,6 +1,7 @@
 'use client';
 import { Fragment, useRef, useState, useEffect } from 'react';
 import { Search, Users, BookOpen, ToggleLeft, ToggleRight, Percent, Save, Pencil, UserPlus, X, Upload } from 'lucide-react';
+import { fetchList } from '@/lib/fetch-list';
 
 // Shared image-upload helper. Posts the file to /api/admin/upload-image
 // (admin-only multipart endpoint) and returns the public URL. Throws
@@ -147,9 +148,7 @@ export default function AdminInstructorsPage() {
   useEffect(() => { fetchInstructors(); }, []);
 
   const fetchInstructors = async () => {
-    const res = await fetch('/api/admin/instructors');
-    const data = await res.json();
-    setInstructors(data);
+    setInstructors(await fetchList('/api/admin/instructors'));
     setLoading(false);
   };
 

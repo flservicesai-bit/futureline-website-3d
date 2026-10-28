@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronDown, ChevronRight, DollarSign, TrendingUp, Wallet, CreditCard, Check, X, Plus } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
+import { fetchList } from '@/lib/fetch-list';
 
 interface PayoutHistory {
   id: string;
@@ -42,8 +43,7 @@ export default function AdminPayoutsPage() {
 
   const fetchPayouts = useCallback(async () => {
     setLoading(true);
-    const res = await fetch('/api/admin/payouts');
-    setInstructors(await res.json());
+    setInstructors(await fetchList('/api/admin/payouts'));
     setLoading(false);
   }, []);
 
@@ -70,11 +70,17 @@ export default function AdminPayoutsPage() {
 
   const saveRate = async (instructorId: string) => {
     setSavingRate(true);
-    await fetch(`/api/admin/payouts/${instructorId}`, {
+    const res = await fetch(`/api/admin/payouts/${instructorId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ commissionRate: parseFloat(rateValue) }),
     });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Could not save the commission rate.');
+      setSavingRate(false);
+      return;
+    }
     setEditingRate(null);
     setSavingRate(false);
     fetchPayouts();

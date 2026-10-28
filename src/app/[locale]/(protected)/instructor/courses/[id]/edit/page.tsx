@@ -17,8 +17,10 @@ export default function EditInstructorCoursePage() {
 
   useEffect(() => {
     fetch(`/api/instructor/courses/${params.id}`)
-      .then(r => r.json())
+      .then(r => (r.ok ? r.json() : null))
       .then(course => {
+        // Not found / not yours: back to the list rather than a form of nothing.
+        if (!course) { router.push('/instructor/courses'); return; }
         const free = course.price === 0;
         setIsFree(free);
         setForm({

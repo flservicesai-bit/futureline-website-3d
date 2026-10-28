@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Download, Eye, Clock } from 'lucide-react';
 import { Link } from '@/i18n/routing';
+import { downloadCsv, toCsv } from '@/lib/csv';
 
 const STAGES = [
   { value: 'all', label: 'All Stages' },
@@ -89,14 +90,10 @@ export default function AdminLeadsPage() {
     const rows = filtered.map(l => [
       l.firstName || '', l.lastName || '', l.email, l.phone || '', l.company || '', l.tourType,
       l.source || 'FL Tourism', l.stage, l.priority,
-      `"${(l.message || '').replace(/"/g, '""')}"`,
+      l.message || '',
       new Date(l.createdAt).toLocaleDateString('en-GB'),
     ]);
-    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'leads.csv'; a.click();
+    downloadCsv('leads.csv', toCsv(headers, rows));
   };
 
   const updateLeadStage = async (leadId: string, newStage: string) => {

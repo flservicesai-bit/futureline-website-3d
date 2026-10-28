@@ -43,18 +43,22 @@ export default function TemplatesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editing) {
-      await fetch(`/api/admin/templates/${editing.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-    } else {
-      await fetch('/api/admin/templates', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
+    const res = editing
+      ? await fetch(`/api/admin/templates/${editing.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        })
+      : await fetch('/api/admin/templates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        });
+    if (!res.ok) {
+      // Keep the form open so nothing typed is lost, and say why.
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Could not save. Please check the fields and try again.');
+      return;
     }
     setShowForm(false);
     fetchTemplates();
