@@ -44,6 +44,7 @@ const nextConfig = {
       { source: '/og/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
       { source: '/hero/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
       { source: '/images/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
+      { source: '/brand/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
       // Last, so videos under /hero/ get the media policy, not the image one.
       { source: '/:file(.*\\.mp4)', headers: [{ key: 'Cache-Control', value: mediaCache }] },
     ];

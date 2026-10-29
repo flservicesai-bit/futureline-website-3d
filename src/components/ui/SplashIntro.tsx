@@ -147,7 +147,7 @@ export function SplashIntro() {
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <div ref={markRef} className="flex items-center gap-2">
-          <span className="block h-2 w-2 rounded-full bg-lab shadow-[0_0_12px_2px_rgba(24,169,153,0.55)]" />
+          <img src="/brand/futureline-mark-white.svg" alt="" className="h-7 w-auto" />
           <span className="bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-base font-black tracking-tight text-transparent">
             FutureLine
           </span>

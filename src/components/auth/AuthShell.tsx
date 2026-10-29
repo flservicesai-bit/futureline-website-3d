@@ -55,11 +55,11 @@ export function AuthShell({
           data-cursor="hover"
         >
           <Image
-            src="/images/logo-mark.png"
+            src="/brand/futureline-mark.svg"
             alt=""
-            width={44}
+            width={45}
             height={44}
-            className="h-11 w-11"
+            className="h-11 w-auto"
             priority
           />
           <span className="font-display text-3xl font-bold tracking-tight">

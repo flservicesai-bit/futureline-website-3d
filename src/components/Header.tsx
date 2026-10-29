@@ -150,16 +150,14 @@ export default function Header() {
             aria-label={a('home')}
             data-cursor="hover"
           >
-            {/* The brand mark, exactly as designed — original colours, shape
-                and size. A thin white outline (fl-logo-stroke) traces its
-                silhouette so the edges read cleanly on the dark hero; the
-                original teal glow is folded into that same filter. */}
+            {/* The Living F mark: navy on the light pages, white over the
+                dark home hero. */}
             <Image
-              src="/images/logo-mark.png"
+              src={overDarkHero ? '/brand/futureline-mark-white.svg' : '/brand/futureline-mark.svg'}
               alt=""
-              width={30}
+              width={31}
               height={30}
-              className="fl-logo-stroke h-[30px] w-[30px]"
+              className="h-[30px] w-auto"
               priority
             />
             <span

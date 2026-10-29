@@ -49,9 +49,9 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: SITE_NAME,
     type: 'website',
-    images: [shareImage('en')],
+    images: [shareImage()],
   },
-  twitter: { card: 'summary_large_image', images: [shareImage('en').url] },
+  twitter: { card: 'summary_large_image', images: [shareImage().url] },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
