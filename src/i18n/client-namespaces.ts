@@ -29,6 +29,7 @@ export const CLIENT_NAMESPACES = [
   'serviceDetail',
   'serviceForm',
   'story',
+  'videoLab',
   'visionMission',
 ] as const;
 

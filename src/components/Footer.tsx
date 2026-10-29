@@ -71,6 +71,9 @@ export default async function Footer() {
               { label: t('links.consulting'), href: '/get-started?pillar=consulting' },
               { label: t('links.applications'), href: '/get-started?pillar=applications' },
               { label: t('links.training'), href: '/courses' },
+              { label: t('links.services'), href: '/services' },
+              { label: t('links.ai'), href: '/ai' },
+              { label: t('links.lab'), href: '/lab/video-effects' },
             ]}
           />
 

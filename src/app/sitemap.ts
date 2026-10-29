@@ -28,6 +28,7 @@ const STATIC_PAGES: Entry[] = [
   { path: '/services/consultation', changeFrequency: 'monthly', priority: 0.5 },
   { path: '/services/automations', changeFrequency: 'monthly', priority: 0.5 },
   { path: '/ai', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/lab/video-effects', changeFrequency: 'monthly', priority: 0.4 },
   { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/terms', changeFrequency: 'yearly', priority: 0.3 },
 ];

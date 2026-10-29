@@ -91,6 +91,9 @@ export default function Header() {
   // unused, in case it comes back.
   const navLinks = [
     { href: '/get-started', label: t('whatWeOffer') },
+    { href: '/services', label: t('services') },
+    { href: '/ai', label: t('ai') },
+    { href: '/lab/video-effects', label: t('lab') },
     { href: '/#who-we-serve', label: t('whoWeServe'), anchor: '#who-we-serve' },
     { href: '/courses', label: t('courses') },
     { href: '/faq', label: t('faq') },
@@ -168,7 +171,9 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-6 md:flex lg:gap-7" aria-label={a('mainNav')}>
+          {/* Desktop nav from lg up: seven links plus the language switcher don't
+              fit at md, so tablets get the menu button instead. */}
+          <nav className="hidden items-center gap-5 lg:flex xl:gap-7" aria-label={a('mainNav')}>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -186,7 +191,7 @@ export default function Header() {
             <LocaleSwitcher tone={overDarkHero ? 'dark' : 'light'} />
           </nav>
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-3 lg:flex">
             {session ? (
               /* Signed in: identity + account actions behind an avatar, rather
                  than a growing row of bare text links. */
@@ -202,7 +207,7 @@ export default function Header() {
           </div>
 
           <button
-            className={`p-2 transition-colors md:hidden ${
+            className={`p-2 transition-colors lg:hidden ${
               overDarkHero ? 'text-white/85 hover:text-white' : 'text-ink-muted hover:text-navy'
             }`}
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -214,7 +219,7 @@ export default function Header() {
         </div>
 
         {mobileOpen && (
-          <div className="flex flex-col gap-1 border-t border-hairline py-3 md:hidden">
+          <div className="flex flex-col gap-1 border-t border-hairline py-3 lg:hidden">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -229,8 +234,8 @@ export default function Header() {
               </Link>
             ))}
             {/* Same switcher in the mobile menu — the desktop nav is hidden
-                below md, so without this there'd be no way to change
-                language on a phone. */}
+                below lg, so without this there'd be no way to change
+                language on a phone or tablet. */}
             <div className="px-3 py-2">
               <LocaleSwitcher />
             </div>
