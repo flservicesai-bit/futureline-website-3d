@@ -34,7 +34,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ enrolled: true, slug: course.slug, message: 'Already enrolled' });
     }
 
-    if (course.price > 0) {
+    // The price actually charged, as shown on the course page: a discount to 0
+    // makes the course free.
+    const amount = course.discountPrice ?? course.price;
+    if (amount > 0) {
       if (paymentMethod === 'BANK_TRANSFER') {
         const existingOrder = await prisma.order.findFirst({
           where: { userId: session.user.id, courseId, paymentStatus: 'PENDING' },
@@ -47,7 +50,7 @@ export async function POST(req: Request) {
           data: {
             userId: session.user.id,
             courseId: course.id,
-            amount: course.discountPrice ?? course.price,
+            amount,
             paymentStatus: 'PENDING',
             paymentMethod: 'BANK_TRANSFER',
           },

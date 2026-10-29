@@ -15,6 +15,9 @@ import { BrandedHeading } from '@/components/ui/BrandedHeading';
 
 export const dynamic = 'force-dynamic';
 
+// The Course.deliveryType enum; any other ?type= value is ignored.
+const DELIVERY_TYPES = ['ONLINE', 'IN_PERSON', 'HYBRID'] as const;
+
 export const generateMetadata = metadataFor('courses', '/courses');
 
 const PILL_CLASS =
@@ -29,18 +32,24 @@ function pillClass(active: boolean) {
 export default async function CoursesPage({
   searchParams,
 }: {
-  searchParams: Promise<{
-    level?: string;
-    category?: string;
-    search?: string;
-    tab?: string;
-    type?: string;
-  }>;
+  searchParams: Promise<Record<'level' | 'category' | 'search' | 'tab' | 'type', string | string[] | undefined>>;
 }) {
   const session = await getServerSession(authOptions);
   const t = await getTranslations('coursesPage');
   const locale = await getLocale();
-  const params = await searchParams;
+  // URLs are user input: a repeated key (?level=a&level=b) arrives as an array
+  // and an unknown ?type= is not a valid enum. Either one used to reach Prisma
+  // and crash the page, so normalise them before anything reads them.
+  const raw = await searchParams;
+  const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
+  const type = first(raw.type)?.toUpperCase();
+  const params = {
+    level: first(raw.level),
+    category: first(raw.category),
+    search: first(raw.search),
+    tab: first(raw.tab),
+    type: type && (DELIVERY_TYPES as readonly string[]).includes(type) ? type : undefined,
+  };
   const activeTab = params.tab || 'all';
 
   // Static marketing copy lives in the coursesPage translation namespace.

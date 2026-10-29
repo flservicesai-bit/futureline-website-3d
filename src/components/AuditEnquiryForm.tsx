@@ -23,14 +23,15 @@ interface Props {
   /** Stored on the lead so funnels are distinguishable in /admin/leads. */
   enquiryType?: string;
   source?: string;
-  /** Colour scheme for the copy this component owns. */
+  /** Colour scheme for the copy this component owns. Light matches the site
+   *  theme; with 'dark' on a light card the confirmation was white on white. */
   tone?: 'dark' | 'light';
 }
 
 export default function AuditEnquiryForm({
   enquiryType = 'Systems Audit',
   source = 'FL Audit Request',
-  tone = 'dark',
+  tone = 'light',
 }: Props = {}) {
   const t = useTranslations('audit.form');
   const light = tone === 'light';

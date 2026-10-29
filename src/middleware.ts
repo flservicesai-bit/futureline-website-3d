@@ -48,12 +48,19 @@ function localeAwareUrl(path: string, request: NextRequest) {
   return new URL(`${prefix}${path}`, request.url);
 }
 
+// Signed-in areas. Each layout checks the role again on the server; this
+// guard makes sure a signed-out visitor comes back to the exact page.
+const PORTALS = ['/admin', '/instructor', '/dashboard'];
+
 export async function middleware(request: NextRequest) {
   const pathWithoutLocale = stripLocale(request.nextUrl.pathname);
+  const portal = PORTALS.find(
+    (area) => pathWithoutLocale === area || pathWithoutLocale.startsWith(`${area}/`)
+  );
 
   // Auth guard runs before locale rewriting: an unauthenticated visitor to
   // /ar/admin should be redirected to /ar/login, not rewritten first.
-  if (pathWithoutLocale.startsWith('/admin')) {
+  if (portal) {
     const token = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET || process.env.SESSION_SECRET,
@@ -61,11 +68,14 @@ export async function middleware(request: NextRequest) {
 
     if (!token) {
       const loginUrl = localeAwareUrl('/login', request);
-      loginUrl.searchParams.set('callbackUrl', request.nextUrl.pathname);
+      loginUrl.searchParams.set(
+        'callbackUrl',
+        request.nextUrl.pathname + request.nextUrl.search
+      );
       return addSecurityHeaders(NextResponse.redirect(loginUrl));
     }
 
-    if ((token as any).role !== 'ADMIN') {
+    if (portal === '/admin' && (token as any).role !== 'ADMIN') {
       return addSecurityHeaders(
         NextResponse.redirect(localeAwareUrl('/dashboard', request))
       );

@@ -1,6 +1,6 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Suspense, useState } from 'react';
 import { Link } from '@/i18n/routing';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 import { PasswordInput } from '@/components/auth/PasswordInput';
@@ -9,11 +9,14 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import { signIn } from 'next-auth/react';
 import { PASSWORD_MIN_LENGTH } from '@/lib/password';
+import { safeCallbackPath } from '@/lib/utils';
 
-export default function RegisterPage() {
+function RegisterForm() {
   const t = useTranslations('auth');
   const locale = useLocale();
-  const router = useRouter();
+  // Where to land after signing up: the page that sent them here (an enrol
+  // button, a gated page), else the dashboard.
+  const callbackUrl = safeCallbackPath(useSearchParams().get('callbackUrl'));
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -48,8 +51,7 @@ export default function RegisterPage() {
       }
 
       await signIn('credentials', { email, password, redirect: false });
-      router.push('/dashboard');
-      router.refresh();
+      window.location.href = callbackUrl ?? `/${locale}/dashboard`;
     } catch {
       setError(t('register.errorGeneric'));
       setLoading(false);
@@ -65,7 +67,7 @@ export default function RegisterPage() {
         <>
           {t('register.haveAccount')}{' '}
           <Link
-            href="/login"
+            href={{ pathname: '/login', query: callbackUrl ? { callbackUrl } : {} }}
             className="font-semibold text-teal transition-colors hover:text-teal-dark"
           >
             {t('register.signIn')}
@@ -82,7 +84,7 @@ export default function RegisterPage() {
         </div>
       )}
 
-      <GoogleSignInButton callbackUrl={`/${locale}/dashboard`} />
+      <GoogleSignInButton callbackUrl={callbackUrl ?? `/${locale}/dashboard`} />
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-2 gap-3">
@@ -159,5 +161,13 @@ export default function RegisterPage() {
         </button>
       </form>
     </AuthShell>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterForm />
+    </Suspense>
   );
 }

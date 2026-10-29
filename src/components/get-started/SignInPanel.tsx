@@ -117,10 +117,11 @@ function SignInInner() {
     setError('');
     setLoading(true);
 
-    // Get-started is for new visitors, so create an account first. If the email
-    // already exists, /api/auth/register returns 400 "Email already registered"
-    // — fall through to a normal credentials login (correct password) or show
-    // an invalid-credentials error (wrong password).
+    // Get-started is mostly new visitors, so create the account first. Whatever
+    // register says, then try signing in: that covers new accounts, existing
+    // ones ("already registered"), and older accounts whose password is shorter
+    // than today's minimum, which register rejects before checking the email.
+    let registerError = '';
     try {
       const reg = await fetch('/api/auth/register', {
         method: 'POST',
@@ -135,24 +136,27 @@ function SignInInner() {
       });
       if (!reg.ok) {
         const data = await reg.json().catch(() => ({}));
-        const msg: string = data?.error ?? '';
-        if (msg && !/already registered/i.test(msg)) {
-          setError(msg);
-          setLoading(false);
-          return;
-        }
+        registerError = data?.error ?? '';
       }
     } catch {
-      /* network error — fall through to signIn, which will surface its own error */
+      setError(t('form.submitError'));
+      setLoading(false);
+      return;
     }
 
     const res = await signIn('credentials', { email, password, redirect: false });
-    if (res?.error) {
-      setError(t('signin.invalid'));
-      setLoading(false);
-    } else {
+    if (res && !res.error) {
       router.push('/get-started/confirm');
+      return;
     }
+    // Sign-in failed. For an existing account the password was wrong; otherwise
+    // show why the account couldn't be created.
+    setError(
+      registerError && !/already registered/i.test(registerError)
+        ? registerError
+        : t('signin.invalid'),
+    );
+    setLoading(false);
   }
 
   const backToRequest = pillar

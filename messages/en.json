@@ -293,7 +293,14 @@
     "done": {
       "title": "We have received your request successfully ✅",
       "body": "We'll be in touch as soon as possible.",
-      "backHome": "Back to home →"
+      "backHome": "Back to home →",
+      "saving": "Sending your request…",
+      "errorTitle": "We couldn't send your request",
+      "errorBody": "Nothing was lost: your request is still here. Please try again in a moment.",
+      "retry": "Try again",
+      "nothingTitle": "There's no request to send",
+      "nothingBody": "Tell us what you need and we'll get back to you.",
+      "startRequest": "Start a request"
     }
   },
   "audit": {
@@ -1858,6 +1865,9 @@
     "comingSoon": "Coming Soon",
     "requestSubmitted": "Request Submitted",
     "pendingApproval": "Your enrolment request is pending admin approval. You will receive access within 12 hours.",
+    "paymentPending": "Payment pending approval",
+    "youAreEnrolled": "You're enrolled in this course",
+    "goToCourse": "Go to course",
     "close": "Close",
     "bankTransferPayment": "Bank Transfer Payment",
     "bankInstructions": "Please make bank payment to <strong>{name}</strong>. You <strong>MUST</strong> send the receipt to WhatsApp with your full name to <strong>{phone}</strong>. Your enrolment will be approved within 12 hours.",
