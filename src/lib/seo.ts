@@ -28,12 +28,14 @@ export function languageAlternates(path = ''): Record<string, string> {
   };
 }
 
-export function shareImage(locale: string) {
+// One card for both languages: the approved Living F artwork, whose lettering
+// is the brand name and tagline. Titles and descriptions stay translated.
+export function shareImage() {
   return {
-    url: `/og/${locale === 'ar' ? 'ar' : 'en'}.jpg`,
+    url: '/og/futureline-share.jpg',
     width: 1200,
     height: 630,
-    alt: 'FutureLine',
+    alt: 'FutureLine — Design • Deploy • Evolve',
   };
 }
 
@@ -49,7 +51,7 @@ type PageMetaInput = {
 
 export function pageMetadata({ locale, path = '', title, description, noIndex }: PageMetaInput): Metadata {
   const url = localePath(locale, path);
-  const image = shareImage(locale);
+  const image = shareImage();
   const current = (routing.locales.includes(locale as Locale) ? locale : routing.defaultLocale) as Locale;
 
   return {
@@ -83,7 +85,7 @@ export function organizationJsonLd(locale: string, description: string) {
     name: 'FutureLine',
     alternateName: SITE_NAME,
     url: `${SITE_URL}/${locale}`,
-    logo: `${SITE_URL}/images/logo-dark.png`,
+    logo: `${SITE_URL}/brand/futureline-logo-512.png`,
     description,
     address: {
       '@type': 'PostalAddress',

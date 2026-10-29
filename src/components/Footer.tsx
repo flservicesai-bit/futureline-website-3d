@@ -49,11 +49,11 @@ export default async function Footer() {
           <div className="md:col-span-2">
             <Link href="/" className="mb-4 inline-flex items-center gap-2.5" aria-label={a('home')}>
               <Image
-                src="/images/logo-mark.png"
+                src="/brand/futureline-mark.svg"
                 alt=""
-                width={28}
+                width={29}
                 height={28}
-                className="h-7 w-7"
+                className="h-7 w-auto"
               />
               <span className="font-display text-lg font-bold tracking-tight text-navy">
                 FutureLine

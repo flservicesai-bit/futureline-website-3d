@@ -183,11 +183,11 @@ function SignInInner() {
                 the Latin wordmark in order on the Arabic layout. */}
             <div dir="ltr" className="mb-8 flex items-center justify-center gap-3">
               <Image
-                src="/images/logo-mark.png"
+                src="/brand/futureline-mark.svg"
                 alt=""
-                width={40}
+                width={41}
                 height={40}
-                className="h-10 w-10"
+                className="h-10 w-auto"
                 priority
               />
               <span className="font-display text-2xl font-bold tracking-tight">

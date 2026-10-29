@@ -158,20 +158,6 @@ select.fl-input > option {
   .fl-elev-2 { box-shadow: var(--fl-elev-2); }
   .fl-elev-3 { box-shadow: var(--fl-elev-3); }
 
-  /* A very subtle white highlight along the UPPER edges of the logo — like
-     soft light reflecting from above — so the mark lifts off the dark hero
-     without a thick outline or a border around the whole shape. Both drops
-     are offset UPWARD only (negative Y), so the white catches just the top-
-     facing contours of the ring and strokes; the sides and bottom get none.
-     Thin, soft and low-alpha — enhances visibility without altering the
-     original logo. The logo's colours, shape, size and position are
-     untouched. */
-  .fl-logo-stroke {
-    filter:
-      drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.5))
-      drop-shadow(0 -0.5px 0.5px rgba(255, 255, 255, 0.35));
-  }
-
   /* Slowly rotating aurora behind hero/vision headlines. */
   .fl-aurora {
     background: conic-gradient(
