@@ -140,7 +140,7 @@ export function VideoEffectsClient() {
           onDrop={onDrop}
           className="flex flex-col items-center justify-center rounded-xl border border-dashed border-hairline bg-canvas-card px-6 py-16 text-center transition-colors hover:border-lab/40 hover:bg-canvas-card"
         >
-          <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-lab/30 bg-lab/10 text-lab">
+          <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-lab/30 bg-lab/10 text-lab-ink">
             <Film size={22} />
           </div>
           <h2 className="text-xl font-semibold text-navy md:text-2xl">
@@ -160,7 +160,7 @@ export function VideoEffectsClient() {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="mt-7 inline-flex items-center gap-2 rounded-full border border-lab/40 bg-lab/[0.12] px-6 py-3 text-sm font-medium text-lab transition-colors hover:border-lab/70 hover:bg-lab/[0.22]"
+            className="mt-7 inline-flex items-center gap-2 rounded-full border border-lab/40 bg-lab/[0.12] px-6 py-3 text-sm font-medium text-lab-ink transition-colors hover:border-lab/70 hover:bg-lab/[0.22]"
           >
             <Upload size={14} />
             Choose video
@@ -180,7 +180,7 @@ export function VideoEffectsClient() {
             />
             <div className="flex flex-col justify-between gap-4">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-lab">
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-lab-ink">
                   Loaded
                 </p>
                 <p className="mt-2 truncate text-sm font-medium text-navy">{file?.name}</p>
@@ -201,7 +201,7 @@ export function VideoEffectsClient() {
 
           {/* Effect picker */}
           <div>
-            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-lab">
+            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-lab-ink">
               Pick a look
             </p>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -221,10 +221,10 @@ export function VideoEffectsClient() {
                     ].join(' ')}
                   >
                     <div className="flex items-baseline justify-between gap-2">
-                      <span className={`text-sm font-semibold ${selected ? 'text-lab' : 'text-navy'}`}>
+                      <span className={`text-sm font-semibold ${selected ? 'text-lab-ink' : 'text-navy'}`}>
                         {eff.label}
                       </span>
-                      {selected && <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-lab">selected</span>}
+                      {selected && <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-lab-ink">selected</span>}
                     </div>
                     <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">
                       {eff.description}
@@ -277,7 +277,7 @@ export function VideoEffectsClient() {
               />
             </div>
             <div>
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-lab">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-lab-ink">
                 After · {resultLabel}
               </p>
               <video

@@ -11,7 +11,6 @@
 import type { Metadata } from 'next';
 import { Inter, Space_Grotesk, Noto_Sans_Arabic } from 'next/font/google';
 import { GeistMono } from 'geist/font/mono';
-import { NextIntlClientProvider } from 'next-intl';
 import { getLocale } from 'next-intl/server';
 import './globals.css';
 import { Providers } from '@/components/Providers';
@@ -66,9 +65,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${inter.variable} ${spaceGrotesk.variable} ${notoArabic.variable} ${GeistMono.variable}`}
     >
       <body className="font-sans antialiased">
-        <NextIntlClientProvider>
-          <Providers>{children}</Providers>
-        </NextIntlClientProvider>
+        {/* No NextIntlClientProvider here: [locale]/layout.tsx provides the
+            client messages for every page. The root not-found page, outside
+            the [locale] tree, wraps itself in its own provider. */}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

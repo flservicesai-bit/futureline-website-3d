@@ -27,7 +27,7 @@ const PALETTE: Record<Accent, {
   hairline: string;
 }> = {
   lab: {
-    text: 'text-lab',
+    text: 'text-lab-ink',
     dot: 'bg-lab',
     dotGlow: '0 0 10px 2px rgba(24, 169, 153, 0.55)',
     hairline: 'from-lab/60',
@@ -58,7 +58,7 @@ export function SectionEyebrow({
       {children}
       <span
         aria-hidden="true"
-        className={`ml-2 hidden h-px w-12 bg-gradient-to-r ${p.hairline} to-transparent md:block`}
+        className={`ms-2 hidden h-px w-12 bg-gradient-to-r rtl:bg-gradient-to-l ${p.hairline} to-transparent md:block`}
       />
     </p>
   );

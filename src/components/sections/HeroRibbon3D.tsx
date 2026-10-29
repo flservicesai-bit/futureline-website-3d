@@ -1,20 +1,23 @@
 /**
  * HeroRibbon3D — reusable signature 3D moment for interior pages.
  *
- * One RibbonWall plane (verbatim shader from DualWalkway) + a small drifting
- * particle field + Bloom. Idle camera (no scroll trigger). Designed to drop
- * into the hero of /services, /courses, /ai, etc. as a brand-aligned visual
- * anchor without the cost of the full DualWalkway pinned canvas.
+ * One RibbonWall plane + a small drifting particle field. Idle camera (no
+ * scroll trigger). Designed to drop into the hero of /services, /courses,
+ * /ai, etc. as a brand-aligned visual anchor without the cost of the full
+ * DualWalkway pinned canvas.
  *
- * The shader (vertical scrolling data stripes, soft horizontal falloff,
- * 0.8 Hz "breathing" pulse) is identical to the home DualWalkway —
- * preserving the design language per the "do not rewrite the 3D" directive.
+ * The shader's pattern (vertical scrolling data stripes, soft horizontal
+ * falloff, 0.8 Hz "breathing" pulse) is the home DualWalkway's, preserving
+ * the design language per the "do not rewrite the 3D" directive. Only how it
+ * composites changed: the pages are light, so the glow tints the page
+ * instead of being bloomed over black.
  */
 'use client';
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import { useMemo, useRef } from 'react';
+import { useInViewFrameloop } from '@/hooks/useInViewFrameloop';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { Color, InstancedMesh, Matrix4, ShaderMaterial } from 'three';
 
 function Ribbon({ color, tilt = 0.3 }: { color: string; tilt?: number }) {
@@ -62,8 +65,9 @@ function Ribbon({ color, tilt = 0.3 }: { color: string; tilt?: number }) {
             float scroll = bands(vUv, uTime);
             float baseGlow = horiz * vert * (0.4 + scroll * 0.6);
             float pulse = 0.85 + 0.15 * sin(uTime * 0.8);
-            vec3 col = uColor * baseGlow * pulse * 1.4;
-            gl_FragColor = vec4(col, baseGlow * 0.9);
+            // Light page: keep the hue constant and let the glow set the
+            // opacity, so faint areas fade to the page rather than to grey.
+            gl_FragColor = vec4(uColor, clamp(baseGlow * pulse * 0.6, 0.0, 1.0));
           }
         `}
       />
@@ -107,7 +111,7 @@ function Particles() {
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, PARTICLE_COUNT]}>
       <sphereGeometry args={[1, 6, 5]} />
-      <meshBasicMaterial color="#cbd5e1" transparent opacity={0.8} toneMapped={false} />
+      <meshBasicMaterial color="#18A999" transparent opacity={0.45} toneMapped={false} />
     </instancedMesh>
   );
 }
@@ -128,15 +132,12 @@ interface HeroRibbon3DProps {
   color?: string;
   /** Plane rotation in radians around Y (default 0.3 — slight tilt) */
   tilt?: number;
-  /** Bloom intensity (default 0.7) */
-  bloom?: number;
   className?: string;
 }
 
 export default function HeroRibbon3D({
   color = '#18A999',
   tilt = 0.3,
-  bloom = 0.7,
   className = 'absolute inset-0',
 }: HeroRibbon3DProps) {
   // Convert hex → rgba so the CSS-gradient fallback matches the canvas tint
@@ -151,27 +152,32 @@ export default function HeroRibbon3D({
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
+  // Render frames only while the hero is on screen, and not at all under
+  // reduced motion (one still frame instead). Off-screen it used to redraw
+  // every frame, draining batteries for nothing.
+  const reduced = usePrefersReducedMotion();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInViewFrameloop(wrapRef);
+
   return (
-    <div aria-hidden="true" className={`${className} pointer-events-none`}>
-      {/* CSS-gradient fallback — always rendered behind the canvas. If
-          WebGL initialises, the canvas covers it. If WebGL fails, this
-          shows through so the right side of the hero is never empty. */}
+    <div ref={wrapRef} aria-hidden="true" className={`${className} pointer-events-none`}>
+      {/* CSS-gradient fallback — always rendered behind the canvas, and all
+          that shows if WebGL is unavailable. Transparent outside the glow so
+          it sits on the page's light background. */}
       <div
         className="absolute inset-0"
         style={{
           background: `
-            radial-gradient(ellipse 60% 80% at 50% 50%, ${rgba(0.22)} 0%, transparent 65%),
-            radial-gradient(ellipse 40% 100% at 50% 40%, ${rgba(0.12)} 0%, transparent 70%),
-            radial-gradient(ellipse 20% 60% at 50% 50%, ${rgba(0.4)} 0%, transparent 60%),
-            #000000
+            radial-gradient(ellipse 60% 80% at 50% 50%, ${rgba(0.14)} 0%, transparent 65%),
+            radial-gradient(ellipse 20% 60% at 50% 50%, ${rgba(0.18)} 0%, transparent 60%)
           `,
         }}
       />
       <Canvas
         dpr={[1, 2]}
-        frameloop="always"
+        frameloop={reduced ? 'demand' : inView}
         camera={{ position: [0, 0, 5], fov: 50 }}
-        gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+        gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}
         // If WebGL context creation fails, canvas silently doesn't mount;
         // the fallback gradient behind us stays visible. No crash.
         onCreated={(state) => {
@@ -182,22 +188,12 @@ export default function HeroRibbon3D({
           });
         }}
       >
-        {/* No <color attach="background">: an opaque clear colour makes
-            this canvas a solid slab wherever it is dropped. Alpha instead,
-            so it composites onto the page's own background. */}
-        <ambientLight intensity={0.05} />
+        {/* Alpha canvas with no postprocessing: the old Bloom + Vignette
+            chain was tuned for a black page and drew a grey slab over the
+            light theme. The ribbon now tints the page directly. */}
         <IdleCamera />
         <Ribbon color={color} tilt={tilt} />
         <Particles />
-        <EffectComposer multisampling={0}>
-          <Bloom
-            intensity={bloom}
-            luminanceThreshold={0.35}
-            luminanceSmoothing={0.4}
-            mipmapBlur
-          />
-          <Vignette eskil={false} offset={0.35} darkness={0.8} />
-        </EffectComposer>
       </Canvas>
     </div>
   );

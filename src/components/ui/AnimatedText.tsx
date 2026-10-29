@@ -200,14 +200,17 @@ export function AnimatedText({
     return wordMask(i, w)
   })
 
+  // The animated tokens are aria-hidden, so screen readers get the text from
+  // a visually hidden copy. aria-label on the element did not work: it is
+  // ignored on <p>, <span> and other generic elements, so those read nothing.
   return createElement(
     as,
     {
       ref,
       className,
       dir: isRtl ? 'rtl' : 'ltr',
-      'aria-label': children,
     },
-    renderedTokens,
+    <span key="sr" className="sr-only">{children}</span>,
+    ...renderedTokens,
   )
 }

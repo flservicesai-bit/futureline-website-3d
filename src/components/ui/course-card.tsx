@@ -35,7 +35,7 @@ export default function CourseCard({
             <BookOpen className="text-ink-muted" size={52} />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent" />
             {/* Badges */}
-            <div className="absolute bottom-3 left-3 flex items-center gap-2">
+            <div className="absolute bottom-3 start-3 flex items-center gap-2">
               <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-widest backdrop-blur-md ${levelColor}`}>
                 {level}
               </span>
@@ -44,7 +44,7 @@ export default function CourseCard({
               </span>
             </div>
             {isEnrolled && (
-              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded-full bg-teal-500/20 border border-teal-500/30 backdrop-blur-md">
+              <div className="absolute top-3 end-3 flex items-center gap-1.5 px-2 py-1 rounded-full bg-teal-500/20 border border-teal-500/30 backdrop-blur-md">
                 <div className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
                 <span className="text-[10px] font-bold text-teal-400 uppercase tracking-widest">Enrolled</span>
               </div>

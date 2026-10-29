@@ -24,7 +24,7 @@ export async function WhoWeServe() {
     >
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto mb-14 max-w-2xl text-center">
-          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal">
+          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal-ink">
             {t('eyebrow')}
           </p>
           <h2

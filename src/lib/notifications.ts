@@ -11,8 +11,21 @@ export interface NotificationProvider {
   sendEmail(notification: EmailNotification): Promise<boolean>;
 }
 
+/**
+ * Used when no Resend API key is configured. In development it prints each
+ * email in full. In production it sends nothing, so it says so and reports
+ * failure instead of "sent", and leaves the body out of the logs (it can
+ * hold password-reset and verification links). EMAIL_LOG_BODIES=true prints
+ * bodies anyway, for local testing against a production build only.
+ */
 class ConsoleNotificationProvider implements NotificationProvider {
   async sendEmail(notification: EmailNotification): Promise<boolean> {
+    if (process.env.NODE_ENV === 'production' && process.env.EMAIL_LOG_BODIES !== 'true') {
+      console.error(
+        `[Notification] NOT SENT (RESEND_API_KEY is not set): "${notification.subject}" to ${notification.to}`,
+      );
+      return false;
+    }
     console.log('[Notification] Email would be sent:');
     console.log(`  To: ${notification.to}`);
     console.log(`  Subject: ${notification.subject}`);
@@ -31,6 +44,12 @@ class ResendNotificationProvider implements NotificationProvider {
   constructor(apiKey: string, fromAddress: string = process.env.RESEND_FROM_EMAIL || 'FutureLine <onboarding@resend.dev>') {
     this.resend = new Resend(apiKey);
     this.fromAddress = fromAddress;
+    if (!process.env.RESEND_FROM_EMAIL) {
+      console.warn(
+        '[Notification] RESEND_FROM_EMAIL is not set, so mail goes from onboarding@resend.dev. ' +
+          'Resend delivers that only to the Resend account owner: customers will not receive their emails.',
+      );
+    }
   }
 
   async sendEmail(notification: EmailNotification): Promise<boolean> {

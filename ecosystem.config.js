@@ -11,13 +11,15 @@
  *
  * Usage on the server:
  *   pm2 start ecosystem.config.js      # first time
- *   pm2 reload futureline              # zero-downtime restart after a deploy
+ *   pm2 reload futureline-web          # zero-downtime restart after a deploy
  *   pm2 save && pm2 startup            # survive reboots
  */
 module.exports = {
   apps: [
     {
-      name: 'futureline',
+      // Must match APP_NAME in deploy.sh. Plain `futureline` is a different,
+      // unrelated app on this server (port 3000).
+      name: 'futureline-web',
       cwd: __dirname,
       script: 'npm',
       args: 'start',

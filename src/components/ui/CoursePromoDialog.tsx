@@ -214,7 +214,7 @@ export function CoursePromoDialog() {
         {view === 'promo' ? (
           <div className="p-7">
             <div className="mb-3 flex items-center gap-2">
-              <p className="font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal">
+              <p className="font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal-ink">
                 {t('eyebrow')}
               </p>
               <span className="rounded-full border border-hairline px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-muted">
@@ -236,7 +236,7 @@ export function CoursePromoDialog() {
                 {t('priceWas')}
               </span>
             </div>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-teal">
+            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-teal-ink">
               {t('priceNote')}
             </p>
 
@@ -287,13 +287,13 @@ export function CoursePromoDialog() {
               <p>{t('detailsNotFor')}</p>
 
               <div>
-                <p className="mb-2 font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal">
+                <p className="mb-2 font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal-ink">
                   {t('detailsCoverTitle')}
                 </p>
                 <ul className="space-y-2">
                   {bullets.map((b) => (
                     <li key={b} className="flex gap-2.5">
-                      <Check size={15} className="mt-0.5 shrink-0 text-teal" aria-hidden />
+                      <Check size={15} className="mt-0.5 shrink-0 text-teal-ink" aria-hidden />
                       <span>{b}</span>
                     </li>
                   ))}
@@ -301,14 +301,14 @@ export function CoursePromoDialog() {
               </div>
 
               <div>
-                <p className="mb-2 font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal">
+                <p className="mb-2 font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal-ink">
                   {t('detailsOutcomeTitle')}
                 </p>
                 <p>{t('detailsOutcome')}</p>
               </div>
 
               <div>
-                <p className="mb-2 font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal">
+                <p className="mb-2 font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal-ink">
                   {t('detailsFactsTitle')}
                 </p>
                 <dl className="space-y-2">

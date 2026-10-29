@@ -126,7 +126,7 @@ function ResetPasswordForm() {
       </form>
 
       <p className="text-center text-sm text-ink-muted mt-6">
-        <Link href="/login" className="font-semibold text-teal transition-colors hover:text-teal-dark">
+        <Link href="/login" className="font-semibold text-teal-ink transition-colors hover:text-navy">
           {t('reset.backToSignIn')}
         </Link>
       </p>

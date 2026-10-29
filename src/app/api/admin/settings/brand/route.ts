@@ -16,6 +16,8 @@ export async function GET() {
       logo: '',
       contactEmail: 'flservices.ai@gmail.com',
       tourismEmail: 'authentic.tour.om@gmail.com',
+      bankPayee: 'Musab Al Sabahi, 96532326',
+      receiptWhatsapp: '96532326',
     };
     return NextResponse.json({ ...defaults, ...settings });
   } catch {

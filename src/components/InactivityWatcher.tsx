@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSession, signOut } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { AlertCircle, Clock, LogOut } from 'lucide-react';
 
 interface InactivityWatcherProps {
@@ -9,6 +10,7 @@ interface InactivityWatcherProps {
 
 export default function InactivityWatcher({ timeoutMinutes }: InactivityWatcherProps) {
   const { data: session, status } = useSession();
+  const t = useTranslations('inactivity');
   const [showWarning, setShowWarning] = useState(false);
   const [countdown, setCountdown] = useState(120); // 2 minute warning
   
@@ -76,14 +78,14 @@ export default function InactivityWatcher({ timeoutMinutes }: InactivityWatcherP
             <Clock className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-xl font-bold">Session Security</h3>
-            <p className="text-orange-100 text-sm">Inactive for too long</p>
+            <h3 className="text-xl font-bold">{t('title')}</h3>
+            <p className="text-orange-100 text-sm">{t('subtitle')}</p>
           </div>
         </div>
 
         <div className="p-8 text-center">
           <div className="mb-6">
-            <p className="text-slate-400 mb-2">Your session will expire in</p>
+            <p className="text-slate-400 mb-2">{t('expiresIn')}</p>
             <div className="text-4xl font-black text-white tabular-nums">
               {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')}
             </div>
@@ -94,13 +96,13 @@ export default function InactivityWatcher({ timeoutMinutes }: InactivityWatcherP
               onClick={stayLoggedIn}
               className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold py-3 px-6 rounded-xl transition-all hover:opacity-90"
             >
-              Stay Logged In
+              {t('stay')}
             </button>
             <button
               onClick={() => logout()}
               className="w-full border border-white/[0.1] text-slate-400 hover:bg-white/[0.05] hover:text-slate-300 font-semibold py-3 px-6 rounded-xl transition-all"
             >
-              Sign Out Now
+              {t('signOut')}
             </button>
           </div>
         </div>
@@ -108,7 +110,7 @@ export default function InactivityWatcher({ timeoutMinutes }: InactivityWatcherP
         <div className="bg-white/[0.02] px-8 py-4 border-t border-white/[0.06] flex items-center gap-3">
           <AlertCircle size={16} className="text-slate-500" />
           <p className="text-xs text-slate-500">
-            For your security, we automatically sign out inactive sessions.
+            {t('note')}
           </p>
         </div>
       </div>

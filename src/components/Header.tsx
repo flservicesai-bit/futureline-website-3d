@@ -42,6 +42,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const t = useTranslations('nav');
+  const a = useTranslations('a11y');
   const locale = useLocale();
   const pathname = usePathname();
 
@@ -137,13 +138,13 @@ export default function Header() {
   };
 
   return (
-    <header className={headerClass} aria-label="Primary">
+    <header className={headerClass} aria-label={a('primaryNav')}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link
             href="/"
             className="group flex items-center gap-2.5"
-            aria-label="FutureLine home"
+            aria-label={a('home')}
             data-cursor="hover"
           >
             {/* The brand mark, exactly as designed — original colours, shape
@@ -167,7 +168,7 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-6 md:flex lg:gap-7" aria-label="Main">
+          <nav className="hidden items-center gap-6 md:flex lg:gap-7" aria-label={a('mainNav')}>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -205,7 +206,7 @@ export default function Header() {
               overDarkHero ? 'text-white/85 hover:text-white' : 'text-ink-muted hover:text-navy'
             }`}
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            aria-label={a('toggleMenu')}
             aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}

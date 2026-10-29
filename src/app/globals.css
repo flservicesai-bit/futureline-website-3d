@@ -63,7 +63,7 @@
   }
 
   .admin-sidebar-item.active {
-    @apply bg-teal/10 text-teal-dark border-s-2 border-teal;
+    @apply bg-teal/10 text-teal-ink border-s-2 border-teal;
   }
 
   /* Form primitives used by the public enquiry forms. Kept separate from
@@ -92,7 +92,7 @@
 
   .fl-submit {
     @apply flex w-full items-center justify-center gap-2 rounded-full
-           bg-gradient-to-r from-navy via-teal to-mint px-6 py-3.5
+           bg-gradient-to-r from-navy via-teal-ink to-teal px-6 py-3.5
            text-sm font-medium text-white transition-opacity
            hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50;
   }

@@ -157,13 +157,13 @@ function FaqItem({ q, a }: { q: string; a: string }) {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="group flex w-full items-start justify-between gap-6 py-6 text-left"
+        className="group flex w-full items-start justify-between gap-6 py-6 text-start"
         data-cursor="hover"
       >
         <span className="text-base font-medium leading-snug text-navy md:text-lg">{q}</span>
         <ChevronDown
           size={18}
-          className="mt-1 flex-shrink-0 text-ink-muted transition-transform duration-300 group-hover:text-lab"
+          className="mt-1 flex-shrink-0 text-ink-muted transition-transform duration-300 group-hover:text-lab-ink"
           style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
         />
       </button>
@@ -173,7 +173,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         style={{ maxHeight: open ? `${innerRef.current?.scrollHeight ?? 600}px` : '0px' }}
       >
         <div ref={innerRef}>
-          <p className="pb-6 pr-12 text-sm leading-relaxed text-ink-muted md:text-base">{a}</p>
+          <p className="pb-6 pe-12 text-sm leading-relaxed text-ink-muted md:text-base">{a}</p>
         </div>
       </div>
     </div>
@@ -226,13 +226,13 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
             so the hero stands on its typography until that is done. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas via-canvas/85 to-transparent md:via-canvas/60"
+          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas via-canvas/85 to-transparent rtl:bg-gradient-to-l md:via-canvas/60"
         />
         {/* Huge faded page-number watermark — editorial layout cue,
             sits behind the hero text and the 3D ribbon. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-2 z-[2] hidden select-none items-center font-black tracking-tighter text-navy/[0.025] md:flex"
+          className="pointer-events-none absolute inset-y-0 end-2 z-[2] hidden select-none items-center font-black tracking-tighter text-navy/[0.025] md:flex"
           style={{ fontSize: 'clamp(14rem, 26vw, 28rem)', lineHeight: 0.85 }}
         >
           {data.pageNumber}
@@ -241,7 +241,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:px-6 md:py-32 lg:px-8">
           <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-12">
             <div className="md:col-span-7">
-              <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.4em] text-lab">
+              <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.4em] text-lab-ink">
                 <span
                   aria-hidden="true"
                   className="block h-1.5 w-1.5 rounded-full bg-lab shadow-[0_0_10px_2px_rgba(24,169,153,0.55)]"
@@ -267,7 +267,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                     href="/audit"
                     data-cursor="magnetic"
                     data-cursor-strength="22"
-                    className="rounded-full bg-white px-7 py-3 text-sm font-medium text-black transition-colors hover:bg-canvas-card"
+                    className="rounded-full bg-navy px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-navy-light"
                   >
                     {t('heroAuditCta')}
                   </Link>
@@ -304,7 +304,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                 className="relative grid grid-cols-12 gap-6 border-t border-hairline py-8 md:gap-12 md:py-10"
               >
                 <div className="col-span-12 md:col-span-3">
-                  <p className="font-mono text-sm tracking-[0.3em] text-lab">
+                  <p className="font-mono text-sm tracking-[0.3em] text-lab-ink">
                     {String(i + 1).padStart(2, '0')}
                   </p>
                   <p className="mt-3 text-3xl font-semibold tracking-tight text-navy md:text-4xl">
@@ -358,7 +358,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
             {data.process.map((step, i) => (
               <FadeUp key={i} delay={i * 0.08}>
                 <div className="border-t border-hairline py-8">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-lab">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-lab-ink">
                     {step.when}
                   </p>
                   <h3 className="mt-5 text-2xl font-semibold tracking-[-0.01em] text-navy">
@@ -373,7 +373,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
           {data.techStack && (
             <div className="mt-9 border-t border-hairline pt-5 md:mt-10">
               <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-[0.3em] text-ink-muted">
-                <span className="text-lab">{t('builtOn')}</span>
+                <span className="text-lab-ink">{t('builtOn')}</span>
                 <span className="text-ink normal-case tracking-normal">{data.techStack}</span>
               </p>
             </div>
@@ -402,7 +402,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                 >
                   <span
                     aria-hidden
-                    className="font-mono text-xs tracking-[0.3em] text-lab"
+                    className="font-mono text-xs tracking-[0.3em] text-lab-ink"
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>
@@ -517,7 +517,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                   <div className="grid grid-cols-12 items-start gap-3 border-b border-hairline px-5 py-6 last:border-b-0 md:gap-4 md:px-8 md:py-7">
                     <div className="col-span-12 md:col-span-3">
                       <div className="flex items-baseline gap-3">
-                        <span aria-hidden className="font-mono text-[11px] tracking-[0.25em] text-lab/70">
+                        <span aria-hidden className="font-mono text-[11px] tracking-[0.25em] text-lab-ink">
                           {String(i + 1).padStart(2, '0')}
                         </span>
                         <h4 className="text-base font-semibold tracking-tight text-navy md:text-lg">
@@ -534,7 +534,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                     <div className="relative col-span-4 md:col-span-3">
                       <span
                         aria-hidden
-                        className="absolute -left-3 top-1 hidden h-[calc(100%-0.5rem)] w-px bg-gradient-to-b from-lab/40 via-lab/15 to-transparent md:block"
+                        className="absolute -start-3 top-1 hidden h-[calc(100%-0.5rem)] w-px bg-gradient-to-b from-lab/40 via-lab/15 to-transparent md:block"
                       />
                       <p className="text-sm font-medium leading-relaxed text-navy md:text-base">
                         {row.futureline}
@@ -590,11 +590,11 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                   <div className="mb-6 flex items-center gap-3">
                     <span
                       aria-hidden
-                      className="flex h-8 w-8 items-center justify-center rounded-full border border-lab/40 bg-lab/15 font-mono text-[10px] font-bold uppercase tracking-widest text-lab"
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-lab/40 bg-lab/15 font-mono text-[10px] font-bold uppercase tracking-widest text-lab-ink"
                     >
                       FL
                     </span>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-lab">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-lab-ink">
                       {t('whatWeDo')}
                     </p>
                   </div>
@@ -606,7 +606,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                       >
                         <span
                           aria-hidden
-                          className="font-mono text-[10px] tracking-[0.25em] text-lab/70"
+                          className="font-mono text-[10px] tracking-[0.25em] text-lab-ink"
                         >
                           {String(i + 1).padStart(2, '0')}
                         </span>
@@ -726,7 +726,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                   <div className="flex items-center gap-3">
                     <span
                       aria-hidden
-                      className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-lab/40 bg-lab/15 text-lab"
+                      className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-lab/40 bg-lab/15 text-lab-ink"
                       style={{ boxShadow: '0 0 18px rgba(24, 169, 153, 0.4)' }}
                     >
                       <Check size={16} strokeWidth={2.5} />
@@ -748,7 +748,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                       <div className="flex items-baseline gap-3">
                         <span
                           aria-hidden
-                          className="font-mono text-[11px] tracking-[0.25em] text-lab/70"
+                          className="font-mono text-[11px] tracking-[0.25em] text-lab-ink"
                         >
                           {String(i + 1).padStart(2, '0')}
                         </span>
@@ -765,7 +765,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                     <div className="relative col-span-6 md:col-span-5">
                       <span
                         aria-hidden
-                        className="absolute -left-4 top-1 hidden h-[calc(100%-0.5rem)] w-px bg-gradient-to-b from-lab/40 via-lab/15 to-transparent md:block"
+                        className="absolute -start-4 top-1 hidden h-[calc(100%-0.5rem)] w-px bg-gradient-to-b from-lab/40 via-lab/15 to-transparent md:block"
                       />
                       <p className="text-sm font-medium leading-relaxed text-navy md:text-base">
                         {row.futureline}
@@ -875,7 +875,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
       <section id="start" className="scroll-mt-24 border-t border-hairline px-4 py-20 sm:px-6 md:py-28 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <FadeUp>
-            <p className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-lab">
+            <p className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-lab-ink">
               {data.cta?.eyebrow ?? t('ctaEyebrowDefault')}
             </p>
             <BrandedHeading as="h2" size="xl">

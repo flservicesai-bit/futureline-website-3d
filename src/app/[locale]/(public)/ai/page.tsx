@@ -1,6 +1,5 @@
 import { Link } from '@/i18n/routing';
 import { Mail, ArrowRight } from 'lucide-react';
-import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { getBrandSettings } from '@/lib/brand';
 import HeroRibbon3D from '@/components/sections/HeroRibbon3DLazy';
@@ -9,21 +8,11 @@ import { BrandedHeading } from '@/components/ui/BrandedHeading';
 import { MarqueeStrip } from '@/components/ui/MarqueeStrip';
 import { FadeUp } from '@/components/motion/FadeUp';
 import { SectionEyebrow } from '@/components/ui/SectionEyebrow';
+import { metadataFor } from '@/lib/seo';
+
+export const generateMetadata = metadataFor('ai', '/ai');
 
 export const dynamic = 'force-dynamic';
-
-export const metadata: Metadata = {
-  title: 'AI & Automation — FutureLine | Intelligent Business Solutions',
-  description:
-    'AI-powered solutions to help businesses automate processes, gain insights, and operate smarter. Machine learning, process automation, and AI-powered analytics.',
-  openGraph: {
-    title: 'AI & Automation — FutureLine',
-    description:
-      'AI-powered solutions to help businesses automate processes, gain insights, and operate smarter.',
-    type: 'website',
-    url: '/ai',
-  },
-};
 
 export default async function AIPage() {
   const t = await getTranslations('aiPage');
@@ -38,18 +27,18 @@ export default async function AIPage() {
     <main className="bg-canvas">
       {/* ── Hero ── */}
       <section className="relative overflow-hidden border-b border-hairline">
-        <div className="absolute inset-y-0 right-0 z-0 w-full md:w-1/2">
-          <HeroRibbon3D color="#18A999" tilt={0.32} bloom={0.78} />
+        <div className="absolute inset-y-0 end-0 z-0 w-full md:w-1/2">
+          <HeroRibbon3D color="#18A999" tilt={0.32} />
         </div>
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas via-canvas/85 to-transparent md:via-canvas/55"
+          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas via-canvas/85 to-transparent rtl:bg-gradient-to-l md:via-canvas/55"
         />
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 sm:px-6 md:py-44 lg:px-8">
           <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-12">
             <div className="md:col-span-7">
-              <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.4em] text-lab">
+              <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.4em] text-lab-ink">
                 <span
                   aria-hidden
                   className="block h-1.5 w-1.5 rounded-full bg-lab shadow-[0_0_10px_2px_rgba(24,169,153,0.55)]"
@@ -76,7 +65,7 @@ export default async function AIPage() {
                     href={`mailto:${contactEmail}?subject=FL%20AI%20Enquiry`}
                     data-cursor="magnetic"
                     data-cursor-strength="22"
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-medium text-black transition-colors hover:bg-canvas-card"
+                    className="inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-navy-light"
                   >
                     {t('hero.ctaPrimary')} <Mail size={15} />
                   </Link>
@@ -85,7 +74,7 @@ export default async function AIPage() {
                     data-cursor="hover"
                     className="inline-flex items-center gap-1 px-3 py-3 text-sm text-ink transition-colors hover:text-navy"
                   >
-                    {t('hero.ctaSecondary')} <ArrowRight size={14} />
+                    {t('hero.ctaSecondary')} <ArrowRight size={14} className="rtl:rotate-180" />
                   </Link>
                 </div>
               </FadeUp>
@@ -124,7 +113,7 @@ export default async function AIPage() {
                 className="relative grid grid-cols-12 gap-6 border-t border-hairline py-12 md:gap-12 md:py-16"
               >
                 <div className="col-span-12 md:col-span-3">
-                  <p className="font-mono text-sm tracking-[0.3em] text-lab">
+                  <p className="font-mono text-sm tracking-[0.3em] text-lab-ink">
                     {String(i + 1).padStart(2, '0')}
                   </p>
                 </div>
@@ -173,7 +162,7 @@ export default async function AIPage() {
                   >
                     <span
                       aria-hidden
-                      className="font-mono text-[10px] tracking-[0.3em] text-lab"
+                      className="font-mono text-[10px] tracking-[0.3em] text-lab-ink"
                     >
                       {String(i + 1).padStart(2, '0')}
                     </span>
@@ -208,7 +197,7 @@ export default async function AIPage() {
       <section className="border-t border-hairline px-4 py-32 sm:px-6 md:py-44 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <FadeUp>
-            <p className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-lab">
+            <p className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-lab-ink">
               {t('cta.eyebrow')}
             </p>
             <BrandedHeading as="h2" size="xl">

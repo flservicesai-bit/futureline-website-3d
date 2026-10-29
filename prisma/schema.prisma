@@ -215,6 +215,10 @@ model BrandSettings {
   tagline      String  @default("Design • Deploy • Evolve")
   contactEmail String  @default("flservices.ai@gmail.com")
   tourismEmail String  @default("authentic.tour.om@gmail.com")
+  // Bank-transfer checkout: who customers pay (as they should see it) and the
+  // WhatsApp number they send the receipt to. Admin > Brand edits both.
+  bankPayee       String @default("Musab Al Sabahi, 96532326")
+  receiptWhatsapp String @default("96532326")
 }
 
 model AISettings {

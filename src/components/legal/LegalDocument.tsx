@@ -31,7 +31,7 @@ export async function LegalDocument({ namespace }: { namespace: 'privacy' | 'ter
     <main className="fl-light relative bg-canvas text-ink">
       <section className="relative py-20 md:py-28">
         <div className="mx-auto max-w-3xl px-6">
-          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal">
+          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal-ink">
             {t('eyebrow')}
           </p>
           <h1 className="font-display text-4xl font-bold tracking-tight text-navy md:text-5xl">
@@ -47,7 +47,7 @@ export async function LegalDocument({ namespace }: { namespace: 'privacy' | 'ter
             {sections.map((section, i) => (
               <section key={`${i}-${section.heading}`} className="scroll-mt-24">
                 <h2 className="font-display text-xl font-bold tracking-tight text-navy md:text-2xl">
-                  <span aria-hidden className="me-2 text-teal">
+                  <span aria-hidden className="me-2 text-teal-ink">
                     {i + 1}.
                   </span>
                   {section.heading}
@@ -68,7 +68,7 @@ export async function LegalDocument({ namespace }: { namespace: 'privacy' | 'ter
               {t('contactNote')}{' '}
               <a
                 href="mailto:flservices.ai@gmail.com"
-                className="font-semibold text-teal transition-colors hover:text-teal-dark"
+                className="font-semibold text-teal-ink transition-colors hover:text-navy"
               >
                 flservices.ai@gmail.com
               </a>

@@ -20,9 +20,10 @@ const ITEMS = [
 
 export async function ServiceHighlights() {
   const t = await getTranslations('hero');
+  const a = await getTranslations('a11y');
 
   return (
-    <section aria-label="What we do" className="relative py-12 md:py-16">
+    <section aria-label={a('whatWeDo')} className="relative py-12 md:py-16">
       <div className="mx-auto max-w-5xl px-6">
         <Stagger className="grid gap-4 sm:grid-cols-3">
           {ITEMS.map(({ key, icon: Icon }) => (
@@ -30,7 +31,7 @@ export async function ServiceHighlights() {
               key={key}
               className="fl-glass fl-elev-1 flex items-center gap-3 rounded-card px-5 py-4 transition-shadow duration-300 hover:shadow-[var(--fl-elev-2)]"
             >
-              <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-teal/10 text-teal">
+              <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-teal/10 text-teal-ink">
                 <Icon size={18} strokeWidth={1.8} aria-hidden />
               </div>
               <span className="font-display text-sm font-semibold text-ink">

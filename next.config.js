@@ -6,13 +6,9 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ['*.replit.dev', '*.repl.co', '*.spock.replit.dev'],
-  // Production builds run full TS type-checking + ESLint, which dev
-  // mode (next dev) skips. The codebase has accumulated strict-mode
-  // debt (implicit-any in admin form handlers etc.) that blocks the
-  // build but doesn't affect runtime — the app runs correctly in dev.
-  // These flags let the production build ship; the dev server still
-  // surfaces type/lint issues so they don't go unnoticed.
-  typescript: { ignoreBuildErrors: true },
+  // Type errors fail the build (the type-check is clean, and CI runs it on
+  // every pull request). The project has no ESLint setup, so linting stays
+  // off rather than printing a "not installed" warning on every build.
   eslint: { ignoreDuringBuilds: true },
   images: {
     remotePatterns: [
@@ -34,7 +30,7 @@ const nextConfig = {
   },
   async headers() {
     // Public media is served with max-age=0 by default, so every visit
-    // re-checked the 3.7 MB hero video. A week of caching, then a background
+    // re-checked the hero video. A week of caching, then a background
     // refresh; a day for share images and posters, which change more often.
     const mediaCache = 'public, max-age=604800, stale-while-revalidate=86400';
     const imageCache = 'public, max-age=86400, stale-while-revalidate=604800';
@@ -45,10 +41,11 @@ const nextConfig = {
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
         ],
       },
-      { source: '/:file(.*\\.mp4)', headers: [{ key: 'Cache-Control', value: mediaCache }] },
       { source: '/og/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
       { source: '/hero/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
       { source: '/images/:file*', headers: [{ key: 'Cache-Control', value: imageCache }] },
+      // Last, so videos under /hero/ get the media policy, not the image one.
+      { source: '/:file(.*\\.mp4)', headers: [{ key: 'Cache-Control', value: mediaCache }] },
     ];
   },
 };

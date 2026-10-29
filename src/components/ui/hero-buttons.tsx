@@ -32,7 +32,7 @@ export default function HeroButtons() {
               whileHover={{ x: 5 }}
               transition={{ type: 'spring', stiffness: 400, damping: 15 }}
             >
-              <ArrowRight size={17} />
+              <ArrowRight size={17} className="rtl:rotate-180" />
             </motion.span>
           </Link>
         </motion.div>

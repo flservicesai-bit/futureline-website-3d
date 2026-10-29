@@ -88,7 +88,7 @@ function Recorder({ slug }: { slug: string }) {
           {state === 'saving' ? (
             <Loader2 size={18} className="animate-spin text-ink-muted" aria-hidden />
           ) : (
-            <Check size={18} className={isError ? 'text-red-500' : 'text-teal'} aria-hidden />
+            <Check size={18} className={isError ? 'text-red-500' : 'text-teal-ink'} aria-hidden />
           )}
         </span>
         <div>

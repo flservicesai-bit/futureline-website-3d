@@ -68,7 +68,7 @@ function RegisterForm() {
           {t('register.haveAccount')}{' '}
           <Link
             href={{ pathname: '/login', query: callbackUrl ? { callbackUrl } : {} }}
-            className="font-semibold text-teal transition-colors hover:text-teal-dark"
+            className="font-semibold text-teal-ink transition-colors hover:text-navy"
           >
             {t('register.signIn')}
           </Link>

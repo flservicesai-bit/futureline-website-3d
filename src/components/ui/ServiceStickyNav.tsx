@@ -43,7 +43,7 @@ export function ServiceStickyNav({
           className="inline-flex items-center gap-2 text-ink-muted hover:text-navy text-xs font-bold uppercase tracking-widest transition-colors shrink-0"
           tabIndex={visible ? 0 : -1}
         >
-          <ArrowLeft size={13} />
+          <ArrowLeft size={13} className="rtl:rotate-180" />
           <span className="hidden sm:inline">All Services</span>
         </Link>
 
@@ -67,7 +67,7 @@ export function ServiceStickyNav({
           style={{ background: gradient }}
           tabIndex={visible ? 0 : -1}
         >
-          {ctaLabel} <ArrowRight size={12} />
+          {ctaLabel} <ArrowRight size={12} className="rtl:rotate-180" />
         </Link>
       </div>
     </div>

@@ -28,8 +28,9 @@ const intlMiddleware = createIntlMiddleware(routing);
 
 /**
  * Strips a leading locale segment so route guards can match on the
- * locale-independent path. With localePrefix 'as-needed' English URLs have no
- * prefix at all, so /admin and /ar/admin must both be recognised as admin.
+ * locale-independent path: /en/admin and /ar/admin are both admin. Unprefixed
+ * paths (/admin) still reach here before next-intl redirects them, so they
+ * are matched as they are.
  */
 function stripLocale(pathname: string) {
   const segments = pathname.split('/');
@@ -90,8 +91,8 @@ export const config = {
   matcher: [
     // Skip: API routes (must not be locale-rewritten), Next internals, and
     // anything with a file extension. That last exclusion matters — public
-    // assets like /hero.mp4 and /favicon.ico would otherwise be rewritten to
-    // /en/hero.mp4 and 500.
+    // assets like /hero/hero-640.mp4 and /favicon.ico would otherwise be rewritten to
+    // /en/hero/hero-640.mp4 and 500.
     '/((?!api|_next/static|_next/image|.*\\..*).*)',
   ],
 };

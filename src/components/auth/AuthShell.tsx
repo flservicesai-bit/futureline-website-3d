@@ -11,6 +11,7 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 export function AuthShell({
   eyebrow,
@@ -25,6 +26,7 @@ export function AuthShell({
   children: ReactNode;
   footer?: ReactNode;
 }) {
+  const a = useTranslations('a11y');
   return (
     <main className="fl-light relative flex min-h-screen items-center justify-center overflow-hidden bg-canvas px-6 py-16 text-ink">
       {/* Same ambient treatment the public pages use, so the canvas doesn't
@@ -49,7 +51,7 @@ export function AuthShell({
           href="/"
           dir="ltr"
           className="mx-auto mb-8 flex items-center justify-center gap-3"
-          aria-label="FutureLine home"
+          aria-label={a('home')}
           data-cursor="hover"
         >
           <Image
@@ -62,12 +64,12 @@ export function AuthShell({
           />
           <span className="font-display text-3xl font-bold tracking-tight">
             <span className="text-navy">Future</span>
-            <span className="text-teal">Line</span>
+            <span className="text-teal-ink">Line</span>
           </span>
         </Link>
 
         <div className="rounded-card border border-hairline bg-canvas-card p-8 fl-elev-2">
-          <p className="mb-3 text-center font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal">
+          <p className="mb-3 text-center font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-teal-ink">
             {eyebrow}
           </p>
           <h1 className="text-center font-display text-3xl font-bold leading-[1.15] tracking-tight text-navy">

@@ -4,21 +4,17 @@
  * proves the "AI builds video effect tools" thesis FL Academy
  * is teaching toward.
  */
-import type { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { Link } from '@/i18n/routing';
 import { SectionEyebrow } from '@/components/ui/SectionEyebrow';
 import { BrandedHeading } from '@/components/ui/BrandedHeading';
 import { VideoEffectsClient } from './VideoEffectsClient';
+import { metadataFor } from '@/lib/seo';
+
+export const generateMetadata = metadataFor('videoLab', '/lab/video-effects', { noIndex: true });
 
 export const dynamic = 'force-dynamic';
-
-export const metadata: Metadata = {
-  title: 'Video Effects Lab | FutureLine',
-  description:
-    'Upload a short video, pick a generative look, get the result in seconds. An FL Lab demo of AI-built video tools.',
-};
 
 export default async function VideoEffectsLabPage({
   params,
@@ -70,7 +66,7 @@ export default async function VideoEffectsLabPage({
               href="https://www.instagram.com/abdullrhman_ha/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-lab hover:text-lab-light underline-offset-2 hover:underline"
+              className="text-lab-ink hover:text-navy underline-offset-2 hover:underline"
             >
               @abdullrhman_ha
             </a>

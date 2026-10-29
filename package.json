@@ -8,7 +8,8 @@
     "start": "next start -p 5000 -H 0.0.0.0",
     "seed": "npx tsx prisma/seed.ts",
     "normalize-emails": "npx tsx prisma/normalize-emails.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "check:messages": "node scripts/check-client-messages.mjs"
   },
   "dependencies": {
     "@14islands/r3f-scroll-rig": "^8.15.0",

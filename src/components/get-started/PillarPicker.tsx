@@ -66,7 +66,7 @@ function PickerInner() {
               >
                 <div
                   className={`inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${
-                    selected ? 'bg-teal text-white' : 'bg-teal/10 text-teal'
+                    selected ? 'bg-teal-ink text-white' : 'bg-teal/10 text-teal-ink'
                   }`}
                 >
                   <Icon size={20} strokeWidth={1.8} aria-hidden />

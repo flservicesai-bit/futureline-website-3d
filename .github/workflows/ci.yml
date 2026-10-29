@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: fl
+          POSTGRES_PASSWORD: fl
+          POSTGRES_DB: futureline
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://fl:fl@localhost:5432/futureline
+      NEXTAUTH_SECRET: ci-only-not-a-secret
+      NEXTAUTH_URL: http://localhost:5000
+      APP_URL: http://localhost:5000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      # React 18 is pinned while @react-three/* declare React 19 peers.
+      - run: npm ci --legacy-peer-deps --no-audit --no-fund
+      - run: npx prisma generate
+      - name: Type-check
+        run: npx tsc --noEmit
+      - name: Client components have their messages
+        run: npm run check:messages
+      - name: Check the schema applies without a data-loss prompt (as deploy.sh runs it)
+        run: npx prisma db push --skip-generate
+      - name: Build
+        run: npm run build

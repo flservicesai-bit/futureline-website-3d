@@ -1,15 +1,11 @@
-import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import {
   ServiceDetailLayout,
   type ServiceDetailData,
 } from '@/components/sections/ServiceDetailLayout';
+import { metadataFor } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Custom Software — FutureLine',
-  description:
-    'Purpose-built platforms shaped around how your team actually works. Live in 6–10 weeks. You own the code. No licence tax — ever.',
-};
+export const generateMetadata = metadataFor('servicesCustomSoftware', '/services/custom-software');
 
 export default async function CustomSoftwarePage() {
   const t = await getTranslations('servicePages.customSoftware');

@@ -19,3 +19,8 @@ next-env.d.ts
 
 # PM2 runtime logs
 logs/
+
+# Design references and pasted notes: keep them locally if you use them, but
+# out of the repo (218 MB that every server checkout carried).
+/reference/
+/attached_assets/

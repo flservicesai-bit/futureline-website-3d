@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowRight, X, Check } from 'lucide-react';
 import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 type BuildKind = 'dashboard' | 'mobile' | 'portal' | 'crm';
 
@@ -124,6 +125,7 @@ function MobileMockup() {
 }
 
 function PortalMockup() {
+  const t = useTranslations('buildMockup');
   return (
     <div className="flex h-full flex-col">
       <ChromeBar />
@@ -142,11 +144,11 @@ function PortalMockup() {
             <span className="mt-1.5 block h-1 w-full rounded-full bg-canvas-card" />
             <span className="mt-0.5 block h-1 w-1/2 rounded-full bg-canvas-card" />
             <div className="mt-2 flex items-center gap-1.5">
-              <span className="rounded-full bg-lab/15 px-1.5 py-0.5 text-[7px] font-mono uppercase tracking-widest text-lab">
-                Active
+              <span className="rounded-full bg-lab/15 px-1.5 py-0.5 text-[7px] font-mono uppercase tracking-widest text-lab-ink">
+                {t('active')}
               </span>
               <span className="rounded-full bg-canvas-card px-1.5 py-0.5 text-[7px] font-mono uppercase tracking-widest text-ink-muted">
-                Draft
+                {t('draft')}
               </span>
             </div>
           </div>
@@ -189,7 +191,7 @@ function CrmMockup() {
               className={[
                 'rounded-full px-1.5 py-0.5 text-[6px] font-mono uppercase tracking-widest',
                 row.status === 'active'
-                  ? 'bg-lab/15 text-lab'
+                  ? 'bg-lab/15 text-lab-ink'
                   : row.status === 'pending'
                     ? 'bg-amber-400/15 text-amber-400/80'
                     : 'bg-canvas-card text-ink-muted',
@@ -226,9 +228,10 @@ function BuildTileBody({
   industry: string;
   clickable: boolean;
 }) {
+  const t = useTranslations('buildMockup');
   const Mockup = MOCKUP_MAP[kind];
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-hairline bg-canvas-card text-left transition-all duration-500 hover:border-lab/35 hover:bg-canvas-card">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-hairline bg-canvas-card text-start transition-all duration-500 hover:border-lab/35 hover:bg-canvas-card">
       <span
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -244,7 +247,7 @@ function BuildTileBody({
         <Mockup />
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-lab/85">
+        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-lab-ink">
           {industry}
         </p>
         <h3 className="mt-3 text-lg font-semibold tracking-tight text-navy">
@@ -259,11 +262,11 @@ function BuildTileBody({
         {/* mt-auto pushes the footer to the bottom of the flex container
             regardless of subtitle height — gives the column its alignment
             without putting the subtitle at flex-shrink risk. */}
-        <div className="mt-auto flex items-center gap-1.5 border-t border-hairline pt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink-muted transition-colors duration-300 group-hover:text-lab">
-          {clickable ? 'See the build' : 'Custom build'}
+        <div className="mt-auto flex items-center gap-1.5 border-t border-hairline pt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink-muted transition-colors duration-300 group-hover:text-lab-ink">
+          {clickable ? t('seeBuild') : t('customBuild')}
           <ArrowRight
             size={11}
-            className="transition-transform duration-300 group-hover:translate-x-0.5"
+            className="transition-transform duration-300 group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5"
           />
         </div>
       </div>
@@ -290,6 +293,7 @@ function BuildDetailModal({
   tile: BuildTileData;
   onClose: () => void;
 }) {
+  const t = useTranslations('buildMockup');
   const Mockup = MOCKUP_MAP[tile.kind];
 
   useEffect(() => {
@@ -347,9 +351,9 @@ function BuildDetailModal({
         <button
           autoFocus
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t('close')}
           data-cursor="hover"
-          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-hairline bg-canvas-card text-ink backdrop-blur-md transition-all duration-200 hover:border-hairline hover:bg-canvas-card hover:text-navy"
+          className="absolute end-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-hairline bg-canvas-card text-ink backdrop-blur-md transition-all duration-200 hover:border-hairline hover:bg-canvas-card hover:text-navy"
         >
           <X size={16} strokeWidth={2.25} />
         </button>
@@ -365,7 +369,7 @@ function BuildDetailModal({
             </div>
           </div>
           <div className="md:col-span-7">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab">
+            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab-ink">
               {tile.industry} · Example build
             </p>
             <h2
@@ -383,8 +387,8 @@ function BuildDetailModal({
         {/* Who it's for */}
         <div className="grid grid-cols-1 gap-6 border-b border-hairline p-7 md:grid-cols-12 md:p-10">
           <div className="md:col-span-3">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab">
-              Who it’s for
+            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab-ink">
+              {t('whoItsFor')}
             </p>
           </div>
           <p className="text-base leading-relaxed text-ink md:col-span-9 md:text-lg">
@@ -395,8 +399,8 @@ function BuildDetailModal({
         {/* Replaces */}
         <div className="grid grid-cols-1 gap-6 border-b border-hairline p-7 md:grid-cols-12 md:p-10">
           <div className="md:col-span-3">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab">
-              Replaces
+            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab-ink">
+              {t('replaces')}
             </p>
           </div>
           <p className="text-base leading-relaxed text-ink md:col-span-9 md:text-lg">
@@ -407,8 +411,8 @@ function BuildDetailModal({
         {/* Features */}
         <div className="grid grid-cols-1 gap-6 border-b border-hairline p-7 md:grid-cols-12 md:p-10">
           <div className="md:col-span-3">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab">
-              What it does
+            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab-ink">
+              {t('whatItDoes')}
             </p>
           </div>
           <ul className="space-y-3 md:col-span-9">
@@ -419,7 +423,7 @@ function BuildDetailModal({
               >
                 <span
                   aria-hidden
-                  className="mt-1 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-lab/40 bg-lab/10 text-lab"
+                  className="mt-1 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border border-lab/40 bg-lab/10 text-lab-ink"
                 >
                   <Check size={11} strokeWidth={2.5} />
                 </span>
@@ -432,15 +436,15 @@ function BuildDetailModal({
         {/* Results */}
         <div className="grid grid-cols-1 gap-6 border-b border-hairline p-7 md:grid-cols-12 md:p-10">
           <div className="md:col-span-3">
-            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab">
-              Typical results
+            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-lab-ink">
+              {t('typicalResults')}
             </p>
           </div>
           <ul className="space-y-3 md:col-span-9">
             {tile.detail.results.map((r, i) => (
               <li
                 key={i}
-                className="border-l-2 border-lab/40 pl-4 text-base leading-relaxed text-ink md:text-lg"
+                className="border-s-2 border-lab/40 ps-4 text-base leading-relaxed text-ink md:text-lg"
               >
                 {r}
               </li>
@@ -461,8 +465,8 @@ function BuildDetailModal({
             data-cursor-strength="22"
             className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-colors hover:bg-canvas-card"
           >
-            Get a free audit
-            <ArrowRight size={14} />
+            {t('freeAudit')}
+            <ArrowRight size={14} className="rtl:rotate-180" />
           </Link>
         </div>
       </div>

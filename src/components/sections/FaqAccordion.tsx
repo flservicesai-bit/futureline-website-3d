@@ -24,7 +24,7 @@ export async function FaqAccordion() {
       />
       <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
-          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal">
+          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal-ink">
             {t('eyebrow')}
           </p>
           {/* h1: this section is the whole /faq page and its only heading. */}
@@ -47,7 +47,7 @@ export async function FaqAccordion() {
                 {item.question}
                 <span
                   aria-hidden
-                  className="shrink-0 text-2xl font-light text-teal transition-transform duration-300 group-open:rotate-45"
+                  className="shrink-0 text-2xl font-light text-teal-ink transition-transform duration-300 group-open:rotate-45"
                 >
                   +
                 </span>

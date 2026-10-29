@@ -8,6 +8,7 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { HtmlLangSync } from '@/components/HtmlLangSync';
+import { clientMessages } from '@/i18n/client-namespaces';
 
 /** Pre-render both locale shells at build time. */
 export function generateStaticParams() {
@@ -33,7 +34,8 @@ export default async function LocaleLayout({
   // so the root's NextIntlClientProvider would keep serving the previous
   // locale's messages to client components. This inner provider re-renders
   // with the switched locale, and HtmlLangSync flips <html lang/dir> to match.
-  const messages = await getMessages();
+  // Only the namespaces client components use; see client-namespaces.ts.
+  const messages = clientMessages(await getMessages());
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>

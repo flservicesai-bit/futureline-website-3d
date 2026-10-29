@@ -105,7 +105,7 @@ export function ConfirmPanel() {
   };
 
   const linkClass =
-    'font-mono text-[11px] uppercase tracking-[0.3em] text-teal transition-colors hover:text-teal-dark';
+    'font-mono text-[11px] uppercase tracking-[0.3em] text-teal-ink transition-colors hover:text-navy';
 
   return (
     <main className="fl-light relative flex min-h-screen flex-col items-center justify-center bg-canvas px-6 py-20 text-ink">
@@ -116,7 +116,7 @@ export function ConfirmPanel() {
       >
         {phase === 'saving' && (
           <>
-            <Loader2 size={28} className="mx-auto mb-6 animate-spin text-teal" aria-hidden />
+            <Loader2 size={28} className="mx-auto mb-6 animate-spin text-teal-ink" aria-hidden />
             <p className="text-sm text-ink-muted">{t('done.saving')}</p>
           </>
         )}
@@ -124,7 +124,7 @@ export function ConfirmPanel() {
         {phase === 'saved' && (
           <>
             <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-teal/30 bg-teal/10">
-              <CheckCircle size={28} className="text-teal" aria-hidden />
+              <CheckCircle size={28} className="text-teal-ink" aria-hidden />
             </div>
             <h1 className="mb-3 font-display text-3xl font-bold tracking-tight text-navy">
               {t('done.title')}

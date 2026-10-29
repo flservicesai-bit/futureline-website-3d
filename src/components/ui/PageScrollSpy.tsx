@@ -10,6 +10,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export interface ScrollSpySection {
   id: string;
@@ -17,6 +18,7 @@ export interface ScrollSpySection {
 }
 
 export function PageScrollSpy({ sections }: { sections: ScrollSpySection[] }) {
+  const a = useTranslations('a11y');
   const [active, setActive] = useState<string>(sections[0]?.id ?? '');
 
   useEffect(() => {
@@ -43,8 +45,8 @@ export function PageScrollSpy({ sections }: { sections: ScrollSpySection[] }) {
 
   return (
     <nav
-      aria-label="On this page"
-      className="pointer-events-none fixed left-6 top-1/2 z-30 hidden -translate-y-1/2 xl:block"
+      aria-label={a('onThisPage')}
+      className="pointer-events-none fixed start-6 top-1/2 z-30 hidden -translate-y-1/2 xl:block"
     >
       <ul className="pointer-events-auto flex flex-col gap-3.5">
         {sections.map((s) => {
@@ -61,7 +63,7 @@ export function PageScrollSpy({ sections }: { sections: ScrollSpySection[] }) {
                   aria-hidden="true"
                   className={[
                     'block h-1.5 rounded-full transition-all duration-300',
-                    isActive ? 'w-6 bg-lab' : 'w-3 bg-canvas-card group-hover:bg-canvas-card',
+                    isActive ? 'w-6 bg-lab' : 'w-3 bg-ink/25 group-hover:bg-ink/50',
                   ].join(' ')}
                   style={isActive ? { boxShadow: '0 0 10px 2px rgba(24,169,153,0.55)' } : undefined}
                 />
@@ -69,7 +71,7 @@ export function PageScrollSpy({ sections }: { sections: ScrollSpySection[] }) {
                   className={[
                     'whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.28em] transition-all duration-300',
                     isActive
-                      ? 'text-lab opacity-100'
+                      ? 'text-lab-ink opacity-100'
                       : 'text-ink-muted opacity-0 group-hover:opacity-100',
                   ].join(' ')}
                 >
