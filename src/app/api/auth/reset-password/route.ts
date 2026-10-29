@@ -59,6 +59,8 @@ export async function POST(req: Request) {
         resetTokenExpiry: null,
         // Sign out every existing session, in case one was stolen.
         sessionVersion: { increment: 1 },
+        // The link arrived by email, so the owner controls the address.
+        emailVerified: user.emailVerified ?? new Date(),
       },
     });
 

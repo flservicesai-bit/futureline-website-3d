@@ -1,10 +1,17 @@
 import { z } from 'zod';
 import { PASSWORD_MIN_LENGTH } from '@/lib/password';
 
+/**
+ * Emails are stored trimmed and lower-case. The column is case-sensitive, so
+ * "Jane@x.com" and "jane@x.com" used to be two accounts, and logging in with
+ * the other casing failed.
+ */
+export const emailField = z.string().trim().toLowerCase().email('Invalid email address');
+
 export const registerSchema = z.object({
   firstName: z.string().min(1, 'First name is required').max(50),
   lastName: z.string().min(1, 'Last name is required').max(50),
-  email: z.string().email('Invalid email address'),
+  email: emailField,
   password: z.string().min(PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters`).max(100),
   confirmPassword: z.string().min(1, 'Please confirm your password'),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -15,7 +22,7 @@ export const registerSchema = z.object({
 export const leadSchema = z.object({
   firstName: z.string().min(1, 'First name is required').max(50),
   lastName: z.string().min(1, 'Last name is required').max(50),
-  email: z.string().email('Invalid email address'),
+  email: emailField,
   phone: z.string().max(30).optional().nullable(),
   company: z.string().max(120).optional().nullable(),
   tourType: z.string().max(200).optional().default('General Enquiry'),

@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { randomBytes } from 'crypto';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { findUserByEmail } from '@/lib/user-email';
 
 async function requireAdmin() {
   const session = await getServerSession(authOptions);
@@ -97,7 +98,7 @@ export async function POST(req: Request) {
     // Only check uniqueness when admin actually entered an email — the
     // generated placeholder is unique-by-construction.
     if (emailInput) {
-      const existing = await prisma.user.findUnique({ where: { email } });
+      const existing = await findUserByEmail(email);
       if (existing) {
         return NextResponse.json(
           { error: 'A user with that email already exists.' },

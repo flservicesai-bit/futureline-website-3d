@@ -18,6 +18,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Send, CheckCircle } from 'lucide-react';
+import { Honeypot, HONEYPOT_FIELD, honeypotValue } from '@/components/Honeypot';
 
 interface Props {
   /** Stored on the lead so funnels are distinguishable in /admin/leads. */
@@ -45,8 +46,9 @@ export default function AuditEnquiryForm({
   });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const trap = honeypotValue(e.currentTarget);
     setStatus('sending');
     try {
       const res = await fetch('/api/leads', {
@@ -57,6 +59,7 @@ export default function AuditEnquiryForm({
           message: form.message.trim() || 'No detail provided — requested a systems audit.',
           tourType: enquiryType,
           source,
+          [HONEYPOT_FIELD]: trap,
         }),
       });
       if (res.ok) {
@@ -200,6 +203,8 @@ export default function AuditEnquiryForm({
           placeholder={t('messagePlaceholder')}
         />
       </div>
+
+      <Honeypot />
 
       <button
         type="submit"

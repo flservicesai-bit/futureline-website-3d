@@ -457,6 +457,19 @@
       "errorFailed": "Failed to reset password.",
       "errorGeneric": "Something went wrong. Please try again.",
       "eyebrow": "New password"
+    },
+    "verify": {
+      "eyebrow": "Email confirmation",
+      "title": "Confirm your email",
+      "subtitle": "Confirm that this address belongs to you to keep your account secure.",
+      "confirm": "Confirm my email",
+      "confirming": "Confirming…",
+      "doneTitle": "Email confirmed",
+      "doneBody": "Thank you. Your email address is confirmed.",
+      "continue": "Continue",
+      "invalidTitle": "This link has expired",
+      "invalidBody": "The confirmation link is invalid or has already been used. Sign in to continue.",
+      "signIn": "Sign in"
     }
   },
   "courseEnquiry": {
@@ -2237,7 +2250,11 @@
     },
     "courseTitle": "{title} — FutureLine.ai",
     "courseFallbackDescription": "Learn {title} with FutureLine.",
-    "courseNotFound": "Course not found — FutureLine.ai"
+    "courseNotFound": "Course not found — FutureLine.ai",
+    "verifyEmail": {
+      "title": "Confirm your email — FutureLine.ai",
+      "description": "Confirm the email address for your FutureLine account."
+    }
   },
   "notFound": {
     "eyebrow": "FutureLine",

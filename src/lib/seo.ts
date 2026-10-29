@@ -110,7 +110,8 @@ type MetaKey =
   | 'login'
   | 'register'
   | 'forgotPassword'
-  | 'resetPassword';
+  | 'resetPassword'
+  | 'verifyEmail';
 
 /**
  * Builds a page's generateMetadata from its translated title/description:

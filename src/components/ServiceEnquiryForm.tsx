@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Send, CheckCircle } from 'lucide-react';
+import { Honeypot, HONEYPOT_FIELD, honeypotValue } from '@/components/Honeypot';
 
 export default function ServiceEnquiryForm() {
   const t = useTranslations('serviceForm');
@@ -14,14 +15,15 @@ export default function ServiceEnquiryForm() {
   });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const trap = honeypotValue(e.currentTarget);
     setStatus('sending');
     try {
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, source: 'FL Services' }),
+        body: JSON.stringify({ ...form, source: 'FL Services', [HONEYPOT_FIELD]: trap }),
       });
       if (res.ok) {
         setStatus('sent');
@@ -129,6 +131,8 @@ export default function ServiceEnquiryForm() {
           placeholder={t('messagePlaceholder')}
         />
       </div>
+
+      <Honeypot />
 
       <button
         type="submit"

@@ -7,6 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start -p 5000 -H 0.0.0.0",
     "seed": "npx tsx prisma/seed.ts",
+    "normalize-emails": "npx tsx prisma/normalize-emails.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

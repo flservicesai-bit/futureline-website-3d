@@ -4,9 +4,12 @@ import { prisma } from '@/lib/prisma';
 import { sendEmail } from '@/lib/notifications';
 import { rateLimit, getRateLimitHeaders, getClientIp } from '@/lib/rateLimit';
 import { z } from 'zod';
+import { emailField } from '@/lib/validations';
+import { findUserByEmail } from '@/lib/user-email';
+import { siteLink } from '@/lib/site-link';
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: emailField,
 });
 
 export async function POST(req: Request) {
@@ -30,7 +33,7 @@ export async function POST(req: Request) {
     }
 
     const { email } = parsed.data;
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await findUserByEmail(email);
 
     if (user && user.isActive) {
       const rawToken = crypto.randomBytes(32).toString('hex');
@@ -45,15 +48,7 @@ export async function POST(req: Request) {
         },
       });
 
-      const appUrl = process.env.APP_URL;
-      let resetUrl: string;
-      if (appUrl) {
-        resetUrl = `${appUrl}/reset-password?token=${rawToken}`;
-      } else {
-        const host = req.headers.get('host') || 'localhost:5000';
-        const protocol = req.headers.get('x-forwarded-proto') || 'http';
-        resetUrl = `${protocol}://${host}/reset-password?token=${rawToken}`;
-      }
+      const resetUrl = siteLink(req, `/reset-password?token=${rawToken}`);
 
       await sendEmail({
         to: user.email,

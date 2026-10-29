@@ -84,12 +84,16 @@ export async function sendEmail(notification: EmailNotification): Promise<boolea
   }
 }
 
-export async function notifyWelcome(user: { name: string; email: string }) {
+export async function notifyWelcome(user: { name: string; email: string }, verifyUrl?: string) {
   const appUrl = process.env.APP_URL || 'https://futureline.ai';
+  // Accounts created with a password get a link proving they own the address.
+  const verify = verifyUrl
+    ? `Please confirm your email address (the link is valid for 24 hours):\n${verifyUrl}\n\n`
+    : '';
   await sendEmail({
     to: user.email,
     subject: 'Welcome to FutureLine!',
-    body: `Dear ${user.name},\n\nWelcome to FutureLine! Your account has been created successfully.\n\nYou can now sign in and explore our professional courses, digital services, and AI solutions.\n\nSign in at any time to get started:\n${appUrl}/login\n\nIf you have any questions, feel free to reach out to our team.\n\nBest regards,\nFutureLine Team`,
+    body: `Dear ${user.name},\n\nWelcome to FutureLine! Your account has been created successfully.\n\n${verify}You can now sign in and explore our professional courses, digital services, and AI solutions.\n\nSign in at any time to get started:\n${appUrl}/login\n\nIf you have any questions, feel free to reach out to our team.\n\nBest regards,\nFutureLine Team`,
     metadata: { type: 'welcome' },
   });
 }
@@ -101,6 +105,16 @@ export async function notifyPasswordChanged(user: { name: string; email: string 
     subject: 'FutureLine - Your Password Has Been Changed',
     body: `Dear ${user.name},\n\nYour password has been successfully changed.\n\nIf you did not make this change, please contact our support team immediately or reset your password here:\n${appUrl}/forgot-password\n\nBest regards,\nFutureLine Team`,
     metadata: { type: 'password_changed' },
+  });
+}
+
+export async function notifyGoogleTookOver(user: { name: string; email: string }) {
+  const appUrl = process.env.APP_URL || 'https://futureline.ai';
+  await sendEmail({
+    to: user.email,
+    subject: 'FutureLine - You now sign in with Google',
+    body: `Dear ${user.name},\n\nYou just signed in to FutureLine with Google. Your email address had not been confirmed yet, so to keep the account yours we removed its old password and signed out every other device.\n\nYou can keep signing in with Google. To use a password as well, set a new one here:\n${appUrl}/forgot-password\n\nBest regards,\nFutureLine Team`,
+    metadata: { type: 'google_took_over' },
   });
 }
 
@@ -145,24 +159,35 @@ export async function notifyLeadConfirmation(lead: {
   message?: string;
   source?: string;
 }) {
+  // This goes to whatever address was typed into a public form, so no free
+  // text from the form reaches it: the topic only when it is one we offer,
+  // the name only when it looks like a name, and the message only when the
+  // caller passes it (it does so for signed-in senders writing to themselves).
   const topic = (lead.topic || '').trim();
   const message = (lead.message || '').trim();
 
-  // Human-readable label for the get-started pillar keys.
+  // Get-started pillar keys and the options on the site's enquiry forms.
   const TOPIC_LABELS: Record<string, string> = {
     consulting: 'AI Consulting',
     applications: 'Applications & Custom Software',
     training: 'Training & Enablement',
     readiness: 'AI Readiness Assessment',
+    'systems audit': 'Systems Audit',
+    digitalisation: 'Digitalisation',
+    'custom software': 'Custom Software',
+    automations: 'Automations',
+    consultation: 'Consultation',
   };
-  const topicLabel = TOPIC_LABELS[topic.toLowerCase()] || topic;
+  const topicLabel = TOPIC_LABELS[topic.toLowerCase()];
+  const name = lead.name.trim();
+  const greetingName = /^\p{L}[\p{L}\p{M}' -]{0,29}$/u.test(name) ? name : 'there';
 
   const subject = topicLabel
     ? `FutureLine — we received your ${topicLabel} request`
     : 'FutureLine — we received your request';
 
   const lines = [
-    `Dear ${lead.name},`,
+    `Hello ${greetingName},`,
     '',
     'Thank you for reaching out to FutureLine. This is an automatic confirmation that your request has reached our team.',
     '',
