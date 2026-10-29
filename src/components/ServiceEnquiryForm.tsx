@@ -40,7 +40,7 @@ export default function ServiceEnquiryForm() {
     return (
       <div className="rounded-md border border-lab/30 bg-lab/[0.04] p-10 text-center">
         <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-lab/30 bg-lab/10">
-          <CheckCircle size={24} className="text-lab" />
+          <CheckCircle size={24} className="text-lab-ink" />
         </div>
         <h3 className="mb-2 text-2xl font-semibold tracking-[-0.01em] text-navy">
           {t('successTitle')}
@@ -50,7 +50,7 @@ export default function ServiceEnquiryForm() {
         </p>
         <button
           onClick={() => setStatus('idle')}
-          className="font-mono text-[11px] uppercase tracking-[0.3em] text-lab transition-colors hover:text-lab-light"
+          className="font-mono text-[11px] uppercase tracking-[0.3em] text-lab-ink transition-colors hover:text-navy"
           data-cursor="hover"
         >
           {t('submitAnother')}

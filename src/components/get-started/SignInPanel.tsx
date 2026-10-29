@@ -70,9 +70,8 @@ function SignInInner() {
   const [googleEnabled, setGoogleEnabled] = useState<boolean | null>(null);
 
   // next-auth's signIn isn't locale-aware, so build the return path by hand.
-  // 'as-needed' prefixing means English is unprefixed and Arabic sits at /ar.
-  const confirmPath =
-    locale === 'en' ? '/get-started/confirm' : `/${locale}/get-started/confirm`;
+  // Every page is locale-prefixed (/en/..., /ar/...).
+  const confirmPath = `/${locale}/get-started/confirm`;
 
   // Is the Google provider actually registered? It only is when the OAuth
   // secrets are set in the environment. We check so the button can fail
@@ -193,7 +192,7 @@ function SignInInner() {
               />
               <span className="font-display text-2xl font-bold tracking-tight">
                 <span className="text-navy">Future</span>
-                <span className="text-teal">Line</span>
+                <span className="text-teal-ink">Line</span>
               </span>
             </div>
 
@@ -245,14 +244,14 @@ function SignInInner() {
               {t('welcome.termsPrefix')}{' '}
               <Link
                 href="/terms"
-                className="text-ink-muted underline decoration-hairline underline-offset-2 transition-colors hover:text-teal"
+                className="text-ink-muted underline decoration-hairline underline-offset-2 transition-colors hover:text-teal-ink"
               >
                 {t('welcome.serviceTerms')}
               </Link>{' '}
               ·{' '}
               <Link
                 href="/privacy"
-                className="text-ink-muted underline decoration-hairline underline-offset-2 transition-colors hover:text-teal"
+                className="text-ink-muted underline decoration-hairline underline-offset-2 transition-colors hover:text-teal-ink"
               >
                 {t('welcome.privacy')}
               </Link>

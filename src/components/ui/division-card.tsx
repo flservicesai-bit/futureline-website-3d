@@ -155,7 +155,7 @@ export default function DivisionCard({ variant, direction }: Props) {
 
             {/* CTA */}
             <motion.div variants={itemVariants} className={`flex items-center gap-2 font-semibold text-sm group-hover:gap-3 transition-all duration-300 ${cfg.ctaText}`}>
-              {cfg.cta} <ChevronRight size={15} />
+              {cfg.cta} <ChevronRight size={15} className="rtl:rotate-180" />
             </motion.div>
           </div>
         </Link>

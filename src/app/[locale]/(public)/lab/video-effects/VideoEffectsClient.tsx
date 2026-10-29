@@ -16,56 +16,38 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Upload, Sparkles, Download, X, Film, RotateCcw } from 'lucide-react';
 
-const EFFECTS = [
-  {
-    id: 'glow',
-    label: 'Cinematic Glow',
-    description: 'Bloom around highlights + warm grade. Reads as polished, dreamy.',
-  },
-  {
-    id: 'neon',
-    label: 'Neon Cyberpunk',
-    description: 'Lifted blues, crushed reds, grain. Reads as synthwave / dark city.',
-  },
-  {
-    id: 'dark',
-    label: 'Dark Aesthetic',
-    description: 'Crushed shadows + vignette. Reads as moody portrait / editorial.',
-  },
-  {
-    id: 'vintage',
-    label: 'Vintage Film',
-    description: 'Warm shift, low saturation, grain, vignette. Reads as Super-8 footage.',
-  },
-] as const;
+// Labels and descriptions live in messages (videoLab.effects.<id>).
+const EFFECTS = ['glow', 'neon', 'dark', 'vintage'] as const;
 
-type EffectId = (typeof EFFECTS)[number]['id'];
+type EffectId = (typeof EFFECTS)[number];
 
 type Status = 'idle' | 'ready' | 'processing' | 'done' | 'error';
 
 const MAX_BYTES = 50 * 1024 * 1024;
 
 export function VideoEffectsClient() {
+  const t = useTranslations('videoLab');
   const [file, setFile] = useState<File | null>(null);
   const [inputPreviewUrl, setInputPreviewUrl] = useState<string>('');
   const [effect, setEffect] = useState<EffectId>('glow');
   const [status, setStatus] = useState<Status>('idle');
   const [resultUrl, setResultUrl] = useState<string>('');
-  const [resultLabel, setResultLabel] = useState<string>('');
+  const [resultEffect, setResultEffect] = useState<EffectId | null>(null);
   const [error, setError] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (f: File | null) => {
     if (!f) return;
     if (f.size > MAX_BYTES) {
-      setError(`File too large. Max ${MAX_BYTES / 1024 / 1024} MB.`);
+      setError(t('tooLarge', { mb: MAX_BYTES / 1024 / 1024 }));
       setStatus('error');
       return;
     }
     if (!f.type.startsWith('video/')) {
-      setError('File must be a video.');
+      setError(t('notVideo'));
       setStatus('error');
       return;
     }
@@ -75,7 +57,7 @@ export function VideoEffectsClient() {
     setInputPreviewUrl(URL.createObjectURL(f));
     setError('');
     setResultUrl('');
-    setResultLabel('');
+    setResultEffect(null);
     setStatus('ready');
   };
 
@@ -104,15 +86,15 @@ export function VideoEffectsClient() {
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(body.error ?? `Server returned ${res.status}.`);
+        setError(body.error ?? t('serverError', { status: res.status }));
         setStatus('error');
         return;
       }
       setResultUrl(body.url);
-      setResultLabel(body.label);
+      setResultEffect(effect);
       setStatus('done');
-    } catch (err: any) {
-      setError(err?.message ?? 'Network error');
+    } catch {
+      setError(t('networkError'));
       setStatus('error');
     }
   };
@@ -122,7 +104,7 @@ export function VideoEffectsClient() {
     setFile(null);
     setInputPreviewUrl('');
     setResultUrl('');
-    setResultLabel('');
+    setResultEffect(null);
     setError('');
     setStatus('idle');
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -140,14 +122,14 @@ export function VideoEffectsClient() {
           onDrop={onDrop}
           className="flex flex-col items-center justify-center rounded-xl border border-dashed border-hairline bg-canvas-card px-6 py-16 text-center transition-colors hover:border-lab/40 hover:bg-canvas-card"
         >
-          <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-lab/30 bg-lab/10 text-lab">
+          <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-lab/30 bg-lab/10 text-lab-ink">
             <Film size={22} />
           </div>
           <h2 className="text-xl font-semibold text-navy md:text-2xl">
-            Drop a video, or click to pick one.
+            {t('dropTitle')}
           </h2>
           <p className="mt-2 max-w-md text-sm text-ink-muted">
-            MP4 / MOV / WebM up to 50&nbsp;MB. The first 30 seconds get processed.
+            {t('dropHint')}
           </p>
           <input
             ref={fileInputRef}
@@ -160,10 +142,10 @@ export function VideoEffectsClient() {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="mt-7 inline-flex items-center gap-2 rounded-full border border-lab/40 bg-lab/[0.12] px-6 py-3 text-sm font-medium text-lab transition-colors hover:border-lab/70 hover:bg-lab/[0.22]"
+            className="mt-7 inline-flex items-center gap-2 rounded-full border border-lab/40 bg-lab/[0.12] px-6 py-3 text-sm font-medium text-lab-ink transition-colors hover:border-lab/70 hover:bg-lab/[0.22]"
           >
             <Upload size={14} />
-            Choose video
+            {t('choose')}
           </button>
         </div>
       )}
@@ -180,8 +162,8 @@ export function VideoEffectsClient() {
             />
             <div className="flex flex-col justify-between gap-4">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-lab">
-                  Loaded
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-lab-ink">
+                  {t('loaded')}
                 </p>
                 <p className="mt-2 truncate text-sm font-medium text-navy">{file?.name}</p>
                 <p className="mt-1 text-xs text-ink-muted">
@@ -194,40 +176,41 @@ export function VideoEffectsClient() {
                 disabled={status === 'processing'}
                 className="inline-flex items-center gap-1.5 self-start rounded-full border border-hairline bg-canvas-card px-4 py-2 text-xs font-medium text-ink transition-colors hover:border-hairline hover:text-navy disabled:opacity-50"
               >
-                <X size={12} /> Choose a different file
+                <X size={12} /> {t('chooseDifferent')}
               </button>
             </div>
           </div>
 
           {/* Effect picker */}
           <div>
-            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-lab">
-              Pick a look
+            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-lab-ink">
+              {t('pickLook')}
             </p>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {EFFECTS.map((eff) => {
-                const selected = eff.id === effect;
+              {EFFECTS.map((id) => {
+                const selected = id === effect;
                 return (
                   <button
-                    key={eff.id}
+                    key={id}
                     type="button"
                     disabled={status === 'processing'}
-                    onClick={() => setEffect(eff.id)}
+                    onClick={() => setEffect(id)}
+                    aria-pressed={selected}
                     className={[
-                      'rounded-lg border p-4 text-left transition-all disabled:opacity-50',
+                      'rounded-lg border p-4 text-start transition-all disabled:opacity-50',
                       selected
                         ? 'border-lab/55 bg-lab/[0.08] shadow-[0_0_0_1px_rgba(24,169,153,0.2)]'
                         : 'border-hairline bg-canvas-card hover:border-hairline',
                     ].join(' ')}
                   >
                     <div className="flex items-baseline justify-between gap-2">
-                      <span className={`text-sm font-semibold ${selected ? 'text-lab' : 'text-navy'}`}>
-                        {eff.label}
+                      <span className={`text-sm font-semibold ${selected ? 'text-lab-ink' : 'text-navy'}`}>
+                        {t(`effects.${id}.label`)}
                       </span>
-                      {selected && <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-lab">selected</span>}
+                      {selected && <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-lab-ink">{t('selected')}</span>}
                     </div>
                     <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">
-                      {eff.description}
+                      {t(`effects.${id}.description`)}
                     </p>
                   </button>
                 );
@@ -237,23 +220,23 @@ export function VideoEffectsClient() {
 
           <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-ink-muted">
-              Processing runs server-side via FFmpeg. Typical time: 10–30s.
+              {t('processingNote')}
             </p>
             <button
               type="button"
               onClick={submit}
               disabled={status === 'processing'}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-black transition-colors hover:bg-canvas-card disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-light disabled:opacity-60"
             >
               {status === 'processing' ? (
                 <>
-                  <span className="inline-block h-3 w-3 animate-spin rounded-full border border-black/30 border-t-black" />
-                  Processing…
+                  <span className="inline-block h-3 w-3 animate-spin rounded-full border border-white/30 border-t-white" />
+                  {t('processing')}
                 </>
               ) : (
                 <>
                   <Sparkles size={14} />
-                  Apply effect
+                  {t('apply')}
                 </>
               )}
             </button>
@@ -267,7 +250,7 @@ export function VideoEffectsClient() {
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <div>
               <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-ink-muted">
-                Before
+                {t('before')}
               </p>
               <video
                 src={inputPreviewUrl}
@@ -277,8 +260,8 @@ export function VideoEffectsClient() {
               />
             </div>
             <div>
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-lab">
-                After · {resultLabel}
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-lab-ink">
+                {t('after')}{resultEffect ? ` · ${t(`effects.${resultEffect}.label`)}` : ''}
               </p>
               <video
                 src={resultUrl}
@@ -295,14 +278,14 @@ export function VideoEffectsClient() {
               onClick={reset}
               className="inline-flex items-center justify-center gap-1.5 rounded-full border border-hairline bg-canvas-card px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-hairline hover:text-navy"
             >
-              <RotateCcw size={13} /> Try another video
+              <RotateCcw size={13} className="rtl:-scale-x-100" /> {t('tryAnother')}
             </button>
             <a
               href={resultUrl}
               download
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-black transition-colors hover:bg-canvas-card"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-light"
             >
-              <Download size={14} /> Download
+              <Download size={14} /> {t('download')}
             </a>
           </div>
         </div>
@@ -310,16 +293,16 @@ export function VideoEffectsClient() {
 
       {/* Error state — surfaces server message, lets user retry */}
       {status === 'error' && (
-        <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-5">
-          <p className="text-sm font-medium text-red-300">
-            {error || 'Something went wrong.'}
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-5" role="alert">
+          <p className="text-sm font-medium text-red-700">
+            {error || t('genericError')}
           </p>
           <button
             type="button"
             onClick={reset}
-            className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-red-200 hover:text-navy"
+            className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-red-700 hover:text-navy"
           >
-            <RotateCcw size={12} /> Start over
+            <RotateCcw size={12} className="rtl:-scale-x-100" /> {t('startOver')}
           </button>
         </div>
       )}

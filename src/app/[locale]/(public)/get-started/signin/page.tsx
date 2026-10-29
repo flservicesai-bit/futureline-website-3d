@@ -1,10 +1,7 @@
-import type { Metadata } from 'next';
 import { SignInPanel } from '@/components/get-started/SignInPanel';
+import { metadataFor } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Sign in — Get Started — FutureLine.ai',
-  description: 'Sign in with Google or your email to send your request.',
-};
+export const generateMetadata = metadataFor('getStartedSignin', '/get-started/signin', { noIndex: true });
 
 export default function GetStartedSignInPage() {
   return <SignInPanel />;

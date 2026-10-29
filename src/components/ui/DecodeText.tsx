@@ -64,10 +64,12 @@ export function DecodeText({ text, className, frames = 36, delayMs = 600 }: Prop
     }
   }, [text, frames, delayMs, reduced])
 
-  // aria-label pins the announced value to the real text, so the scramble is
-  // never read out mid-resolve.
+  // Screen readers get the real text from a visually hidden copy, so the
+  // scramble is never read out mid-resolve. (aria-label on a <span> is
+  // ignored, which left nothing to read.)
   return (
-    <span className={className} aria-label={text}>
+    <span className={className}>
+      <span className="sr-only">{text}</span>
       <span aria-hidden>{display}</span>
     </span>
   )

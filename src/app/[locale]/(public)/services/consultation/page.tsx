@@ -1,15 +1,11 @@
-import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import {
   ServiceDetailLayout,
   type ServiceDetailData,
 } from '@/components/sections/ServiceDetailLayout';
+import { metadataFor } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Consultation — FutureLine',
-  description:
-    'A plain-English audit of your current systems. No commission, no vendor bias — just an honest read on what to fix first and what to leave alone.',
-};
+export const generateMetadata = metadataFor('servicesConsultation', '/services/consultation');
 
 export default async function ConsultationPage() {
   const t = await getTranslations('servicePages.consultation');

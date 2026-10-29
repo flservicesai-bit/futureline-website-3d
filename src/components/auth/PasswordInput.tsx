@@ -69,7 +69,7 @@ export function PasswordInput({
           aria-label={visible ? hideLabelText : showLabelText}
           aria-pressed={visible}
           title={visible ? hideLabelText : showLabelText}
-          className="absolute inset-y-0 end-0 flex w-11 items-center justify-center rounded-e-md text-ink-muted transition-colors hover:text-teal focus:outline-none focus-visible:text-teal"
+          className="absolute inset-y-0 end-0 flex w-11 items-center justify-center rounded-e-md text-ink-muted transition-colors hover:text-teal-ink focus:outline-none focus-visible:text-teal-ink"
         >
           {visible ? <EyeOff size={17} aria-hidden /> : <Eye size={17} aria-hidden />}
         </button>

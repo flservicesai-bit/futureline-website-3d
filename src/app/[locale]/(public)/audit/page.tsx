@@ -57,7 +57,7 @@ export default async function AuditPage() {
                 {whatYouGet.map((item, i) => (
                   <FadeUp key={i} delay={i * 0.08}>
                     <div className="flex items-start gap-4">
-                      <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-lab/40 bg-lab/10 text-lab">
+                      <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-lab/40 bg-lab/10 text-lab-ink">
                         <CheckCircle2 size={14} strokeWidth={2.25} />
                       </span>
                       <div>
@@ -78,7 +78,7 @@ export default async function AuditPage() {
             <div className="lg:col-span-6">
               <FadeUp>
                 <div className="rounded-2xl border border-hairline bg-canvas-card p-7 backdrop-blur-md md:p-9">
-                  <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.32em] text-lab">
+                  <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.32em] text-lab-ink">
                     {t('formEyebrow')}
                   </p>
                   <BrandedHeading as="h2" size="sm" className="mb-7">

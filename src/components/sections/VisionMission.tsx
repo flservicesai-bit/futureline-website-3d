@@ -106,7 +106,7 @@ export function VisionMission() {
       >
         <div className="mx-auto max-w-3xl space-y-14 px-6 text-center">
           <div>
-            <p className="mb-4 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal">
+            <p className="mb-4 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal-ink">
               {t('visionKicker')}
             </p>
             <h2
@@ -117,7 +117,7 @@ export function VisionMission() {
             </h2>
           </div>
           <div>
-            <p className="mb-4 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal">
+            <p className="mb-4 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal-ink">
               {t('missionKicker')}
             </p>
             <p className="font-display text-2xl font-semibold leading-relaxed text-navy">
@@ -149,7 +149,7 @@ export function VisionMission() {
       >
         <p
           ref={visionKickerRef}
-          className="mb-4 inline-block font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal opacity-0"
+          className="mb-4 inline-block font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal-ink opacity-0"
         >
           {t('visionKicker')}
         </p>
@@ -179,7 +179,7 @@ export function VisionMission() {
       >
         <p
           ref={missionKickerRef}
-          className="mb-4 inline-block font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal opacity-0"
+          className="mb-4 inline-block font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal-ink opacity-0"
         >
           {t('missionKicker')}
         </p>

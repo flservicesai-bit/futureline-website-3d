@@ -92,7 +92,7 @@ export default function AuditEnquiryForm({
             light ? 'border border-teal/30 bg-teal/10' : 'border border-lab/30 bg-lab/10'
           }`}
         >
-          <CheckCircle size={24} className={light ? 'text-teal' : 'text-lab'} />
+          <CheckCircle size={24} className={light ? 'text-teal-ink' : 'text-lab'} />
         </div>
         <h3
           className={`mb-2 text-2xl font-semibold tracking-[-0.01em] ${
@@ -107,7 +107,7 @@ export default function AuditEnquiryForm({
         <button
           onClick={() => setStatus('idle')}
           className={`font-mono text-[11px] uppercase tracking-[0.3em] transition-colors ${
-            light ? 'text-teal hover:text-teal-dark' : 'text-lab hover:text-lab-light'
+            light ? 'text-teal-ink hover:text-navy' : 'text-lab hover:text-lab-light'
           }`}
           data-cursor="hover"
         >
@@ -185,7 +185,7 @@ export default function AuditEnquiryForm({
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
             className="fl-input"
-            placeholder="+968 9765 3461"
+            placeholder={t('phonePlaceholder')}
           />
         </div>
       </div>

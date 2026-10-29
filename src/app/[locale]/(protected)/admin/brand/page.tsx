@@ -1,9 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Palette, Save, Mail } from 'lucide-react';
+import { Palette, Save, Mail, Landmark } from 'lucide-react';
 
 export default function BrandSettingsPage() {
-  const [settings, setSettings] = useState({ companyName: '', tagline: '', primaryColor: '', accentColor: '', logo: '', contactEmail: '', tourismEmail: '' });
+  // Colours start valid: an empty value in <input type="color"> logs a console warning until the fetch lands.
+  const [settings, setSettings] = useState({ companyName: '', tagline: '', primaryColor: '#0F1E3D', accentColor: '#18A999', logo: '', contactEmail: '', tourismEmail: '', bankPayee: '', receiptWhatsapp: '' });
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -28,6 +29,8 @@ export default function BrandSettingsPage() {
         logo: settings.logo,
         contactEmail: settings.contactEmail,
         tourismEmail: settings.tourismEmail,
+        bankPayee: settings.bankPayee,
+        receiptWhatsapp: settings.receiptWhatsapp,
       }),
     });
     setLoading(false);
@@ -105,6 +108,30 @@ export default function BrandSettingsPage() {
               <label className="block text-xs font-bold uppercase tracking-widest text-ink-muted mb-1.5">Contact Email (Tourism)</label>
               <input type="email" value={settings.tourismEmail} onChange={e => setSettings({...settings, tourismEmail: e.target.value})} className="w-full bg-canvas-card border border-hairline rounded-lg px-3 py-2 text-sm text-ink-muted placeholder:text-ink-muted focus:outline-none focus:border-teal-500/50" placeholder="tourism@example.com" />
               <p className="text-xs text-ink-muted mt-1">Used on the FL Tourism page</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-hairline pt-6 mt-2">
+          <div className="flex items-center gap-4 p-4 bg-canvas-card border border-hairline rounded-xl mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center">
+              <Landmark className="text-navy" size={22} />
+            </div>
+            <div>
+              <div className="font-semibold text-navy">Bank Transfer</div>
+              <div className="text-sm text-ink-muted">Shown to customers who pay for a course by bank transfer</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest text-ink-muted mb-1.5">Pay To</label>
+              <input value={settings.bankPayee} onChange={e => setSettings({...settings, bankPayee: e.target.value})} className="w-full bg-canvas-card border border-hairline rounded-lg px-3 py-2 text-sm text-ink-muted placeholder:text-ink-muted focus:outline-none focus:border-teal-500/50" placeholder="Name, account or phone" />
+              <p className="text-xs text-ink-muted mt-1">Exactly as customers should see it</p>
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest text-ink-muted mb-1.5">Receipt WhatsApp Number</label>
+              <input value={settings.receiptWhatsapp} onChange={e => setSettings({...settings, receiptWhatsapp: e.target.value})} className="w-full bg-canvas-card border border-hairline rounded-lg px-3 py-2 text-sm text-ink-muted placeholder:text-ink-muted focus:outline-none focus:border-teal-500/50" />
+              <p className="text-xs text-ink-muted mt-1">Customers send their payment receipt here</p>
             </div>
           </div>
         </div>

@@ -29,7 +29,7 @@ export async function ThreePillars() {
     <section id="services" aria-labelledby="pillars-heading" className="relative py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto mb-14 max-w-2xl text-center">
-          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal">
+          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal-ink">
             {t('eyebrow')}
           </p>
           <h2
@@ -45,7 +45,7 @@ export async function ThreePillars() {
           {PILLARS.map(({ icon: Icon, key, href }) => (
             <TiltCard key={key}>
               <article className="flex h-full flex-col rounded-card border border-hairline bg-canvas-card p-7 fl-elev-1 transition-shadow duration-300 hover:shadow-[var(--fl-elev-3)]">
-                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-teal/10 text-teal">
+                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-teal/10 text-teal-ink">
                   <Icon size={24} strokeWidth={1.8} aria-hidden />
                 </div>
                 <h3 className="mb-4 font-display text-xl font-bold text-navy">{t(`${key}.title`)}</h3>
@@ -62,13 +62,13 @@ export async function ThreePillars() {
                 </ul>
                 <Link
                   href={href}
-                  className="group mt-auto inline-flex items-center gap-1.5 font-display text-sm font-semibold text-teal transition-colors hover:text-teal-dark"
+                  className="group mt-auto inline-flex items-center gap-1.5 font-display text-sm font-semibold text-teal-ink transition-colors hover:text-navy"
                   data-cursor="hover"
                 >
                   {t(`${key}.cta`)}
                   <ArrowRight
                     size={15}
-                    className="transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180"
+                    className="transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1"
                     aria-hidden
                   />
                 </Link>

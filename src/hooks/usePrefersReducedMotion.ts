@@ -4,28 +4,26 @@
  */
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
+
+const QUERY = '(prefers-reduced-motion: reduce)'
+
+function subscribe(onChange: () => void) {
+  const mq = window.matchMedia(QUERY)
+  mq.addEventListener('change', onChange)
+  return () => mq.removeEventListener('change', onChange)
+}
 
 export function usePrefersReducedMotion(): boolean {
-  // Lazy initialiser rather than useState(false): on the client the correct
-  // value is known before first paint, so a section that renders a static
-  // layout under reduced motion does so immediately instead of showing one
-  // animated frame first. Still returns false during SSR, so server and
-  // client markup match.
-  const [prefers, setPrefers] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  })
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefers(mq.matches)
-
-    const handler = (e: MediaQueryListEvent) => setPrefers(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
-
-  return prefers
+  // useSyncExternalStore renders the server value (false) while hydrating and
+  // switches to the real one straight after, so server and client markup
+  // match. Reading matchMedia in a useState initialiser instead made the
+  // first client render differ from the server's under reduced motion, which
+  // React reports as a hydration error (#418) and re-renders the page for.
+  // Components mounted later (client navigation) get the real value at once.
+  return useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(QUERY).matches,
+    () => false,
+  )
 }

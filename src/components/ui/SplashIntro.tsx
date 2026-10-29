@@ -1,16 +1,18 @@
 /**
  * SplashIntro — black-screen counter intro with a curtain reveal.
- * Plays at most once per browser session. Click to skip.
+ * Plays at most once per browser session. Click or press any key to skip.
  */
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useTranslations } from 'next-intl'
 
 const STORAGE_KEY = 'futureline_splash_played'
 
 export function SplashIntro() {
+  const t = useTranslations('footer')
   const [mounted, setMounted] = useState(false)
   const [active, setActive] = useState(false)
   const counterRef = useRef<HTMLSpanElement>(null)
@@ -84,14 +86,17 @@ export function SplashIntro() {
       '<',
     )
 
+    // Any click or key skips it: keyboard users had no way past the overlay.
     const onClick = () => finish(true)
     window.addEventListener('click', onClick)
+    window.addEventListener('keydown', onClick)
 
     function finish(immediate: boolean) {
       if (finishedRef.current) return
       finishedRef.current = true
       sessionStorage.setItem(STORAGE_KEY, '1')
       window.removeEventListener('click', onClick)
+      window.removeEventListener('keydown', onClick)
       if (lockBodyRef.current) {
         document.body.style.overflow = ''
         lockBodyRef.current = false
@@ -115,6 +120,7 @@ export function SplashIntro() {
 
     return () => {
       window.removeEventListener('click', onClick)
+      window.removeEventListener('keydown', onClick)
       tl.kill()
       if (lockBodyRef.current) {
         document.body.style.overflow = ''
@@ -161,7 +167,7 @@ export function SplashIntro() {
           ref={labelRef}
           className="mt-16 text-[10px] uppercase tracking-[0.4em] text-white/35"
         >
-          Systems built for scale
+          {t('tagline')}
         </div>
       </div>
     </div>

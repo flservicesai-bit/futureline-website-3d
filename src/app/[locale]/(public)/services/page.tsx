@@ -9,6 +9,9 @@ import { BrandedHeading } from '@/components/ui/BrandedHeading';
 import { MarqueeStrip } from '@/components/ui/MarqueeStrip';
 import { FadeUp } from '@/components/motion/FadeUp';
 import { SectionEyebrow } from '@/components/ui/SectionEyebrow';
+import { metadataFor } from '@/lib/seo';
+
+export const generateMetadata = metadataFor('services', '/services');
 
 export const dynamic = 'force-dynamic';
 
@@ -32,19 +35,19 @@ export default async function ServicesPage() {
     <main className="bg-canvas">
       {/* ── Hero ── */}
       <section className="relative overflow-hidden border-b border-hairline">
-        {/* Dark canvas backdrop with the signature 3D ribbon on the right side. */}
-        <div className="absolute inset-y-0 right-0 z-0 w-full md:w-1/2">
-          <HeroRibbon3D color="#18A999" tilt={0.32} bloom={0.75} />
+        {/* The signature 3D ribbon on the right side. */}
+        <div className="absolute inset-y-0 end-0 z-0 w-full md:w-1/2">
+          <HeroRibbon3D color="#18A999" tilt={0.32} />
         </div>
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas via-canvas/85 to-transparent md:via-canvas/55"
+          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-canvas via-canvas/85 to-transparent rtl:bg-gradient-to-l md:via-canvas/55"
         />
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 sm:px-6 md:py-44 lg:px-8">
           <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-16">
             <div className="md:col-span-7">
-              <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.4em] text-lab">
+              <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.4em] text-lab-ink">
                 <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-lab shadow-[0_0_10px_2px_rgba(24,169,153,0.55)]" />
                 FL · Lab
               </p>
@@ -65,7 +68,7 @@ export default async function ServicesPage() {
                     href="#services-grid"
                     data-cursor="magnetic"
                     data-cursor-strength="22"
-                    className="rounded-full bg-white px-7 py-3 text-sm font-medium text-black transition-colors hover:bg-canvas-card"
+                    className="rounded-full bg-navy px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-navy-light"
                   >
                     {t('browse')}
                   </Link>
@@ -124,14 +127,14 @@ export default async function ServicesPage() {
                 const inner = (
                   <>
                     <div className="mb-8 flex items-baseline justify-between">
-                      <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-lab">{num}</span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-lab-ink">{num}</span>
                       {service.featured && (
-                        <span className="rounded-full border border-lab/30 bg-lab/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.25em] text-lab">
+                        <span className="rounded-full border border-lab/30 bg-lab/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.25em] text-lab-ink">
                           {t('featured')}
                         </span>
                       )}
                     </div>
-                    <h3 className="text-2xl font-semibold leading-[1.05] tracking-[-0.01em] text-navy transition-colors group-hover:text-lab-light">
+                    <h3 className="text-2xl font-semibold leading-[1.05] tracking-[-0.01em] text-navy transition-colors group-hover:text-navy">
                       {service.title}
                     </h3>
                     <p className="mt-5 flex-1 text-sm leading-relaxed text-ink-muted">
@@ -143,7 +146,7 @@ export default async function ServicesPage() {
                       </span>
                       <ArrowRight
                         size={14}
-                        className="text-ink-muted transition-all group-hover:translate-x-1 group-hover:text-lab"
+                        className="text-ink-muted transition-all group-hover:translate-x-1 group-hover:text-lab-ink rtl:rotate-180 rtl:group-hover:-translate-x-1"
                       />
                     </div>
                   </>

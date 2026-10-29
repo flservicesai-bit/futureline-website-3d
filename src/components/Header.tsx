@@ -42,6 +42,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const t = useTranslations('nav');
+  const a = useTranslations('a11y');
   const locale = useLocale();
   const pathname = usePathname();
 
@@ -90,6 +91,9 @@ export default function Header() {
   // unused, in case it comes back.
   const navLinks = [
     { href: '/get-started', label: t('whatWeOffer') },
+    { href: '/services', label: t('services') },
+    { href: '/ai', label: t('ai') },
+    { href: '/lab/video-effects', label: t('lab') },
     { href: '/#who-we-serve', label: t('whoWeServe'), anchor: '#who-we-serve' },
     { href: '/courses', label: t('courses') },
     { href: '/faq', label: t('faq') },
@@ -137,13 +141,13 @@ export default function Header() {
   };
 
   return (
-    <header className={headerClass} aria-label="Primary">
+    <header className={headerClass} aria-label={a('primaryNav')}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link
             href="/"
             className="group flex items-center gap-2.5"
-            aria-label="FutureLine home"
+            aria-label={a('home')}
             data-cursor="hover"
           >
             {/* The brand mark, exactly as designed — original colours, shape
@@ -167,7 +171,9 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-6 md:flex lg:gap-7" aria-label="Main">
+          {/* Desktop nav from lg up: seven links plus the language switcher don't
+              fit at md, so tablets get the menu button instead. */}
+          <nav className="hidden items-center gap-5 lg:flex xl:gap-7" aria-label={a('mainNav')}>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -185,7 +191,7 @@ export default function Header() {
             <LocaleSwitcher tone={overDarkHero ? 'dark' : 'light'} />
           </nav>
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-3 lg:flex">
             {session ? (
               /* Signed in: identity + account actions behind an avatar, rather
                  than a growing row of bare text links. */
@@ -201,11 +207,11 @@ export default function Header() {
           </div>
 
           <button
-            className={`p-2 transition-colors md:hidden ${
+            className={`p-2 transition-colors lg:hidden ${
               overDarkHero ? 'text-white/85 hover:text-white' : 'text-ink-muted hover:text-navy'
             }`}
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            aria-label={a('toggleMenu')}
             aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
@@ -213,7 +219,7 @@ export default function Header() {
         </div>
 
         {mobileOpen && (
-          <div className="flex flex-col gap-1 border-t border-hairline py-3 md:hidden">
+          <div className="flex flex-col gap-1 border-t border-hairline py-3 lg:hidden">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -228,8 +234,8 @@ export default function Header() {
               </Link>
             ))}
             {/* Same switcher in the mobile menu — the desktop nav is hidden
-                below md, so without this there'd be no way to change
-                language on a phone. */}
+                below lg, so without this there'd be no way to change
+                language on a phone or tablet. */}
             <div className="px-3 py-2">
               <LocaleSwitcher />
             </div>

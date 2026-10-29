@@ -182,8 +182,8 @@ export default async function CoursesPage({
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr] lg:gap-12">
 
             <aside
-              aria-label="Course filters"
-              className="lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-2"
+              aria-label={t('filtersLabel')}
+              className="lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pe-2"
             >
               <div className="flex flex-col gap-6">
                 {/* Search */}
@@ -191,14 +191,14 @@ export default async function CoursesPage({
                     default locale, which sent Arabic searches to /en. */}
                 <form method="GET" action={`/${locale}/courses`} className="w-full" role="search">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" size={14} />
+                    <Search className="absolute start-3 top-1/2 -translate-y-1/2 text-ink-muted" size={14} />
                     <input
                       type="search"
                       name="search"
                       defaultValue={params.search}
                       aria-label={t('searchPlaceholder')}
                       placeholder={t('searchPlaceholder')}
-                      className="fl-input w-full !py-2 !pl-9 !text-xs"
+                      className="fl-input w-full !py-2 !ps-9 !text-xs"
                     />
                   </div>
                   {params.level && <input type="hidden" name="level" value={params.level} />}
@@ -330,9 +330,12 @@ export default async function CoursesPage({
                   if (course.scheduleStatus === 'TBC') return t('scheduleDatesTbc');
                   if (course.scheduleStatus === 'COMPLETED') return t('scheduleNextCohort');
                   if (course.startDate) {
-                    const d = new Date(course.startDate).toLocaleDateString(undefined, {
-                      day: 'numeric', month: 'short',
-                    });
+                    // The visitor's language, not the server's (which printed
+                    // English month names on Arabic pages).
+                    const d = new Date(course.startDate).toLocaleDateString(
+                      locale === 'ar' ? 'ar-OM-u-nu-latn' : 'en-GB',
+                      { day: 'numeric', month: 'short' },
+                    );
                     return course.courseFormat === 'WORKSHOP' ? d : `${t('scheduleStarts')} ${d}`;
                   }
                   return '';
@@ -392,7 +395,7 @@ export default async function CoursesPage({
                       </span>
                       <span className="flex items-center gap-2 text-sm font-semibold text-navy">
                         {priceLabel}
-                        <ArrowRight size={13} className="text-ink-muted transition-all group-hover:translate-x-1 group-hover:text-academy" />
+                        <ArrowRight size={13} className="text-ink-muted transition-all group-hover:translate-x-1 group-hover:text-academy rtl:rotate-180 rtl:group-hover:-translate-x-1" />
                       </span>
                     </div>
                       </Link>
@@ -542,7 +545,7 @@ export default async function CoursesPage({
                   <div className="relative col-span-6 md:col-span-4">
                     <span
                       aria-hidden
-                      className="absolute -left-3 top-1 hidden h-[calc(100%-0.5rem)] w-px bg-gradient-to-b from-academy/40 via-academy/15 to-transparent md:block"
+                      className="absolute -start-3 top-1 hidden h-[calc(100%-0.5rem)] w-px bg-gradient-to-b from-academy/40 via-academy/15 to-transparent md:block"
                     />
                     <p className="text-sm font-medium leading-relaxed text-navy md:text-base">{row.fl}</p>
                   </div>
@@ -680,7 +683,7 @@ export default async function CoursesPage({
                 className="group border-t border-hairline"
               >
                 <summary
-                  className="flex cursor-pointer list-none items-start justify-between gap-6 py-6 text-left"
+                  className="flex cursor-pointer list-none items-start justify-between gap-6 py-6 text-start"
                   data-cursor="hover"
                 >
                   <span className="text-base font-medium leading-snug text-navy md:text-lg">{f.q}</span>
@@ -692,7 +695,7 @@ export default async function CoursesPage({
                     +
                   </span>
                 </summary>
-                <p className="pb-6 pr-8 text-sm leading-relaxed text-ink md:text-base">{f.a}</p>
+                <p className="pb-6 pe-8 text-sm leading-relaxed text-ink md:text-base">{f.a}</p>
               </details>
             ))}
             <div className="border-t border-hairline" />

@@ -1,15 +1,11 @@
-import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import {
   ServiceDetailLayout,
   type ServiceDetailData,
 } from '@/components/sections/ServiceDetailLayout';
+import { metadataFor } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Digitalisation — FutureLine',
-  description:
-    'Replace paper, spreadsheets, and inbox approvals with one system your team will actually use. Live in weeks. Owned forever.',
-};
+export const generateMetadata = metadataFor('servicesDigitalisation', '/services/digitalisation');
 
 export default async function DigitalisationPage() {
   const t = await getTranslations('servicePages.digitalisation');

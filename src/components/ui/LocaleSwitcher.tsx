@@ -14,7 +14,7 @@
 'use client'
 
 import { usePathname, useRouter } from '@/i18n/routing'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { type Locale } from '@/i18n/routing'
 import { Globe } from 'lucide-react'
 
@@ -28,6 +28,7 @@ export function LocaleSwitcher({ tone = 'light' }: { tone?: 'light' | 'dark' }) 
   const pathname = usePathname()
   const router = useRouter()
   const active = useLocale() as Locale
+  const a = useTranslations('a11y')
 
   const light = tone === 'light'
 
@@ -35,7 +36,7 @@ export function LocaleSwitcher({ tone = 'light' }: { tone?: 'light' | 'dark' }) 
   // text links, so it matches their weight, size and colour rather than
   // reading as a separate control.
   return (
-    <div className="inline-flex items-center gap-1.5" role="group" aria-label="Language">
+    <div className="inline-flex items-center gap-1.5" role="group" aria-label={a('language')}>
       <Globe
         size={14}
         aria-hidden
@@ -53,7 +54,11 @@ export function LocaleSwitcher({ tone = 'light' }: { tone?: 'light' | 'dark' }) 
             lang={loc}
             dir={loc === 'ar' ? 'rtl' : 'ltr'}
             aria-current={loc === active ? 'true' : undefined}
-            onClick={() => router.replace(pathname, { locale: loc })}
+            // Keep the query and hash (course filters, #sections) across the
+            // switch; usePathname alone dropped them.
+            onClick={() =>
+              router.replace(`${pathname}${window.location.search}${window.location.hash}`, { locale: loc })
+            }
             // Mirrors Header's linkClass so it reads as one of the nav items.
             className={`text-[13px] font-medium transition-colors ${
               loc === 'ar' ? 'font-arabic' : 'font-display'

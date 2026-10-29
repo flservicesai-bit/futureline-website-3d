@@ -14,12 +14,17 @@ export default function EnrollButton({
   slug,
   price = 0,
   state = 'none',
+  bankPayee,
+  receiptWhatsapp,
 }: {
   courseId: string;
   slug: string;
   /** The price actually charged: the discount price when there is one. */
   price?: number;
   state?: EnrollState;
+  /** Bank-transfer details from Admin > Brand. */
+  bankPayee: string;
+  receiptWhatsapp: string;
 }) {
   const t = useTranslations('enroll');
   const locale = useLocale();
@@ -107,7 +112,7 @@ export default function EnrollButton({
   };
 
   const primaryClass =
-    'block w-full py-3 rounded-lg bg-gradient-to-r from-teal-500 to-blue-600 text-navy text-center text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50 uppercase tracking-widest';
+    'block w-full py-3 rounded-lg bg-gradient-to-r from-navy via-teal-ink to-teal text-white text-center text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50 uppercase tracking-widest';
 
   if (state === 'enrolled') {
     return (
@@ -174,7 +179,7 @@ export default function EnrollButton({
               {submitted ? (
                 <div className="space-y-4 py-4 text-center">
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-teal/20 bg-teal/10">
-                    <CheckCircle className="text-teal" size={28} aria-hidden />
+                    <CheckCircle className="text-teal-ink" size={28} aria-hidden />
                   </div>
                   <h3 id="bank-transfer-title" className="text-lg font-black tracking-tight text-navy">
                     {t('requestSubmitted')}
@@ -201,8 +206,8 @@ export default function EnrollButton({
 
                   <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900">
                     {t.rich('bankInstructions', {
-                      name: 'Musab Al Sabahi, 96532326',
-                      phone: '96532326',
+                      name: bankPayee,
+                      phone: receiptWhatsapp,
                       strong: (chunks) => <strong className="font-semibold text-amber-950">{chunks}</strong>,
                     })}
                   </div>

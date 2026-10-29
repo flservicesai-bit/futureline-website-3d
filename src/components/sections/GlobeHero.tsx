@@ -18,9 +18,11 @@ import GlobeHeroScene from './GlobeHeroCanvasLazy';
 import { HeroNetwork } from './HeroNetwork';
 import { EmergingWordmark } from './EmergingWordmark';
 import { DecodeText } from '@/components/ui/DecodeText';
+import { HeroVideo } from './HeroVideo';
 
 export async function GlobeHero() {
   const t = await getTranslations('hero');
+  const a = await getTranslations('a11y');
   return (
     <section
       id="top"
@@ -82,19 +84,7 @@ export async function GlobeHero() {
           the start, and the hand holds still while the light plays out.
           mix-blend-lighten keeps the robot/scene solid while the neon network
           behind glows through the night sky. */}
-      {/* poster = the video's first frame, so the hero isn't empty while the
-          3.7 MB video downloads on a slow connection. */}
-      <video
-        aria-hidden
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        poster="/hero/hero-poster.jpg"
-        className="pointer-events-none absolute inset-0 z-[1] h-full w-full object-cover mix-blend-lighten opacity-30"
-      >
-        <source src="/hero-test.mp4" type="video/mp4" />
-      </video>
+      <HeroVideo className="pointer-events-none absolute inset-0 z-[1] h-full w-full object-cover mix-blend-lighten opacity-30" />
 
       {/* Perspective grid floor */}
       <div
@@ -141,7 +131,7 @@ export async function GlobeHero() {
             {t('secondaryCta')}
             <ArrowRight
               size={18}
-              className="transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180"
+              className="transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1"
               aria-hidden
             />
             <span
@@ -157,7 +147,7 @@ export async function GlobeHero() {
           a real link there instead of an in-page anchor. */}
       <Link
         href="/get-started"
-        aria-label="See what we offer"
+        aria-label={a('seeOffer')}
         className="absolute bottom-6 left-1/2 z-10 flex h-10 w-6 -translate-x-1/2 justify-center rounded-pill border-[1.6px] border-white/30"
       >
         <span

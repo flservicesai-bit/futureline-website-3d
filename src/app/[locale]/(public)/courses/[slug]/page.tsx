@@ -15,6 +15,7 @@ import {
 import EnrollButton, { type EnrollState } from '@/components/EnrollButton';
 import { WaitlistRecorder } from '@/components/courses/WaitlistRecorder';
 import { formatPrice } from '@/lib/utils';
+import { getBrandSettings } from '@/lib/brand';
 import { AnimatedText } from '@/components/ui/AnimatedText';
 import { BrandedHeading } from '@/components/ui/BrandedHeading';
 import { FadeUp } from '@/components/motion/FadeUp';
@@ -59,6 +60,7 @@ export default async function CourseDetailPage({
 }) {
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: 'courseDetail' });
+  const brand = await getBrandSettings();
   const tc = await getTranslations({ locale, namespace: 'coursesPage' });
   const course = await prisma.course.findUnique({
     where: { slug },
@@ -272,7 +274,7 @@ export default async function CourseDetailPage({
               <div className="sticky top-24 overflow-hidden rounded-md border border-hairline bg-canvas-card backdrop-blur-sm">
                 <div className="relative flex h-40 items-center justify-center border-b border-hairline bg-gradient-to-br from-academy/15 via-canvas to-canvas">
                   <BookOpen className="text-ink-muted" size={36} />
-                  <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                  <div className="absolute bottom-3 start-3 flex items-center gap-2">
                     <span className="rounded-full border border-academy/30 bg-academy/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-academy">
                       {levelLabel}
                     </span>
@@ -307,6 +309,8 @@ export default async function CourseDetailPage({
                     slug={course.slug}
                     price={course.discountPrice ?? course.price}
                     state={enrollState}
+                    bankPayee={brand.bankPayee}
+                    receiptWhatsapp={brand.receiptWhatsapp}
                   />
 
                   <div className="space-y-2.5 border-t border-hairline pt-5 font-mono text-[11px] uppercase tracking-[0.25em] text-ink-muted">

@@ -1,11 +1,10 @@
 /**
  * Locale routing.
  *
- * localePrefix: 'as-needed' is deliberate. English keeps unprefixed URLs
- * (/courses, /services/...) and Arabic is purely additive at /ar/*.
- * Switching to an always-prefixed scheme would move every existing URL and
- * require a redirect map to avoid losing search rankings and breaking
- * inbound links.
+ * Every page lives under a locale prefix: English at /en/*, Arabic at /ar/*
+ * (localePrefix 'always', see the note below for why). Unprefixed URLs from
+ * before the switch (/courses, /services/...) redirect to the visitor's
+ * language, so old links keep working.
  *
  * Note: bilingual support was removed at one point and then restored by
  * request — see the git history around "remove Arabic/bilingual support"

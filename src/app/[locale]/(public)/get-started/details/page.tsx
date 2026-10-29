@@ -1,10 +1,7 @@
-import type { Metadata } from 'next';
 import { DetailsAuthForm } from '@/components/get-started/DetailsAuthForm';
+import { metadataFor } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Submit — Get Started — FutureLine.ai',
-  description: 'Tell us where you need us most, and submit your request.',
-};
+export const generateMetadata = metadataFor('getStartedDetails', '/get-started/details', { noIndex: true });
 
 export default function GetStartedDetailsPage() {
   return <DetailsAuthForm />;

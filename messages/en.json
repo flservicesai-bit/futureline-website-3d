@@ -14,7 +14,10 @@
     "readinessAssessment": "Readiness assessment",
     "dashboard": "Dashboard",
     "signOut": "Sign out",
-    "account": "Account"
+    "account": "Account",
+    "services": "Services",
+    "ai": "AI",
+    "lab": "Lab"
   },
   "hero": {
     "eyebrow": "AI Consulting · Applications · Training",
@@ -201,7 +204,10 @@
       "courses": "Courses",
       "audit": "Systems audit",
       "privacy": "Privacy",
-      "terms": "Terms"
+      "terms": "Terms",
+      "services": "Services",
+      "ai": "AI & Automation",
+      "lab": "Video Effects Lab"
     }
   },
   "getStarted": {
@@ -331,6 +337,7 @@
       "email": "Email",
       "company": "Company",
       "phone": "Phone",
+      "phonePlaceholder": "+968 XXXX XXXX",
       "optional": "(optional)",
       "firstNamePlaceholder": "First name",
       "lastNamePlaceholder": "Last name",
@@ -567,11 +574,6 @@
         "value": "50+",
         "label": "AI projects planned",
         "sub": "In active scoping across industries we serve."
-      },
-      {
-        "value": "98%",
-        "label": "Target satisfaction",
-        "sub": "Designed so the system pays for itself, fast."
       },
       {
         "value": "5+",
@@ -1856,7 +1858,8 @@
     ],
     "enquiryEyebrow": "Get in touch",
     "enquiryHeading": "Can't find what you need?",
-    "enquiryLede": "A different schedule, a different topic, or training that doesn't fit a public cohort — tell us what you're working toward and we'll come back within a business day."
+    "enquiryLede": "A different schedule, a different topic, or training that doesn't fit a public cohort — tell us what you're working toward and we'll come back within a business day.",
+    "filtersLabel": "Course filters"
   },
   "changePassword": {
     "title": "Change Password",
@@ -2254,6 +2257,46 @@
     "verifyEmail": {
       "title": "Confirm your email — FutureLine.ai",
       "description": "Confirm the email address for your FutureLine account."
+    },
+    "services": {
+      "title": "Services — FutureLine.ai",
+      "description": "Four ways we build the digital infrastructure that lets your business scale without breaking. Done in weeks, not years. No recurring licence tax."
+    },
+    "servicesDigitalisation": {
+      "title": "Digitalisation — FutureLine.ai",
+      "description": "Replace paper, spreadsheets, and inbox approvals with one system your team will actually use. Live in weeks. Owned forever. AI-ready by design."
+    },
+    "servicesCustomSoftware": {
+      "title": "Custom Software — FutureLine.ai",
+      "description": "Purpose-built platforms shaped around how your team actually works. Live in 6–10 weeks. You own the code. No licence tax — ever."
+    },
+    "servicesConsultation": {
+      "title": "Consultation — FutureLine.ai",
+      "description": "A plain-English audit of your current systems. No commission, no vendor bias — just an honest read on what to fix first and what to leave alone."
+    },
+    "servicesAutomations": {
+      "title": "Automations — FutureLine.ai",
+      "description": "AI-powered workflows that eliminate manual work, cut errors, and give your team their day back. Live in weeks. Owned forever."
+    },
+    "ai": {
+      "title": "AI & Automation — FutureLine.ai",
+      "description": "Practical AI for businesses. We don't build AI for the sake of AI — every model and automation we ship solves a real problem and pays its way."
+    },
+    "videoLab": {
+      "title": "Video Effects Lab — FutureLine.ai",
+      "description": "Upload a short video, pick a generative look, get the result in seconds. An FL Lab demo of AI-built video tools."
+    },
+    "getStartedDetails": {
+      "title": "Submit — Get Started — FutureLine.ai",
+      "description": "Tell us where you need us most, and submit your request."
+    },
+    "getStartedSignin": {
+      "title": "Sign in — Get Started — FutureLine.ai",
+      "description": "Sign in with Google or your email to send your request."
+    },
+    "getStartedConfirm": {
+      "title": "Your request — Get Started — FutureLine.ai",
+      "description": "Sending your request to the FutureLine team."
     }
   },
   "notFound": {
@@ -2277,5 +2320,89 @@
     "studentsEnrolled": "{count, plural, one {{n} student enrolled} other {{n} students enrolled}}",
     "seatsLeft": "{count, plural, =0 {No seats left} one {{n} seat left} other {{n} seats left}}",
     "fallbackDescription": "Learn {title} with FutureLine."
+  },
+  "buildMockup": {
+    "seeBuild": "See the build",
+    "customBuild": "Custom build",
+    "close": "Close",
+    "active": "Active",
+    "draft": "Draft",
+    "whoItsFor": "Who it’s for",
+    "replaces": "Replaces",
+    "whatItDoes": "What it does",
+    "typicalResults": "Typical results",
+    "freeAudit": "Get a free audit"
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "We encountered an unexpected error. Please try again or return to the home page.",
+    "retry": "Try again",
+    "home": "Go home",
+    "errorId": "Error ID"
+  },
+  "inactivity": {
+    "title": "Session security",
+    "subtitle": "Inactive for too long",
+    "expiresIn": "Your session will expire in",
+    "stay": "Stay signed in",
+    "signOut": "Sign out now",
+    "note": "For your security, we automatically sign out inactive sessions."
+  },
+  "a11y": {
+    "onThisPage": "On this page",
+    "language": "Language",
+    "home": "FutureLine home",
+    "seeOffer": "See what we offer",
+    "whatWeDo": "What we do",
+    "primaryNav": "Primary",
+    "mainNav": "Main",
+    "toggleMenu": "Toggle menu",
+    "progress": "Progress"
+  },
+  "videoLab": {
+    "eyebrow": "FL Lab · Demo",
+    "heading": "Apply Cinematic Effects to Your Video.",
+    "lede": "Upload a short clip, pick a look, download the result. The processing pipeline runs on FFmpeg. The effect graphs were prototyped with AI — exactly the workflow FL Academy teaches.",
+    "signInPrompt": "Sign in to try the lab. Videos are processed on our servers, so it's open to registered users.",
+    "signIn": "Sign in to continue",
+    "limits": "Max 50 MB · clipped to the first 30 seconds · MP4 output · inspired by the Saudi visual artist <artist>@abdullrhman_ha</artist>'s TouchDesigner-into-Claude workflow.",
+    "effects": {
+      "glow": {
+        "label": "Cinematic Glow",
+        "description": "Bloom around highlights + warm grade. Reads as polished, dreamy."
+      },
+      "neon": {
+        "label": "Neon Cyberpunk",
+        "description": "Lifted blues, crushed reds, grain. Reads as synthwave / dark city."
+      },
+      "dark": {
+        "label": "Dark Aesthetic",
+        "description": "Crushed shadows + vignette. Reads as moody portrait / editorial."
+      },
+      "vintage": {
+        "label": "Vintage Film",
+        "description": "Warm shift, low saturation, grain, vignette. Reads as Super-8 footage."
+      }
+    },
+    "tooLarge": "File too large. Max {mb} MB.",
+    "notVideo": "File must be a video.",
+    "serverError": "Server returned {status}.",
+    "networkError": "Network error. Please try again.",
+    "dropTitle": "Drop a video, or click to pick one.",
+    "dropHint": "MP4 / MOV / WebM up to 50 MB. The first 30 seconds get processed.",
+    "choose": "Choose video",
+    "loaded": "Loaded",
+    "chooseDifferent": "Choose a different file",
+    "pickLook": "Pick a look",
+    "selected": "selected",
+    "processingNote": "Processing runs server-side via FFmpeg. Typical time: 10–30s.",
+    "processing": "Processing…",
+    "apply": "Apply effect",
+    "before": "Before",
+    "after": "After",
+    "tryAnother": "Try another video",
+    "download": "Download",
+    "genericError": "Something went wrong.",
+    "startOver": "Start over"
   }
 }

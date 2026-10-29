@@ -16,6 +16,9 @@ const config: Config = {
           DEFAULT: '#18A999',
           light: '#20C5B3',
           dark: '#148F82',
+          // For text and icons on the light surfaces: brand teal itself is
+          // 2.8:1 on canvas, below the 4.5:1 small text needs. This is 5:1.
+          ink: '#0F7A6E',
         },
         // Mint — the bright end of the wordmark gradient. Genuinely distinct
         // from teal.light (#20C5B3); the navy→teal→mint ramp is what gives
@@ -45,6 +48,7 @@ const config: Config = {
           DEFAULT: '#18A999',
           light: '#20C5B3',
           dark: '#148F82',
+          ink: '#0F7A6E', // text on light surfaces, as teal.ink
         },
         // Academy pole — wordmark's blue end (lavender → deep navy).
         // Replaces the off-brand amber so Academy and Lab read as the

@@ -53,12 +53,13 @@ export function GetStartedShell({
   children: React.ReactNode;
 }) {
   const t = useTranslations('getStarted');
+  const a = useTranslations('a11y');
 
   return (
     <main className="fl-light relative min-h-screen bg-canvas px-4 py-16 text-ink sm:px-6 md:py-24 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal">
+          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal-ink">
             {t('eyebrow')}
           </p>
           <h1 className="mb-4 font-display text-4xl font-bold tracking-tight text-navy md:text-5xl">
@@ -67,7 +68,7 @@ export function GetStartedShell({
           <p className="text-lg text-ink-muted">{t('lede')}</p>
         </div>
 
-        <nav aria-label="Progress" className="mb-12">
+        <nav aria-label={a('progress')} className="mb-12">
           <ol className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
             {STEPS.map(({ key, href }, i) => {
               const n = i + 1;
@@ -81,7 +82,7 @@ export function GetStartedShell({
                     done
                       ? 'bg-teal text-white'
                       : active
-                        ? 'border-2 border-teal text-teal'
+                        ? 'border-2 border-teal text-teal-ink'
                         : 'border border-hairline text-ink-muted'
                   }`}
                 >

@@ -143,6 +143,13 @@ rewrite *and* a self-redirect), which took the whole English site down. See the
 note in `src/i18n/routing.ts`. Revisit once that upstream bug is fixed. Consider
 making the redirects permanent (308) for SEO.
 
+### Checks before merging
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request: a
+type-check, `prisma db push` against an empty database (catching a schema
+change that would stop `deploy.sh` with a data-loss prompt), and a full build.
+Builds also fail on type errors locally and on the server.
+
 ### Database migrations
 
 `deploy.sh` runs `prisma db push`, which is additive and a no-op when the
@@ -157,13 +164,13 @@ pg_dump -Fc futureline > backup-$(date +%F).dump
 
 ```bash
 git reset --hard <previous-sha>
-npm ci --legacy-peer-deps && npm run build && pm2 reload futureline
+npm ci --legacy-peer-deps && npm run build && pm2 reload futureline-web
 ```
 
 ### Logs
 
 ```bash
-pm2 logs futureline --lines 100
+pm2 logs futureline-web --lines 100
 pm2 status
 ```
 

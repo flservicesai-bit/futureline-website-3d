@@ -25,7 +25,7 @@ function FooterCol({ title, links }: FooterColProps) {
           <li key={l.label}>
             <Link
               href={l.href}
-              className="text-sm text-ink-muted transition-colors hover:text-teal"
+              className="text-sm text-ink-muted transition-colors hover:text-teal-ink"
               data-cursor="hover"
             >
               {l.label}
@@ -39,6 +39,7 @@ function FooterCol({ title, links }: FooterColProps) {
 
 export default async function Footer() {
   const t = await getTranslations('footer');
+  const a = await getTranslations('a11y');
   const year = new Date().getFullYear();
 
   return (
@@ -46,7 +47,7 @@ export default async function Footer() {
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
           <div className="md:col-span-2">
-            <Link href="/" className="mb-4 inline-flex items-center gap-2.5" aria-label="FutureLine home">
+            <Link href="/" className="mb-4 inline-flex items-center gap-2.5" aria-label={a('home')}>
               <Image
                 src="/images/logo-mark.png"
                 alt=""
@@ -70,6 +71,9 @@ export default async function Footer() {
               { label: t('links.consulting'), href: '/get-started?pillar=consulting' },
               { label: t('links.applications'), href: '/get-started?pillar=applications' },
               { label: t('links.training'), href: '/courses' },
+              { label: t('links.services'), href: '/services' },
+              { label: t('links.ai'), href: '/ai' },
+              { label: t('links.lab'), href: '/lab/video-effects' },
             ]}
           />
 
@@ -87,25 +91,25 @@ export default async function Footer() {
         <div className="mt-14 flex flex-col gap-3 border-t border-hairline pt-8 text-sm text-ink-muted sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {year} FutureLine.ai. {t('rights')}</p>
           <p>
-            <Link href="/courses" className="transition-colors hover:text-teal">
+            <Link href="/courses" className="transition-colors hover:text-teal-ink">
               {t('links.courses')}
             </Link>
             <span aria-hidden className="mx-2">
               ·
             </span>
-            <Link href="/audit" className="transition-colors hover:text-teal">
+            <Link href="/audit" className="transition-colors hover:text-teal-ink">
               {t('links.audit')}
             </Link>
             <span aria-hidden className="mx-2">
               ·
             </span>
-            <Link href="/privacy" className="transition-colors hover:text-teal">
+            <Link href="/privacy" className="transition-colors hover:text-teal-ink">
               {t('links.privacy')}
             </Link>
             <span aria-hidden className="mx-2">
               ·
             </span>
-            <Link href="/terms" className="transition-colors hover:text-teal">
+            <Link href="/terms" className="transition-colors hover:text-teal-ink">
               {t('links.terms')}
             </Link>
           </p>

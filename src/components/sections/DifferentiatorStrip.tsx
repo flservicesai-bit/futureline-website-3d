@@ -21,7 +21,7 @@ export async function DifferentiatorStrip() {
       <div className="mx-auto max-w-6xl px-6">
         <h2
           id="differentiators-heading"
-          className="mb-12 text-center font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal"
+          className="mb-12 text-center font-display text-sm font-semibold uppercase tracking-[0.3em] text-teal-ink"
         >
           {t('heading')}
         </h2>

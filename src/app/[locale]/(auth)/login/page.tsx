@@ -76,7 +76,7 @@ function LoginForm() {
           {t('login.noAccount')}{' '}
           <Link
             href={{ pathname: '/register', query: callbackUrl ? { callbackUrl } : {} }}
-            className="font-semibold text-teal transition-colors hover:text-teal-dark"
+            className="font-semibold text-teal-ink transition-colors hover:text-navy"
           >
             {t('login.createOne')}
           </Link>
@@ -133,7 +133,7 @@ function LoginForm() {
       <div className="mt-5 text-center">
         <Link
           href="/forgot-password"
-          className="text-sm font-medium text-teal transition-colors hover:text-teal-dark"
+          className="text-sm font-medium text-teal-ink transition-colors hover:text-navy"
         >
           {t('login.forgotPassword')}
         </Link>

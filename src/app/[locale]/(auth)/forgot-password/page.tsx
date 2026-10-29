@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
           {t('forgot.rememberPassword')}{' '}
           <Link
             href="/login"
-            className="font-semibold text-teal transition-colors hover:text-teal-dark"
+            className="font-semibold text-teal-ink transition-colors hover:text-navy"
           >
             {t('forgot.signIn')}
           </Link>
@@ -66,7 +66,7 @@ export default function ForgotPasswordPage() {
               setSubmitted(false);
               setEmail('');
             }}
-            className="mx-auto block text-sm font-semibold text-teal transition-colors hover:text-teal-dark"
+            className="mx-auto block text-sm font-semibold text-teal-ink transition-colors hover:text-navy"
           >
             {t('forgot.tryAnother')}
           </button>

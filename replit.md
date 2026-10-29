@@ -1,5 +1,9 @@
 # FutureLine
 
+> **Out of date.** The site no longer runs on Replit (see `docs/DEPLOYMENT.md`),
+> the FL Tourism page and its images were removed, and every URL is now
+> locale-prefixed (`/en/...`, `/ar/...`). The overview below is kept for history.
+
 ## Overview
 FutureLine is a production-ready full-stack web application for a professional AI, training, and digital services company. Built with Next.js 15 (App Router), TypeScript, TailwindCSS, PostgreSQL, and Prisma ORM.
 

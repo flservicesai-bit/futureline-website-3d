@@ -10,7 +10,9 @@
  * dark theme, which made it invisible on the light canvas.
  */
 import type { Metadata } from 'next';
-import { getLocale, getTranslations } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
+import { clientMessages } from '@/i18n/client-namespaces';
 import { Home, BookOpen } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import Header from '@/components/Header';
@@ -29,8 +31,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function NotFound() {
   const t = await getTranslations('notFound');
 
+  // Outside the [locale] tree there is no message provider, and Header and
+  // Footer are client components that need one.
   return (
-    <>
+    <NextIntlClientProvider messages={clientMessages(await getMessages())}>
       <Header />
       <main className="relative flex min-h-[80vh] items-center justify-center overflow-hidden bg-canvas px-4 pb-20 pt-32">
         <div
@@ -39,7 +43,7 @@ export default async function NotFound() {
         />
 
         <div className="relative w-full max-w-md text-center">
-          <p className="mb-6 inline-flex items-center gap-2 rounded-pill border border-teal/20 bg-teal/10 px-3 py-1.5 font-display text-xs font-semibold uppercase tracking-[0.14em] text-teal">
+          <p className="mb-6 inline-flex items-center gap-2 rounded-pill border border-teal/20 bg-teal/10 px-3 py-1.5 font-display text-xs font-semibold uppercase tracking-[0.14em] text-teal-ink">
             <span className="h-1.5 w-1.5 rounded-full bg-teal" />
             {t('eyebrow')}
           </p>
@@ -73,6 +77,6 @@ export default async function NotFound() {
         </div>
       </main>
       <Footer />
-    </>
+    </NextIntlClientProvider>
   );
 }

@@ -8,6 +8,8 @@ const DEFAULTS = {
   logo: null as string | null,
   contactEmail: 'flservices.ai@gmail.com',
   tourismEmail: 'authentic.tour.om@gmail.com',
+  bankPayee: 'Musab Al Sabahi, 96532326',
+  receiptWhatsapp: '96532326',
 };
 
 export async function getBrandSettings() {

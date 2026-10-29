@@ -98,7 +98,7 @@ export function ThreeActStory() {
         <div className="mx-auto max-w-2xl space-y-14 px-6">
           {acts.map((act) => (
             <div key={act.key}>
-              <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal">
+              <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal-ink">
                 {act.kicker}
               </p>
               <h3 className="mb-3 font-display text-3xl font-bold tracking-tight text-navy">
@@ -110,13 +110,13 @@ export function ThreeActStory() {
 
           {/* Same Vision & Mission capstone as the scrubbed version. */}
           <div className="border-t border-hairline pt-10">
-            <p className="mb-2 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal">
+            <p className="mb-2 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal-ink">
               {tv('visionKicker')}
             </p>
             <p className="mb-6 font-display text-2xl font-bold leading-snug tracking-tight text-navy">
               {tv('vision')}
             </p>
-            <p className="mb-2 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal">
+            <p className="mb-2 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal-ink">
               {tv('missionKicker')}
             </p>
             <p className="text-lg leading-relaxed text-ink-muted">{tv('mission')}</p>
@@ -168,7 +168,7 @@ export function ThreeActStory() {
             }}
             className="absolute left-1/2 top-1/2 w-[min(620px,88vw)] -translate-x-1/2 -translate-y-1/2 text-center opacity-0"
           >
-            <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal">
+            <p className="mb-3 font-display text-sm font-semibold uppercase tracking-[0.32em] text-teal-ink">
               {act.kicker}
             </p>
             <h3 className="mb-3 font-display text-[clamp(1.9rem,4.4vw,3.2rem)] font-bold leading-tight tracking-tight text-navy">

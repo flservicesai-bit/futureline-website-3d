@@ -1,5 +1,17 @@
 # Handoff — `feat/light-redesign`
 
+> **Historical document.** It records the state when the light redesign was handed
+> over and is kept for its design notes. Several facts below are out of date:
+>
+> - `npx tsc --noEmit` reports **0** errors, builds now fail on type errors
+>   (`ignoreBuildErrors` is gone), and CI (`.github/workflows/ci.yml`) type-checks
+>   and builds every pull request.
+> - `NeuralPathway`, `DualWalkway` and the other unused sections were deleted;
+>   `HeroRibbon3D` now composites for the light pages and pauses off-screen.
+> - URLs are always locale-prefixed (`/en/...`, `/ar/...`); see `src/i18n/routing.ts`.
+>
+> For running and deploying the site today, use `docs/DEPLOYMENT.md`.
+
 **Tag:** `v2.0.0-light-redesign` · **Head:** `b023fd0` · **Base:** `main` (`f6a558b`, no drift as of this writing)
 
 This branch replaces the public face of futureline.ai with a light 3D design and adds

@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
 import { routing } from '@/i18n/routing';
-import { SITE_URL } from '@/lib/seo';
+import { SITE_URL, languageAlternates } from '@/lib/seo';
 
 // Rebuilt hourly so newly published courses appear without a redeploy.
 export const revalidate = 3600;
@@ -24,18 +24,25 @@ const STATIC_PAGES: Entry[] = [
   { path: '/faq', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/services', changeFrequency: 'monthly', priority: 0.5 },
   { path: '/services/digitalisation', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/services/custom-software', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/services/consultation', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/services/automations', changeFrequency: 'monthly', priority: 0.5 },
   { path: '/ai', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/lab/video-effects', changeFrequency: 'monthly', priority: 0.4 },
   { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/terms', changeFrequency: 'yearly', priority: 0.3 },
 ];
 
 function localized(entry: Entry): MetadataRoute.Sitemap {
+  // Same alternates as the pages' own hreflang tags, x-default included.
   const languages = Object.fromEntries(
-    routing.locales.map((l) => [l, `${SITE_URL}/${l}${entry.path}`]),
+    Object.entries(languageAlternates(entry.path)).map(([l, p]) => [l, `${SITE_URL}${p}`]),
   );
   return routing.locales.map((locale) => ({
     url: `${SITE_URL}/${locale}${entry.path}`,
-    lastModified: entry.lastModified ?? new Date(),
+    // Only when it is known: "modified now" on every fetch taught search
+    // engines to ignore the field.
+    ...(entry.lastModified ? { lastModified: entry.lastModified } : {}),
     changeFrequency: entry.changeFrequency,
     priority: entry.priority,
     alternates: { languages },

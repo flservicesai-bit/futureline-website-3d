@@ -111,7 +111,17 @@ type MetaKey =
   | 'register'
   | 'forgotPassword'
   | 'resetPassword'
-  | 'verifyEmail';
+  | 'verifyEmail'
+  | 'services'
+  | 'servicesDigitalisation'
+  | 'servicesCustomSoftware'
+  | 'servicesConsultation'
+  | 'servicesAutomations'
+  | 'ai'
+  | 'videoLab'
+  | 'getStartedDetails'
+  | 'getStartedSignin'
+  | 'getStartedConfirm';
 
 /**
  * Builds a page's generateMetadata from its translated title/description:
