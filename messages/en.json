@@ -1668,154 +1668,45 @@
   },
   "coursesPage": {
     "eyebrow": "FL · Academy",
-    "heading": "Learn Future AI Skills, Today.",
-    "subhead": "Applied AI courses, starting with Vibe Coding. Taught by people shipping the systems they teach — so what you learn is what you can actually use.",
+    "heading": "Learn Future AI Skills, <accent>Today</accent>.",
+    "subhead": "Applied AI courses taught by people shipping the systems they teach — so what you learn is what you can actually use.",
     "searchPlaceholder": "Search courses…",
-    "filterAll": "All",
+    "searchLabel": "Search",
+    "searchButton": "Search",
     "levelLabel": "Level",
     "levelBeginner": "Beginner",
     "levelIntermediate": "Intermediate",
     "levelAdvanced": "Advanced",
+    "allLevels": "All levels",
     "categoryLabel": "Category",
+    "allCategories": "All categories",
     "deliveryLabel": "Delivery",
     "deliveryOnline": "Online",
     "deliveryInPerson": "In-person",
     "deliveryHybrid": "Hybrid",
+    "allDelivery": "All types",
     "viewLabel": "View",
     "viewAll": "All courses",
     "viewEnrolled": "My courses",
     "emptyTitle": "No courses found",
     "emptyBody": "Try adjusting your filters.",
+    "resultsCount": "{count, plural, =0 {No courses} one {{n} course} other {{n} courses}}",
+    "clearFilters": "Clear filters",
     "cardContinue": "Continue →",
     "cardFree": "Free",
     "cardTaughtBy": "Taught by",
-    "hoursSuffix": "h",
+    "cardEnrolled": "Enrolled",
+    "cardHours": "{count, plural, one {{n} hour} other {{n} hours}}",
+    "cardLessons": "{count, plural, one {{n} lesson} other {{n} lessons}}",
+    "originalPrice": "Original price",
     "scheduleSelfPaced": "Self-paced",
     "scheduleDatesTbc": "Dates TBC",
     "scheduleNextCohort": "Next cohort TBA",
     "scheduleStarts": "Starts",
-    "whereEyebrow": "Where it gets paid",
-    "whereHeading": "Skills Organizations Are Hiring For.",
-    "whereLede": "Four practical outcomes AI proficiency unlocks. Here's where each gets applied — and the roles people get hired to do them.",
-    "whereApplied": "Where it's applied",
-    "whatItPays": "What it pays",
-    "rolesLabel": "Roles you could land",
-    "pillars": [
-      {
-        "name": "Build",
-        "pitch": "Build Your Dream App with AI.",
-        "sectors": [
-          "Internal tools",
-          "Workflow apps",
-          "Side-project prototypes",
-          "Personal automations",
-          "Founder experiments"
-        ],
-        "earn": "Startups, SMEs, and product teams pay well for builders who can ship without a six-month dev cycle.",
-        "roles": [
-          "Solo Builder",
-          "Product Operator",
-          "Tech Founder",
-          "No-Code Lead",
-          "Solo Developer"
-        ],
-        "demand": "The bar for shipping useful software has dropped — but the people who actually ship are still rare."
-      },
-      {
-        "name": "Automate",
-        "pitch": "Automate Boring Tasks with AI.",
-        "sectors": [
-          "Reporting",
-          "Email triage",
-          "Document review",
-          "Data cleanup",
-          "Routine admin"
-        ],
-        "earn": "Time saved is value created — and operators who automate their busywork get promoted into bigger work.",
-        "roles": [
-          "Automation Engineer",
-          "Workflow Designer",
-          "Operations Lead",
-          "Process Owner",
-          "Productivity Specialist"
-        ],
-        "demand": "The average knowledge worker loses hours every day to busywork. The ones who automate it pull ahead."
-      },
-      {
-        "name": "Decide",
-        "pitch": "Make Sharper Decisions with AI.",
-        "sectors": [
-          "Strategy reviews",
-          "Market analysis",
-          "Stress-testing decisions",
-          "Risk assessments",
-          "Insight reports"
-        ],
-        "earn": "Decisions that hit the target are worth what the wrong call would have cost.",
-        "roles": [
-          "Analyst",
-          "Insights Lead",
-          "Strategy Consultant",
-          "Decision Scientist",
-          "Researcher"
-        ],
-        "demand": "Every organisation drowns in data and starves for insight. AI-fluent decision-makers close that gap."
-      },
-      {
-        "name": "Advance",
-        "pitch": "Land Your Next Role with AI.",
-        "sectors": [
-          "Career pivots",
-          "Promotions",
-          "Internal moves",
-          "Job applications",
-          "Salary negotiations"
-        ],
-        "earn": "AI proficiency is the new computer literacy — invisible if you have it, expensive if you don't.",
-        "roles": [
-          "Senior Specialist",
-          "Team Lead",
-          "Manager",
-          "Consultant",
-          "Specialist Hire"
-        ],
-        "demand": "AI fluency is the difference between staying relevant and falling behind. Most people are scrambling to catch up."
-      }
-    ],
-    "compareEyebrow": "How it compares",
-    "compareHeading": "Others and FutureLine.",
-    "compareLede": "Two honest paths. Pick the one that matches how you actually finish.",
-    "compareOthers": "Others",
-    "vsRows": [
-      {
-        "label": "Cost shape",
-        "others": "Free content with hidden time cost, or premium tuition for a full-time commitment.",
-        "fl": "Per-cohort pricing for individuals. Team training scales without per-seat tax."
-      },
-      {
-        "label": "Time to first result",
-        "others": "Weeks to months. If you finish at all.",
-        "fl": "Working setup and first reviewed milestone inside the opening weeks."
-      },
-      {
-        "label": "Instructor access",
-        "others": "Either none, or a scripted curriculum from junior assistants.",
-        "fl": "Live sessions with practitioners shipping the systems they teach."
-      },
-      {
-        "label": "Completion rate",
-        "others": "Most people don't finish — the format isn't built for it.",
-        "fl": "Cohort-paced and end-to-end designed for the people who do."
-      },
-      {
-        "label": "What you leave with",
-        "others": "Notes, maybe a generic capstone built by everyone in the cohort.",
-        "fl": "A portfolio-grade project tied to your own work + instructor feedback."
-      }
-    ],
     "teamsEyebrow": "For teams",
     "teamsHeading": "Upskill Your Team With FutureLine.",
     "teamsLede": "For 5+ team members. We design the training around the work your team actually does — and price it like training, not a per-seat licence.",
+    "teamsCta": "Talk to us about team training",
     "teamsItems": [
       "Custom syllabus designed around your team's actual work and tools",
       "On-site (Oman / GCC), remote (any timezone), or hybrid",
@@ -1877,8 +1768,7 @@
     "processing": "Processing…",
     "enrolForFree": "Enrol for Free",
     "payViaBankTransfer": "Pay via Bank Transfer",
-    "creditCard": "Credit Card",
-    "comingSoon": "Coming Soon",
+    "cardComingSoon": "Card payment coming soon",
     "requestSubmitted": "Request Submitted",
     "pendingApproval": "Your enrolment request is pending admin approval. You will receive access within 12 hours.",
     "paymentPending": "Payment pending approval",
@@ -2168,44 +2058,6 @@
       ]
     }
   },
-  "promo": {
-    "eyebrow": "Coming soon · Vibe Coding",
-    "title": "Build Working Software. Zero Coding Experience.",
-    "levelBadge": "Beginner",
-    "tagline": "You describe what you want. AI writes the code. You ship a real, working product — no programming background needed.",
-    "priceNow": "OMR 99",
-    "priceWas": "OMR 149",
-    "priceNote": "Early waitlist price",
-    "cta": "Join the waitlist",
-    "learnMore": "See what you'll build",
-    "dismiss": "Maybe later",
-    "close": "Close",
-    "back": "Back",
-    "detailsTitle": "About Vibe Coding",
-    "detailsIntro": "Vibe Coding is for people with an idea and no programming background. You describe what you want in plain words, AI writes the code, and you learn to guide it, test it and publish a real product.",
-    "detailsNotFor": "You do not need to know how to code. If you can describe a problem clearly and use a laptop, you have everything this programme needs.",
-    "detailsCoverTitle": "What we cover",
-    "detailsCover1": "Turning your idea into a clear plan an AI can build from",
-    "detailsCover2": "Directing AI to write, fix and improve your software, step by step",
-    "detailsCover3": "Testing what it built so it works for real users",
-    "detailsCover4": "Publishing your product online so people can use it",
-    "detailsOutcomeTitle": "What you leave with",
-    "detailsOutcome": "A real, published product you built yourself — not a certificate, not a demo. Plus the method to build the next one.",
-    "detailsFactsTitle": "The details",
-    "factLevel": "Level",
-    "factLevelValue": "Beginner — no coding experience needed",
-    "factFormat": "Format",
-    "factFormatValue": "Live online cohort, English or Arabic",
-    "factDuration": "Duration",
-    "factDurationValue": "24 hours of content",
-    "factDates": "Dates",
-    "factDatesValue": "Announced to the waitlist first",
-    "joiningTitle": "Adding you to the waitlist…",
-    "joinedTitle": "You're on the waitlist",
-    "joinedBody": "We have your place at OMR 99. Dates go to the waitlist first — watch your inbox.",
-    "joinErrorTitle": "We couldn't save your place",
-    "joinErrorBody": "Something went wrong on our side. Email flservices.ai@gmail.com and we will add you by hand."
-  },
   "meta": {
     "home": {
       "title": "FutureLine.ai — AI Consulting · Applications · Training",
@@ -2217,7 +2069,7 @@
     },
     "courses": {
       "title": "Courses — FutureLine.ai",
-      "description": "Applied AI courses from FutureLine, starting with Vibe Coding: take an idea to a real, published product with no coding background. Live online cohorts in English or Arabic."
+      "description": "Applied AI courses from FutureLine, taught by people who ship the systems they teach. Live online cohorts in English or Arabic."
     },
     "faq": {
       "title": "FAQ — FutureLine.ai",
@@ -2307,19 +2159,42 @@
     "courses": "Browse courses"
   },
   "courseDetail": {
-    "backToCatalog": "Course catalog",
-    "preview": "Preview",
     "previewTitle": "Course preview",
     "awaitingApproval": "Preview only: this course is waiting for admin approval and isn't visible to the public yet.",
-    "aboutEyebrow": "About this course",
-    "aboutHeading": "What you'll learn.",
+    "breadcrumbLabel": "Breadcrumb",
+    "breadcrumbCourses": "Courses",
+    "factLevel": "Level",
+    "factFormat": "Delivery",
+    "factDuration": "Duration",
+    "factLessons": "Lessons",
+    "factStarts": "Starts",
+    "factSchedule": "Schedule",
+    "factInstructor": "Instructor",
+    "learnHeading": "What you'll learn",
+    "aboutHeading": "About this course",
+    "syllabusHeading": "Syllabus",
+    "modules": "{count, plural, one {{n} module} other {{n} modules}}",
+    "instructorHeading": "Your instructor",
     "price": "Price",
     "free": "Free",
+    "originalPrice": "Original price",
+    "includesHeading": "This course includes",
     "hoursOfContent": "{count, plural, one {{n} hour of content} other {{n} hours of content}}",
     "lessons": "{count, plural, one {{n} lesson} other {{n} lessons}}",
-    "studentsEnrolled": "{count, plural, one {{n} student enrolled} other {{n} students enrolled}}",
     "seatsLeft": "{count, plural, =0 {No seats left} one {{n} seat left} other {{n} seats left}}",
-    "fallbackDescription": "Learn {title} with FutureLine."
+    "includesOnline": "Taught online",
+    "includesInPerson": "Taught in person",
+    "includesHybrid": "Taught online and in person",
+    "includesCohort": "Cohort-based course",
+    "includesSelfPaced": "Self-paced course",
+    "includesWorkshop": "Workshop",
+    "includesDates": "{start} – {end}",
+    "includesStarts": "Starts {date}",
+    "includesDatesTbc": "Dates to be confirmed",
+    "includesNextCohort": "Next cohort to be announced",
+    "fallbackDescription": "Learn {title} with FutureLine.",
+    "relatedHeading": "More courses",
+    "relatedAll": "View all courses"
   },
   "buildMockup": {
     "seeBuild": "See the build",

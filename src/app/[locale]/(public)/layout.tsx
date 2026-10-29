@@ -4,7 +4,6 @@ import Footer from '@/components/Footer';
 import InactivityWatcher from '@/components/InactivityWatcher';
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider';
 import { SplashIntro } from '@/components/ui/SplashIntro';
-import { CoursePromoDialog } from '@/components/ui/CoursePromoDialog';
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const t = await getTranslations('common');
@@ -24,7 +23,6 @@ export default async function PublicLayout({ children }: { children: React.React
         {children}
       </div>
       <Footer />
-      <CoursePromoDialog />
     </SmoothScrollProvider>
   );
 }

@@ -17,7 +17,7 @@ import { safeCallbackPath } from '@/lib/utils';
  * the light redesign instead of the generic form it used to be.
  *
  * Honours ?callbackUrl= so anything that sends someone here to sign in first
- * — the course waitlist, a gated page — gets them back where they were
+ * — the enrol button, a gated page — gets them back where they were
  * instead of dropping them on the dashboard.
  */
 function LoginForm() {
