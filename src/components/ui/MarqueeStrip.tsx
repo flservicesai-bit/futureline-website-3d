@@ -25,7 +25,7 @@ export function MarqueeStrip({
   return (
     <div
       aria-hidden="true"
-      className={`relative w-full overflow-hidden border-y border-hairline bg-black py-8 ${className}`}
+      className={`relative w-full overflow-hidden border-y border-hairline bg-navy py-8 ${className}`}
     >
       <div
         className="flex w-max gap-12 whitespace-nowrap will-change-transform"

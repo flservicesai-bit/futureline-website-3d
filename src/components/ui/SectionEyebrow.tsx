@@ -29,7 +29,7 @@ const PALETTE: Record<Accent, {
   lab: {
     text: 'text-lab-ink',
     dot: 'bg-lab',
-    dotGlow: '0 0 10px 2px rgba(24, 169, 153, 0.55)',
+    dotGlow: '0 0 10px 2px rgba(20, 102, 222, 0.55)',
     hairline: 'from-lab/60',
   },
   academy: {

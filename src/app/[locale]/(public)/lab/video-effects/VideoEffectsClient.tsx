@@ -199,7 +199,7 @@ export function VideoEffectsClient() {
                     className={[
                       'rounded-lg border p-4 text-start transition-all disabled:opacity-50',
                       selected
-                        ? 'border-lab/55 bg-lab/[0.08] shadow-[0_0_0_1px_rgba(24,169,153,0.2)]'
+                        ? 'border-lab/55 bg-lab/[0.08] shadow-[0_0_0_1px_rgba(20,102,222,0.2)]'
                         : 'border-hairline bg-canvas-card hover:border-hairline',
                     ].join(' ')}
                   >

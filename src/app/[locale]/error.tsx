@@ -21,7 +21,7 @@ export default function Error({
   return (
     <div className="min-h-screen bg-canvas flex items-center justify-center px-4 relative overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-red-600/[0.04] rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute -top-32 -end-32 w-80 h-80 bg-[#18a999]/[0.04] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-32 -end-32 w-80 h-80 bg-[#1466de]/[0.04] rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative text-center max-w-md w-full">
         <div className="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">

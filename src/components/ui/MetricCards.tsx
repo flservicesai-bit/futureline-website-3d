@@ -72,7 +72,7 @@ const CARDS: CardDef[] = [
     suffix: '×',
     label: 'Faster Delivery',
     sub: 'vs manual processes',
-    color: '#2dd4bf',
+    color: '#22a6f7',
     borderClass: 'border-teal-500/20',
     gradClass: 'from-teal-500/[0.12] to-teal-500/[0.04]',
     delay: 0,

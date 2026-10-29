@@ -111,7 +111,7 @@ function Particles() {
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, PARTICLE_COUNT]}>
       <sphereGeometry args={[1, 6, 5]} />
-      <meshBasicMaterial color="#18A999" transparent opacity={0.45} toneMapped={false} />
+      <meshBasicMaterial color="#1466DE" transparent opacity={0.45} toneMapped={false} />
     </instancedMesh>
   );
 }
@@ -128,7 +128,7 @@ function IdleCamera() {
 }
 
 interface HeroRibbon3DProps {
-  /** Hex color, defaults to brand-lab teal */
+  /** Hex color, defaults to the brand royal blue */
   color?: string;
   /** Plane rotation in radians around Y (default 0.3 — slight tilt) */
   tilt?: number;
@@ -136,7 +136,7 @@ interface HeroRibbon3DProps {
 }
 
 export default function HeroRibbon3D({
-  color = '#18A999',
+  color = '#1466DE',
   tilt = 0.3,
   className = 'absolute inset-0',
 }: HeroRibbon3DProps) {

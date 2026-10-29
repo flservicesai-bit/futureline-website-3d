@@ -65,7 +65,7 @@ export function PageScrollSpy({ sections }: { sections: ScrollSpySection[] }) {
                     'block h-1.5 rounded-full transition-all duration-300',
                     isActive ? 'w-6 bg-lab' : 'w-3 bg-ink/25 group-hover:bg-ink/50',
                   ].join(' ')}
-                  style={isActive ? { boxShadow: '0 0 10px 2px rgba(24,169,153,0.55)' } : undefined}
+                  style={isActive ? { boxShadow: '0 0 10px 2px rgba(20,102,222,0.55)' } : undefined}
                 />
                 <span
                   className={[

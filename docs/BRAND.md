@@ -18,3 +18,19 @@ backdrop don't read on the light pages.
 
 The site's wordmark ("FutureLine" next to the mark) is live text in the
 display font, not part of the image, so it stays sharp and translatable.
+
+## Colours
+
+Taken from the logo artwork. Tailwind tokens live in `tailwind.config.ts`;
+the accent tokens kept their old names (`teal`, `lab`, `mint`) so class names
+didn't change, but they hold these blues.
+
+| Role | Value | Token | Notes |
+| --- | --- | --- | --- |
+| Navy (text, dark surfaces) | `#011C41` | `navy`, `ink` | The flat logo's navy |
+| Royal blue (accent) | `#1466DE` | `teal`, `lab` | 5:1 on the page background, so usable for text |
+| Royal blue, text | `#0E50C0` | `teal-ink`, `lab-ink` | Small text and icons, 6.7:1 |
+| Azure (bright end of gradients) | `#22A6F7` | `mint` | The "Line" blue; decorative only (2.5:1) |
+| Periwinkle (Academy pole) | `#5B7BFB` | `academy` | Unchanged |
+| Page background | `#F6F8FC` / `#EDF2FA` | `canvas`, `canvas-alt` | Tinted toward the logo blue |
+| Muted text | `#52627A` | `ink-muted` | 5.8:1 |

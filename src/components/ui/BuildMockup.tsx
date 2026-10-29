@@ -65,13 +65,13 @@ function DashboardMockup() {
           <path
             d="M0,22 Q15,18 25,20 T50,12 T75,15 T100,8"
             fill="none"
-            stroke="rgb(24, 169, 153)"
+            stroke="rgb(20, 102, 222)"
             strokeWidth="1.5"
             opacity="0.85"
           />
           <path
             d="M0,22 Q15,18 25,20 T50,12 T75,15 T100,8 L100,30 L0,30 Z"
-            fill="rgb(24, 169, 153)"
+            fill="rgb(20, 102, 222)"
             opacity="0.12"
           />
         </svg>
@@ -237,7 +237,7 @@ function BuildTileBody({
         className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
           background:
-            'linear-gradient(90deg, transparent 0%, rgba(24, 169, 153, 0.75) 50%, transparent 100%)',
+            'linear-gradient(90deg, transparent 0%, rgba(20, 102, 222, 0.75) 50%, transparent 100%)',
         }}
       />
       <div
@@ -343,7 +343,7 @@ function BuildDetailModal({
       >
         {/* Panel */}
         <div
-          className="relative w-full max-w-3xl rounded-2xl border border-hairline bg-[#070707] shadow-[0_50px_140px_-20px_rgba(0,0,0,0.85),0_0_40px_-10px_rgba(24,169,153,0.25)]"
+          className="relative w-full max-w-3xl rounded-2xl border border-hairline bg-[#070707] shadow-[0_50px_140px_-20px_rgba(0,0,0,0.85),0_0_40px_-10px_rgba(20,102,222,0.25)]"
           style={{
             animation: 'build-modal-pop 320ms cubic-bezier(0.22, 1, 0.36, 1)',
           }}

@@ -37,7 +37,7 @@ export default async function ServicesPage() {
       <section className="relative overflow-hidden border-b border-hairline">
         {/* The signature 3D ribbon on the right side. */}
         <div className="absolute inset-y-0 end-0 z-0 w-full md:w-1/2">
-          <HeroRibbon3D color="#18A999" tilt={0.32} />
+          <HeroRibbon3D color="#1466DE" tilt={0.32} />
         </div>
         <div
           aria-hidden="true"
@@ -48,7 +48,7 @@ export default async function ServicesPage() {
           <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-16">
             <div className="md:col-span-7">
               <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.4em] text-lab-ink">
-                <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-lab shadow-[0_0_10px_2px_rgba(24,169,153,0.55)]" />
+                <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-lab shadow-[0_0_10px_2px_rgba(20,102,222,0.55)]" />
                 FL · Lab
               </p>
               <BrandedHeading as="h1" size="xl">

@@ -28,7 +28,7 @@ export default async function AIPage() {
       {/* ── Hero ── */}
       <section className="relative overflow-hidden border-b border-hairline">
         <div className="absolute inset-y-0 end-0 z-0 w-full md:w-1/2">
-          <HeroRibbon3D color="#18A999" tilt={0.32} />
+          <HeroRibbon3D color="#1466DE" tilt={0.32} />
         </div>
         <div
           aria-hidden
@@ -41,7 +41,7 @@ export default async function AIPage() {
               <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.4em] text-lab-ink">
                 <span
                   aria-hidden
-                  className="block h-1.5 w-1.5 rounded-full bg-lab shadow-[0_0_10px_2px_rgba(24,169,153,0.55)]"
+                  className="block h-1.5 w-1.5 rounded-full bg-lab shadow-[0_0_10px_2px_rgba(20,102,222,0.55)]"
                 />
                 {t('hero.eyebrow')}
               </p>

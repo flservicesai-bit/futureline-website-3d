@@ -23,7 +23,7 @@ export default function InstructorSidebar() {
             <span
               className="text-lg font-bold block text-transparent bg-clip-text"
               style={{
-                background: 'linear-gradient(to right, #2dd4bf, #3b82f6)',
+                background: 'linear-gradient(to right, #22a6f7, #3b82f6)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
