@@ -60,6 +60,10 @@ RESEND_FROM_EMAIL="noreply@futureline.ai"
 # Google sign-in (optional — the button degrades gracefully when unset)
 GOOGLE_CLIENT_ID="<client-id>.apps.googleusercontent.com"
 GOOGLE_CLIENT_SECRET="<client-secret>"
+
+# Proxies in front of the app (rate limits trust only what they add to
+# X-Forwarded-For). 1 = nginx only. Use 2 if Cloudflare sits in front of nginx.
+TRUSTED_PROXY_COUNT="1"
 ```
 
 ### 3. First boot
@@ -77,7 +81,9 @@ pm2 save && pm2 startup   # survive reboots
 ```
 
 `npm run seed` inserts throwaway accounts with weak passwords. Run it only on
-an empty database, and change those passwords immediately if you do.
+an empty database, and change those passwords immediately if you do. It
+deletes all existing data first, so it refuses to run once any user exists;
+`SEED_FORCE=yes npm run seed` overrides that for local resets only.
 
 ### 4. nginx
 

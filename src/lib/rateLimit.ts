@@ -44,6 +44,26 @@ export async function rateLimit(
   }
 }
 
+/**
+ * The visitor's IP, for rate-limit keys.
+ *
+ * X-Forwarded-For is a list the client can start themselves: nginx's
+ * `$proxy_add_x_forwarded_for` appends the real address to whatever the
+ * client sent, so the raw header is attacker-controlled. Only entries added
+ * by our own proxies are trustworthy, so count back from the right. With
+ * nginx alone (TRUSTED_PROXY_COUNT=1, the default) the last entry is the
+ * address nginx saw. Behind a second proxy such as Cloudflare, set it to 2.
+ */
+export function getClientIp(req: Request): string {
+  const hops = Math.max(1, Number(process.env.TRUSTED_PROXY_COUNT) || 1);
+  const chain = (req.headers.get('x-forwarded-for') ?? '')
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean);
+  if (chain.length) return chain[Math.max(0, chain.length - hops)];
+  return req.headers.get('x-real-ip')?.trim() || 'unknown';
+}
+
 export function getRateLimitHeaders(remaining: number, resetIn: number) {
   return {
     'X-RateLimit-Remaining': String(remaining),

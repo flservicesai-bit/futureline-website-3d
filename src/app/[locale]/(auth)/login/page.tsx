@@ -7,6 +7,7 @@ import { AuthShell } from '@/components/auth/AuthShell';
 import { useLocale, useTranslations } from 'next-intl';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 import { PasswordInput } from '@/components/auth/PasswordInput';
+import { safeCallbackPath } from '@/lib/utils';
 
 /**
  * Sign in.
@@ -24,11 +25,9 @@ function LoginForm() {
   const locale = useLocale();
   const searchParams = useSearchParams();
 
-  // Only same-site relative paths. A bare '//host' or 'https://host' would
-  // turn this into an open redirect that phishing links could point anywhere.
-  const requested = searchParams.get('callbackUrl');
-  const callbackUrl =
-    requested && requested.startsWith('/') && !requested.startsWith('//') ? requested : null;
+  // Only same-site paths; anything else would make this an open redirect that
+  // phishing links could point anywhere.
+  const callbackUrl = safeCallbackPath(searchParams.get('callbackUrl'));
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

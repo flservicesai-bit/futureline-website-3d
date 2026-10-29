@@ -46,9 +46,12 @@ export async function POST(req: Request) {
     if (!parsed.success) {
       return NextResponse.json({ error: formatZodError(parsed.error) }, { status: 400 });
     }
+    const fields = normalizeCourseData(parsed.data);
+    // Featuring a course on the home page is an admin decision.
+    delete fields.featuredSlot;
     const course = await prisma.course.create({
       data: {
-        ...normalizeCourseData(parsed.data),
+        ...fields,
         instructorId: session.user.id,
         approvalStatus: 'PENDING',
       },

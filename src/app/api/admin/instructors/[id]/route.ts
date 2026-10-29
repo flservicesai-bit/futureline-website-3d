@@ -18,7 +18,13 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const data = await req.json();
 
     const updateData: any = {};
-    if (data.commissionRate !== undefined) updateData.commissionRate = data.commissionRate;
+    if (data.commissionRate !== undefined) {
+      const rate = data.commissionRate;
+      if (typeof rate !== 'number' || !Number.isFinite(rate) || rate < 0 || rate > 100) {
+        return NextResponse.json({ error: 'Commission rate must be a number from 0 to 100' }, { status: 400 });
+      }
+      updateData.commissionRate = rate;
+    }
     if (data.isActive !== undefined) updateData.isActive = data.isActive;
     if (data.bio !== undefined) updateData.bio = data.bio;
     if (data.image !== undefined) updateData.image = data.image;
@@ -26,8 +32,20 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     if (data.lastName !== undefined) updateData.lastName = data.lastName;
 
     const updated = await prisma.user.update({
-      where: { id: id },
+      // Instructors only: this endpoint must not edit or deactivate an admin.
+      where: { id: id, role: 'INSTRUCTOR' },
       data: updateData,
+      // Never send the password hash or reset token back to the browser.
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        bio: true,
+        image: true,
+        commissionRate: true,
+        isActive: true,
+      },
     });
 
     return NextResponse.json(updated);

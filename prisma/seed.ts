@@ -4,6 +4,18 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
+  // Seeding deletes every user, course, order and enrolment first. Refuse to
+  // run against a database that already has users (production, above all)
+  // unless a local reset is explicitly requested.
+  const existingUsers = await prisma.user.count();
+  if (existingUsers > 0 && process.env.SEED_FORCE !== 'yes') {
+    console.error(
+      `Refusing to seed: the database already has ${existingUsers} user(s), and seeding deletes all data.\n` +
+        'For a local reset only: SEED_FORCE=yes npm run seed',
+    );
+    process.exit(1);
+  }
+
   await prisma.testimonial.deleteMany();
   await prisma.enrollment.deleteMany();
   await prisma.order.deleteMany();
