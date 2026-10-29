@@ -79,7 +79,7 @@ export function ConstellationFallback() {
 
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = p.teal ? 'rgba(24,169,153,0.5)' : 'rgba(15,30,61,0.35)'
+        ctx.fillStyle = p.teal ? 'rgba(20,102,222,0.5)' : 'rgba(1,28,65,0.35)'
         ctx.fill()
       }
 
@@ -92,7 +92,7 @@ export function ConstellationFallback() {
             ctx.beginPath()
             ctx.moveTo(a.x, a.y)
             ctx.lineTo(b.x, b.y)
-            ctx.strokeStyle = `rgba(24,169,153,${0.14 * (1 - dist / LINK_DISTANCE)})`
+            ctx.strokeStyle = `rgba(20,102,222,${0.14 * (1 - dist / LINK_DISTANCE)})`
             ctx.lineWidth = 1
             ctx.stroke()
           }

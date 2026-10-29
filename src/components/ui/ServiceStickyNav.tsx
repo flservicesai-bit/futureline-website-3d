@@ -8,7 +8,7 @@ interface ServiceStickyNavProps {
   title: string;
   ctaHref: string;
   ctaLabel: string;
-  /** CSS gradient string, e.g. 'linear-gradient(to right, #2dd4bf, #3b82f6)' */
+  /** CSS gradient string, e.g. 'linear-gradient(to right, #22a6f7, #3b82f6)' */
   gradient: string;
   /** Scroll depth (px) before nav slides in — defaults to 500 */
   triggerAt?: number;

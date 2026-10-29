@@ -7,48 +7,59 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Palette from the Living F logo (docs/BRAND.md): its navy, the deep
+        // royal of its glow and the azure of "Line". The accent tokens keep
+        // their old names (teal, lab, mint) so the hundreds of class names
+        // that use them didn't have to change; they now hold the logo blues.
         navy: {
-          DEFAULT: '#0F1E3D',
-          light: '#1B2C63',
-          dark: '#0A1428',
+          DEFAULT: '#011C41',
+          light: '#0B2A5C',
+          dark: '#000E26',
         },
         teal: {
-          DEFAULT: '#18A999',
-          light: '#20C5B3',
-          dark: '#148F82',
-          // For text and icons on the light surfaces: brand teal itself is
-          // 2.8:1 on canvas, below the 4.5:1 small text needs. This is 5:1.
-          ink: '#0F7A6E',
+          // Full scale too, so default-palette classes (teal-400, teal-500…)
+          // follow the brand instead of staying green-blue.
+          50: '#EEF5FF',
+          100: '#D9E8FF',
+          200: '#BCD7FF',
+          300: '#8EBEFF',
+          400: '#59A0FB',
+          500: '#2A82F2',
+          600: '#1466DE',
+          700: '#0E50C0',
+          800: '#0E3F94',
+          900: '#0F3570',
+          950: '#0A2247',
+          DEFAULT: '#1466DE', // 5:1 on canvas, so it also works as text
+          light: '#3D8FF0',
+          dark: '#0E50C0',
+          ink: '#0E50C0', // small text and icons on light surfaces, 6.7:1
         },
-        // Mint — the bright end of the wordmark gradient. Genuinely distinct
-        // from teal.light (#20C5B3); the navy→teal→mint ramp is what gives
-        // the redesign's globe and gradient text their depth.
+        // The bright end of the wordmark gradient: the logo's azure.
         mint: {
-          DEFAULT: '#2DD4BF',
-          light: '#5EEAD4',
+          DEFAULT: '#22A6F7',
+          light: '#7CC8FB',
         },
-        // Light-surface palette for the redesigned public pages.
-        // Additive on purpose: every existing dark token is left untouched so
-        // unconverted pages keep rendering correctly while the redesign lands
-        // one surface at a time. Reads as `bg-canvas text-ink border-hairline`.
+        // Light-surface palette, tinted toward the logo's blue.
+        // Reads as `bg-canvas text-ink border-hairline`.
         canvas: {
-          DEFAULT: '#F7FAFA',
-          alt: '#EEF5F4',
+          DEFAULT: '#F6F8FC',
+          alt: '#EDF2FA',
           card: '#FFFFFF',
         },
         ink: {
-          // Body text is the brand navy rather than a neutral black — it is
-          // what keeps the light theme feeling like FutureLine.
-          DEFAULT: '#0F1E3D',
-          muted: '#5B6B78',
+          // Body text is the brand navy rather than a neutral black.
+          DEFAULT: '#011C41',
+          muted: '#52627A',
         },
-        hairline: 'rgba(15, 30, 61, 0.10)',
-        // Two-pole accent system (Lab vs Academy)
+        hairline: 'rgba(1, 28, 65, 0.10)',
+        // Two-pole accent system (Lab vs Academy). Lab is the logo's royal
+        // blue, the same values as teal.
         lab: {
-          DEFAULT: '#18A999',
-          light: '#20C5B3',
-          dark: '#148F82',
-          ink: '#0F7A6E', // text on light surfaces, as teal.ink
+          DEFAULT: '#1466DE',
+          light: '#3D8FF0',
+          dark: '#0E50C0',
+          ink: '#0E50C0',
         },
         // Academy pole — wordmark's blue end (lavender → deep navy).
         // Replaces the off-brand amber so Academy and Lab read as the
@@ -68,8 +79,8 @@ const config: Config = {
           surface: '#0a0a0a',
           fg: '#fafafa',
           muted: '#a1a1aa',
-          accent: '#18A999',
-          accent2: '#20C5B3',
+          accent: '#1466DE',
+          accent2: '#3D8FF0',
         },
         gray: {
           soft: '#F4F6F9',
@@ -89,7 +100,7 @@ const config: Config = {
         outline: '#869490',
         primary: {
           DEFAULT: '#5edac8',
-          container: '#18a999',
+          container: '#1466de',
         },
         secondary: {
           DEFAULT: '#93AEFF',
@@ -115,9 +126,9 @@ const config: Config = {
         'out-expo': 'cubic-bezier(.16,1,.3,1)',
       },
       backgroundImage: {
-        'brand-gradient': 'linear-gradient(135deg, #1B2C63, #18A999)',
-        'brand-gradient-hover': 'linear-gradient(135deg, #0F1E3D, #148F82)',
-        'lab-glow': 'radial-gradient(ellipse at center, rgba(24, 169, 153, 0.25), transparent 70%)',
+        'brand-gradient': 'linear-gradient(135deg, #0B2A5C, #1466DE)',
+        'brand-gradient-hover': 'linear-gradient(135deg, #011C41, #0E50C0)',
+        'lab-glow': 'radial-gradient(ellipse at center, rgba(20, 102, 222, 0.25), transparent 70%)',
         'academy-glow': 'radial-gradient(ellipse at center, rgba(91, 123, 251, 0.28), transparent 70%)',
       },
       animation: {
@@ -152,10 +163,10 @@ const config: Config = {
             textShadow: '0 0 0 transparent',
           },
           '93%': {
-            textShadow: '-2px 0 0 rgba(32, 197, 179, 0.85), 2px 0 0 rgba(245, 166, 35, 0.75)',
+            textShadow: '-2px 0 0 rgba(61, 143, 240, 0.85), 2px 0 0 rgba(245, 166, 35, 0.75)',
           },
           '95%': {
-            textShadow: '2px 0 0 rgba(32, 197, 179, 0.85), -2px 0 0 rgba(245, 166, 35, 0.75)',
+            textShadow: '2px 0 0 rgba(61, 143, 240, 0.85), -2px 0 0 rgba(245, 166, 35, 0.75)',
           },
           '97%': {
             textShadow: '0 0 0 transparent',

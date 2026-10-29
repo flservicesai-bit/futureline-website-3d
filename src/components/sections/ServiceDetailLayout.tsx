@@ -244,7 +244,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
               <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.4em] text-lab-ink">
                 <span
                   aria-hidden="true"
-                  className="block h-1.5 w-1.5 rounded-full bg-lab shadow-[0_0_10px_2px_rgba(24,169,153,0.55)]"
+                  className="block h-1.5 w-1.5 rounded-full bg-lab shadow-[0_0_10px_2px_rgba(20,102,222,0.55)]"
                 />
                 {data.eyebrow}
               </p>
@@ -500,12 +500,12 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                 <div className="col-span-4 md:col-span-3">
                   <p
                     className="flex items-center gap-2 text-sm font-semibold tracking-tight text-navy md:text-base"
-                    style={{ textShadow: '0 0 8px rgba(24,169,153,0.4)' }}
+                    style={{ textShadow: '0 0 8px rgba(20,102,222,0.4)' }}
                   >
                     <span
                       aria-hidden
                       className="inline-block h-2 w-2 rounded-full bg-lab"
-                      style={{ boxShadow: '0 0 8px rgba(24, 169, 153, 0.65)' }}
+                      style={{ boxShadow: '0 0 8px rgba(20, 102, 222, 0.65)' }}
                     />
                     FutureLine
                   </p>
@@ -584,7 +584,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                     className="pointer-events-none absolute inset-x-0 top-0 h-px"
                     style={{
                       background:
-                        'linear-gradient(90deg, transparent 0%, rgba(24,169,153,0.7) 50%, transparent 100%)',
+                        'linear-gradient(90deg, transparent 0%, rgba(20,102,222,0.7) 50%, transparent 100%)',
                     }}
                   />
                   <div className="mb-6 flex items-center gap-3">
@@ -727,7 +727,7 @@ export function ServiceDetailLayout({ data }: { data: ServiceDetailData }) {
                     <span
                       aria-hidden
                       className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-lab/40 bg-lab/15 text-lab-ink"
-                      style={{ boxShadow: '0 0 18px rgba(24, 169, 153, 0.4)' }}
+                      style={{ boxShadow: '0 0 18px rgba(20, 102, 222, 0.4)' }}
                     >
                       <Check size={16} strokeWidth={2.5} />
                     </span>

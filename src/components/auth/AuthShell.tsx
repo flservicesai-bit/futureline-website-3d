@@ -35,7 +35,7 @@ export function AuthShell({
         aria-hidden
         className="pointer-events-none absolute -left-40 -top-40 h-[28rem] w-[28rem] rounded-full opacity-60 blur-3xl"
         style={{
-          background: 'radial-gradient(circle, rgba(24,169,153,0.16) 0%, rgba(24,169,153,0) 70%)',
+          background: 'radial-gradient(circle, rgba(20,102,222,0.16) 0%, rgba(20,102,222,0) 70%)',
         }}
       />
       <div

@@ -138,11 +138,11 @@ export function SplashIntro() {
     >
       <div
         ref={topRef}
-        className="absolute inset-x-0 top-0 h-1/2 bg-black"
+        className="absolute inset-x-0 top-0 h-1/2 bg-navy"
       />
       <div
         ref={bottomRef}
-        className="absolute inset-x-0 bottom-0 h-1/2 bg-black"
+        className="absolute inset-x-0 bottom-0 h-1/2 bg-navy"
       />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">

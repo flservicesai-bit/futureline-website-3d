@@ -93,7 +93,7 @@ interface MorphicBackgroundProps {
 }
 
 export const MorphicBackground: React.FC<MorphicBackgroundProps> = ({
-  ballColor = '#2dd4bf',          // teal-300 — visible on dark bg
+  ballColor = '#22a6f7',          // teal-300 — visible on dark bg
   bgClassName = 'absolute inset-0 bg-[#030d1a]',
   spawnInterval = 220,
 }) => {

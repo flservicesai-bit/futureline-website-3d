@@ -18,17 +18,17 @@ export function AmbientMesh() {
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 900px 600px at 15% -5%, rgba(15,30,61,0.10), transparent 60%),' +
-            'radial-gradient(ellipse 800px 700px at 100% 10%, rgba(45,212,191,0.16), transparent 60%),' +
-            'radial-gradient(ellipse 700px 600px at 50% 100%, rgba(24,169,153,0.10), transparent 55%)',
+            'radial-gradient(ellipse 900px 600px at 15% -5%, rgba(1,28,65,0.10), transparent 60%),' +
+            'radial-gradient(ellipse 800px 700px at 100% 10%, rgba(34,166,247,0.16), transparent 60%),' +
+            'radial-gradient(ellipse 700px 600px at 50% 100%, rgba(20,102,222,0.10), transparent 55%)',
         }}
       />
 
       {/* Drifting orbs. motion-reduce:animate-none keeps them still for
           anyone who has asked for less movement. */}
-      <div className="absolute -left-24 top-16 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_30%_30%,#3B4C74,#0F1E3D)] opacity-[0.18] blur-[60px] motion-safe:animate-orbit-spin-slow motion-reduce:animate-none" />
-      <div className="absolute -right-20 top-80 h-[380px] w-[380px] rounded-full bg-[radial-gradient(circle_at_30%_30%,#5EEAD4,#18A999)] opacity-25 blur-[60px] motion-safe:animate-orbit-spin motion-reduce:animate-none" />
-      <div className="absolute left-[40%] top-[900px] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle_at_30%_30%,#99F6E4,#2DD4BF)] opacity-20 blur-[60px] motion-safe:animate-orbit-spin-slow motion-reduce:animate-none" />
+      <div className="absolute -left-24 top-16 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_30%_30%,#3B4C74,#011C41)] opacity-[0.18] blur-[60px] motion-safe:animate-orbit-spin-slow motion-reduce:animate-none" />
+      <div className="absolute -right-20 top-80 h-[380px] w-[380px] rounded-full bg-[radial-gradient(circle_at_30%_30%,#7CC8FB,#1466DE)] opacity-25 blur-[60px] motion-safe:animate-orbit-spin motion-reduce:animate-none" />
+      <div className="absolute left-[40%] top-[900px] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle_at_30%_30%,#7CC8FB,#22A6F7)] opacity-20 blur-[60px] motion-safe:animate-orbit-spin-slow motion-reduce:animate-none" />
 
       {/* Tech grid, masked so it only reads near the top of the page */}
       <div className="fl-tech-grid absolute inset-0" />

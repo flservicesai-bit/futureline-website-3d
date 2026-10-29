@@ -5,7 +5,7 @@
  * public-facing marketing pages so the brand stamp is consistent.
  *
  * What it does:
- *   - Applies the FutureLine wordmark gradient (teal → mint → blue) as
+ *   - Applies the FutureLine wordmark gradient (royal → azure → periwinkle) as
  *     a bg-clip-text fill. Same gradient the hero wordmark uses.
  *   - Centres the text (and the block via mx-auto, so subheads/sub-CTAs
  *     placed inside the same container also centre cleanly).
@@ -42,12 +42,12 @@ const SIZE_CLASSES: Record<Size, string> = {
   xl: 'text-[2.5rem] sm:text-5xl md:text-[clamp(3rem,6vw,5rem)] lg:text-[clamp(3.25rem,6vw,5.5rem)]',
 };
 
-// The FutureLine wordmark gradient — teal (lab) → mint → light blue →
-// royal blue (academy) → dark navy. Both brand poles in one mark, so
-// it reads as "FL" on every page regardless of which pole the page
-// leans toward.
+// The FutureLine wordmark gradient, in the Living F logo's blues: light
+// royal → royal → azure ("Line") → periwinkle (academy) → deep indigo. Both
+// brand poles in one mark, so it reads as "FL" on every page regardless of
+// which pole the page leans toward.
 const FL_GRADIENT =
-  'linear-gradient(90deg, #20C5B3 0%, #18A999 35%, #5edac8 55%, #93AEFF 80%, #2A3475 100%)';
+  'linear-gradient(90deg, #3D8FF0 0%, #1466DE 35%, #22A6F7 55%, #93AEFF 80%, #2A3475 100%)';
 
 export function BrandedHeading({
   as: Tag = 'h2',

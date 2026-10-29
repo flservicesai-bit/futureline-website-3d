@@ -27,8 +27,8 @@
 
   /* Selection — light canvas default. */
   ::selection {
-    background: rgba(24, 169, 153, 0.25);
-    color: #0f1e3d;
+    background: rgba(20, 102, 222, 0.25);
+    color: #011c41;
   }
 }
 
@@ -109,7 +109,7 @@
 .fl-select > option,
 select.fl-input > option {
   background: #fff;
-  color: #0f1e3d;
+  color: #011c41;
 }
 
 /* ============================================================================
@@ -133,9 +133,9 @@ select.fl-input > option {
 
     /* Teal-tinted rather than neutral grey — a neutral shadow on a light
        surface reads as dirt, a brand-tinted one reads as depth. */
-    --fl-elev-1: 0 1px 2px rgba(15, 30, 61, 0.05), 0 1px 3px rgba(15, 30, 61, 0.06);
-    --fl-elev-2: 0 8px 24px -8px rgba(24, 169, 153, 0.22), 0 2px 8px rgba(15, 30, 61, 0.07);
-    --fl-elev-3: 0 24px 48px -16px rgba(15, 30, 61, 0.28), 0 8px 20px -8px rgba(24, 169, 153, 0.18);
+    --fl-elev-1: 0 1px 2px rgba(1, 28, 65, 0.05), 0 1px 3px rgba(1, 28, 65, 0.06);
+    --fl-elev-2: 0 8px 24px -8px rgba(20, 102, 222, 0.22), 0 2px 8px rgba(1, 28, 65, 0.07);
+    --fl-elev-3: 0 24px 48px -16px rgba(1, 28, 65, 0.28), 0 8px 20px -8px rgba(20, 102, 222, 0.18);
   }
 
   /* Frosted panel. The saturate() is what stops the glass going grey over a
@@ -162,11 +162,11 @@ select.fl-input > option {
   .fl-aurora {
     background: conic-gradient(
       from 0deg,
-      rgba(45, 212, 191, 0.2),
-      rgba(15, 30, 61, 0.1),
-      rgba(24, 169, 153, 0.22),
-      rgba(94, 234, 212, 0.16),
-      rgba(45, 212, 191, 0.2)
+      rgba(34, 166, 247, 0.2),
+      rgba(1, 28, 65, 0.1),
+      rgba(20, 102, 222, 0.22),
+      rgba(124, 200, 251, 0.16),
+      rgba(34, 166, 247, 0.2)
     );
     filter: blur(64px);
   }
@@ -174,8 +174,8 @@ select.fl-input > option {
   /* Perspective grid receding to the horizon. Decorative — always aria-hidden. */
   .fl-grid-floor {
     background-image:
-      linear-gradient(rgba(24, 169, 153, 0.13) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(24, 169, 153, 0.13) 1px, transparent 1px);
+      linear-gradient(rgba(20, 102, 222, 0.13) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20, 102, 222, 0.13) 1px, transparent 1px);
     background-size: 46px 46px;
     transform: perspective(700px) rotateX(61deg);
     transform-origin: center bottom;
@@ -186,8 +186,8 @@ select.fl-input > option {
   /* Flat tech grid, faded out from the top of the page. */
   .fl-tech-grid {
     background-image:
-      linear-gradient(rgba(15, 30, 61, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(15, 30, 61, 0.05) 1px, transparent 1px);
+      linear-gradient(rgba(1, 28, 65, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(1, 28, 65, 0.05) 1px, transparent 1px);
     background-size: 56px 56px;
     -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
     mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
@@ -204,11 +204,11 @@ select.fl-input > option {
   .fl-text-gradient {
     background-image: linear-gradient(
       90deg,
-      #0f1e3d 0%,
-      #18a999 28%,
-      #2dd4bf 50%,
-      #18a999 72%,
-      #0f1e3d 100%
+      #011c41 0%,
+      #1466de 28%,
+      #22a6f7 50%,
+      #1466de 72%,
+      #011c41 100%
     );
     background-size: 220% 100%;
     -webkit-background-clip: text;
@@ -250,8 +250,8 @@ select.fl-input > option {
 
   /* Light-surface selection colour, scoped so dark pages keep theirs. */
   .fl-light ::selection {
-    background: rgba(24, 169, 153, 0.25);
-    color: #0f1e3d;
+    background: rgba(20, 102, 222, 0.25);
+    color: #011c41;
   }
 
   /* Opt back into the dark canvas. Applied by pages that have not been
@@ -261,7 +261,7 @@ select.fl-input > option {
     @apply bg-[#030d1a] text-white;
   }
   .fl-dark-surface ::selection {
-    background: rgba(24, 169, 153, 0.35);
+    background: rgba(20, 102, 222, 0.35);
     color: #fff;
   }
 }

@@ -4,7 +4,7 @@ import { Palette, Save, Mail, Landmark } from 'lucide-react';
 
 export default function BrandSettingsPage() {
   // Colours start valid: an empty value in <input type="color"> logs a console warning until the fetch lands.
-  const [settings, setSettings] = useState({ companyName: '', tagline: '', primaryColor: '#0F1E3D', accentColor: '#18A999', logo: '', contactEmail: '', tourismEmail: '', bankPayee: '', receiptWhatsapp: '' });
+  const [settings, setSettings] = useState({ companyName: '', tagline: '', primaryColor: '#011C41', accentColor: '#1466DE', logo: '', contactEmail: '', tourismEmail: '', bankPayee: '', receiptWhatsapp: '' });
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
 

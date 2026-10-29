@@ -21,9 +21,9 @@ import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useGlowTexture } from '@/components/three/useGlowTexture'
 
-const NAVY = new THREE.Color('#0F1E3D')
-const TEAL = new THREE.Color('#18A999')
-const MINT = new THREE.Color('#2DD4BF')
+const NAVY = new THREE.Color('#011C41')
+const ROYAL = new THREE.Color('#1466DE')
+const AZURE = new THREE.Color('#22A6F7')
 const RADIUS = 1.9
 const GOLDEN = Math.PI * (3 - Math.sqrt(5))
 const SAT_COUNT = 3
@@ -107,8 +107,8 @@ export function ThreeActStoryCanvas({ progressRef, labelRefs }: Props) {
       cluster.set([c[0] + j(), c[1] + j(), c[2] + j() * 0.6], i * 3)
 
       const t = (y + 1) / 2
-      if (t < 0.55) tmp.copy(NAVY).lerp(TEAL, t / 0.55)
-      else tmp.copy(TEAL).lerp(MINT, (t - 0.55) / 0.45)
+      if (t < 0.55) tmp.copy(NAVY).lerp(ROYAL, t / 0.55)
+      else tmp.copy(ROYAL).lerp(AZURE, (t - 0.55) / 0.45)
       colors.set([tmp.r, tmp.g, tmp.b], i * 3)
     }
 
@@ -229,11 +229,11 @@ export function ThreeActStoryCanvas({ progressRef, labelRefs }: Props) {
       </points>
 
       <lineSegments geometry={scene.wireGeo}>
-        <lineBasicMaterial ref={wireMatRef} color={TEAL} transparent opacity={0} />
+        <lineBasicMaterial ref={wireMatRef} color={ROYAL} transparent opacity={0} />
       </lineSegments>
 
       <lineSegments geometry={scene.linkGeo}>
-        <lineBasicMaterial ref={linkMatRef} color={TEAL} transparent opacity={0} />
+        <lineBasicMaterial ref={linkMatRef} color={ROYAL} transparent opacity={0} />
       </lineSegments>
 
       <points geometry={scene.satGeo}>
@@ -241,7 +241,7 @@ export function ThreeActStoryCanvas({ progressRef, labelRefs }: Props) {
           ref={satMatRef}
           size={0.22}
           map={glow}
-          color={MINT}
+          color={AZURE}
           transparent
           opacity={0}
           sizeAttenuation

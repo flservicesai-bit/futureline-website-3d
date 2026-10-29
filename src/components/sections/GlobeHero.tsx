@@ -125,7 +125,7 @@ export async function GlobeHero() {
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
             href="/get-started"
-            className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-pill bg-gradient-to-r from-navy via-teal to-mint px-7 py-3.5 font-display text-base font-semibold text-white shadow-[0_10px_24px_-8px_rgba(24,169,153,0.5)] transition-transform duration-300 hover:-translate-y-0.5"
+            className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-pill bg-gradient-to-r from-navy via-teal to-mint px-7 py-3.5 font-display text-base font-semibold text-white shadow-[0_10px_24px_-8px_rgba(20,102,222,0.5)] transition-transform duration-300 hover:-translate-y-0.5"
             data-cursor="magnetic"
           >
             {t('secondaryCta')}

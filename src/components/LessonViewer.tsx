@@ -335,7 +335,7 @@ export default function LessonViewer({
                           {lesson.content && (
                             <div className="mb-6">
                               <div className="flex items-center gap-2 mb-3">
-                                <StickyNote className="text-[#18a999]" size={16} />
+                                <StickyNote className="text-[#1466de]" size={16} />
                                 <h4 className="font-bold text-navy text-xs uppercase tracking-widest">
                                   {isQuiz ? t('instructions') : t('lessonNotes')}
                                 </h4>
@@ -360,7 +360,7 @@ export default function LessonViewer({
                           {!isQuiz && lesson.resources && (
                             <div className="mb-6">
                               <div className="flex items-center gap-2 mb-3">
-                                <Download className="text-[#18a999]" size={16} />
+                                <Download className="text-[#1466de]" size={16} />
                                 <h4 className="font-bold text-navy text-xs uppercase tracking-widest">{t('attachments')}</h4>
                               </div>
                               <div className="space-y-2">

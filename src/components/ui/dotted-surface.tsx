@@ -8,7 +8,7 @@ type DottedSurfaceProps = Omit<React.ComponentProps<'div'>, 'ref'>;
 
 /**
  * Animated Three.js dot-wave surface — adapted for FutureLine's always-dark theme.
- * Dots use the brand teal (#18a999) and fade into the dark background (#030d1a).
+ * Dots use the brand teal (#1466de) and fade into the dark background (#030d1a).
  * Sizes itself to its container, not the window, so it works as a section background.
  */
 export function DottedSurface({ className, ...props }: DottedSurfaceProps) {

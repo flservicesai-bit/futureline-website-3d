@@ -10,7 +10,7 @@ const vsSource = `
 `;
 
 // Brand colors (normalized 0–1):
-//   lineColor  → teal #18A999 = (0.094, 0.663, 0.600)
+//   lineColor  → teal #1466DE = (0.094, 0.663, 0.600)
 //   bgColor1   → surface #031231 = (0.012, 0.071, 0.192)
 //   bgColor2   → surface-container-low #0b1a39 = (0.043, 0.102, 0.224)
 const fsSource = `

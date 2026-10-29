@@ -135,7 +135,7 @@ export function VisionMission() {
       id="vision"
       aria-labelledby="vision-heading"
       className="relative flex h-screen w-full items-center justify-center overflow-hidden"
-      style={{ ['--fl-reading-edge' as string]: '#18A999' }}
+      style={{ ['--fl-reading-edge' as string]: '#1466DE' }}
     >
       <div
         aria-hidden

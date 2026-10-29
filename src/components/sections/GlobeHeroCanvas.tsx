@@ -18,9 +18,9 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useGlowTexture } from '@/components/three/useGlowTexture'
 
-const NAVY = new THREE.Color('#0F1E3D')
-const TEAL = new THREE.Color('#18A999')
-const MINT = new THREE.Color('#2DD4BF')
+const NAVY = new THREE.Color('#011C41')
+const ROYAL = new THREE.Color('#1466DE')
+const AZURE = new THREE.Color('#22A6F7')
 const RADIUS = 1.72
 
 /**
@@ -85,8 +85,8 @@ export function GlobeHeroCanvas({ pointerRef }: Props) {
     for (let i = 0; i < count; i++) {
       const y = ptsGeo.attributes.position.getY(i)
       const t = (y / RADIUS + 1) / 2
-      if (t < 0.55) tmp.copy(NAVY).lerp(TEAL, t / 0.55)
-      else tmp.copy(TEAL).lerp(MINT, (t - 0.55) / 0.45)
+      if (t < 0.55) tmp.copy(NAVY).lerp(ROYAL, t / 0.55)
+      else tmp.copy(ROYAL).lerp(AZURE, (t - 0.55) / 0.45)
       colors.set([tmp.r, tmp.g, tmp.b], i * 3)
     }
     ptsGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3))
@@ -107,7 +107,7 @@ export function GlobeHeroCanvas({ pointerRef }: Props) {
         ],
         i * 3,
       )
-      tmp.copy(Math.random() > 0.5 ? TEAL : NAVY)
+      tmp.copy(Math.random() > 0.5 ? ROYAL : NAVY)
       starCol.set([tmp.r, tmp.g, tmp.b], i * 3)
     }
     const starGeo = new THREE.BufferGeometry()
@@ -164,7 +164,7 @@ export function GlobeHeroCanvas({ pointerRef }: Props) {
       <group ref={tiltRef} rotation={[0, 0, 0.16]}>
         <group ref={spinRef}>
           <lineSegments geometry={wireGeo}>
-            <lineBasicMaterial color={TEAL} transparent opacity={0.28} />
+            <lineBasicMaterial color={ROYAL} transparent opacity={0.28} />
           </lineSegments>
 
           <lineSegments ref={cageRef} geometry={cageGeo}>

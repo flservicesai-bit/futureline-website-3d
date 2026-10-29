@@ -209,8 +209,8 @@ model Testimonial {
 model BrandSettings {
   id           String  @id @default(cuid())
   logo         String?
-  primaryColor String  @default("#0F1E3D")
-  accentColor  String  @default("#18A999")
+  primaryColor String  @default("#011C41")
+  accentColor  String  @default("#1466DE")
   companyName  String  @default("FutureLine")
   tagline      String  @default("Design • Deploy • Evolve")
   contactEmail String  @default("flservices.ai@gmail.com")
