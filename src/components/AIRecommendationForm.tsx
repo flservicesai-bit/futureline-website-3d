@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { formatPrice } from '@/lib/utils';
+import { formatCoursePrice } from '@/lib/utils';
 import { BookOpen, Clock, Loader2 } from 'lucide-react';
 
 interface RecommendedCourse {
@@ -170,7 +170,7 @@ export default function AIRecommendationForm() {
                       </p>
                       <div className="flex items-center justify-between border-t border-hairline pt-3">
                         <span className="text-sm font-semibold text-navy">
-                          {course.price > 0 ? formatPrice(course.discountPrice ?? course.price) : t('free')}
+                          {course.price > 0 ? formatCoursePrice(course.discountPrice ?? course.price) : t('free')}
                         </span>
                         <span className="flex items-center gap-1 text-xs text-ink-muted">
                           <Clock size={11} /> {course.durationHours}{t('hoursSuffix')}

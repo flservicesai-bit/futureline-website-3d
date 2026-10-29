@@ -25,7 +25,6 @@ export const CLIENT_NAMESPACES = [
   'lessonViewer',
   'nav',
   'pillars',
-  'promo',
   'serviceDetail',
   'serviceForm',
   'story',

@@ -14,6 +14,20 @@ export function formatPrice(price: number): string {
   }).format(price);
 }
 
+/**
+ * A course price as visitors see it: "OMR 249", keeping the baisa only when
+ * there are some ("OMR 249.500"). Ledgers and payouts keep formatPrice's
+ * fixed three decimals so their columns line up.
+ */
+export function formatCoursePrice(price: number): string {
+  return new Intl.NumberFormat('en-OM', {
+    style: 'currency',
+    currency: 'OMR',
+    minimumFractionDigits: Number.isInteger(price) ? 0 : 3,
+    maximumFractionDigits: 3,
+  }).format(price);
+}
+
 // Placeholder origin for resolving relative paths; any off-site path resolves
 // to a different origin, so this works without `window` (SSR included).
 const SAME_SITE_ORIGIN = 'https://same-site.invalid';

@@ -112,7 +112,7 @@ export default function EnrollButton({
   };
 
   const primaryClass =
-    'block w-full py-3 rounded-lg bg-gradient-to-r from-navy via-teal-ink to-teal text-white text-center text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50 uppercase tracking-widest';
+    'block w-full rounded-lg bg-navy py-3 text-center text-[15px] font-semibold text-white transition-colors hover:bg-teal-ink disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal';
 
   if (state === 'enrolled') {
     return (
@@ -152,14 +152,9 @@ export default function EnrollButton({
         {t('payViaBankTransfer')}
       </button>
 
-      <button
-        disabled
-        className="w-full py-2.5 px-4 rounded-lg border border-hairline text-ink-muted text-sm font-semibold cursor-not-allowed bg-canvas-card flex items-center justify-center gap-2"
-      >
-        <CreditCard size={14} />
-        <span>{t('creditCard')}</span>
-        <span className="text-[10px] bg-slate-800 text-white px-2 py-0.5 rounded-full uppercase tracking-widest">{t('comingSoon')}</span>
-      </button>
+      <p className="flex items-center justify-center gap-1.5 text-xs text-ink-muted">
+        <CreditCard size={13} aria-hidden /> {t('cardComingSoon')}
+      </p>
 
       {/* Rendered on <body>: inside the price card, an animated ancestor
           trapped the "full-screen" overlay in the card, half off-screen. */}
