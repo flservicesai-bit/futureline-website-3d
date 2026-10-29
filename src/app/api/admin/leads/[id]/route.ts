@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { notifyLeadStageChange } from '@/lib/notifications';
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -68,12 +67,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
           performedBy: (session.user as any).id,
         },
       });
-
-      notifyLeadStageChange(
-        { name: `${oldLead.firstName} ${oldLead.lastName}`.trim(), email: oldLead.email, stage },
-        oldLead.stage,
-        stage
-      );
+      // Pipeline stages are internal (NEGOTIATING, LOST…), so the prospect is
+      // not emailed about them; the activity log above records the change.
     }
 
     if (priority && priority !== oldLead.priority) {

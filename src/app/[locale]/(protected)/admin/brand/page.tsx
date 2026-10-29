@@ -8,7 +8,8 @@ export default function BrandSettingsPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    fetch('/api/admin/settings/brand').then(r => r.json()).then(data => {
+    // An error response is an { error } object, not settings: keep the defaults.
+    fetch('/api/admin/settings/brand').then(r => (r.ok ? r.json() : null)).then(data => {
       if (data) setSettings(data);
     });
   }, []);
@@ -16,7 +17,7 @@ export default function BrandSettingsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await fetch('/api/admin/settings/brand', {
+    const res = await fetch('/api/admin/settings/brand', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -30,6 +31,11 @@ export default function BrandSettingsPage() {
       }),
     });
     setLoading(false);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Could not save brand settings. Please try again.');
+      return;
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };

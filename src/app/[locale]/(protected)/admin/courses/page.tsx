@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from '@/i18n/routing';
 import { Plus, Search, Edit, Trash2, Eye, CheckCircle, XCircle, Clock, RotateCcw } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
+import { fetchList } from '@/lib/fetch-list';
 
 export default function AdminCoursesPage() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -17,9 +18,7 @@ export default function AdminCoursesPage() {
   }, []);
 
   const fetchCourses = async () => {
-    const res = await fetch('/api/admin/courses');
-    const data = await res.json();
-    setCourses(data);
+    setCourses(await fetchList('/api/admin/courses'));
     setLoading(false);
   };
 

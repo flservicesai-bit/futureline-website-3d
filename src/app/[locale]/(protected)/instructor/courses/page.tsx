@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from '@/i18n/routing';
 import { Plus, Search, Edit, Trash2, Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { fetchList } from '@/lib/fetch-list';
 
 export default function InstructorCoursesPage() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -13,9 +14,7 @@ export default function InstructorCoursesPage() {
   useEffect(() => { fetchCourses(); }, []);
 
   const fetchCourses = async () => {
-    const res = await fetch('/api/instructor/courses');
-    const data = await res.json();
-    setCourses(data);
+    setCourses(await fetchList('/api/instructor/courses'));
     setLoading(false);
   };
 

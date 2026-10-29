@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { parseCommissionRate } from '@/lib/validations';
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -75,13 +76,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     }
 
     const { commissionRate } = await req.json();
-    if (commissionRate === undefined || commissionRate < 0 || commissionRate > 100) {
-      return NextResponse.json({ error: 'Commission rate must be between 0 and 100' }, { status: 400 });
+    const rate = parseCommissionRate(commissionRate);
+    if (rate === null) {
+      return NextResponse.json({ error: 'Commission rate must be a number from 0 to 100' }, { status: 400 });
     }
 
     const user = await prisma.user.update({
       where: { id: instructorId },
-      data: { commissionRate: Number(commissionRate) },
+      data: { commissionRate: rate },
       select: { id: true, commissionRate: true },
     });
 

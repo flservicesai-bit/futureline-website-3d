@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { quizProblem, withScheme } from '@/lib/validations';
 
 export async function GET(req: Request) {
   try {
@@ -37,11 +38,13 @@ export async function POST(req: Request) {
       lessonTitle: data.lessonTitle,
       lessonType: data.lessonType || 'CONTENT',
       orderIndex: data.orderIndex,
-      videoUrl: data.videoUrl || null,
+      videoUrl: withScheme(data.videoUrl) || null,
       content: data.content || null,
       resources: data.resources || null,
       questions: data.questions || null,
     };
+    const problem = quizProblem(lessonData.lessonType, lessonData.questions);
+    if (problem) return NextResponse.json({ error: problem }, { status: 400 });
     const lesson = await prisma.lesson.create({ data: lessonData });
     return NextResponse.json(lesson);
   } catch (error: any) {

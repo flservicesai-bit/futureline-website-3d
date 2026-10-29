@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
+import { fetchList } from '@/lib/fetch-list';
 
 export default function AdminServicesPage() {
   const [services, setServices] = useState<any[]>([]);
@@ -12,15 +13,20 @@ export default function AdminServicesPage() {
   useEffect(() => { fetchServices(); }, []);
 
   const fetchServices = async () => {
-    const res = await fetch('/api/admin/services');
-    setServices(await res.json());
+    setServices(await fetchList('/api/admin/services'));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const url = editing ? `/api/admin/services/${editing.id}` : '/api/admin/services';
     const method = editing ? 'PUT' : 'POST';
-    await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
+    if (!res.ok) {
+      // Keep the form open so nothing typed is lost, and say why.
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Could not save. Please check the fields and try again.');
+      return;
+    }
     setShowForm(false);
     setEditing(null);
     setForm({ title: '', description: '', category: '', pricingModel: '', featured: false, status: 'ACTIVE' });

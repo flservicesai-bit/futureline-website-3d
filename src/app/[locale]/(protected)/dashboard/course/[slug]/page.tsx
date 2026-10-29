@@ -5,6 +5,8 @@ import Header from '@/components/Header';
 import LessonViewer from '@/components/LessonViewer';
 import { ArrowLeft, Users } from 'lucide-react';
 import { Link } from '@/i18n/routing';
+import { getLocale } from 'next-intl/server';
+import { backfillLessonProgress, syncProgress } from '@/lib/progress';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,10 +28,23 @@ export default async function CourseLearnPage({ params }: { params: Promise<{ sl
     where: { userId_courseId: { userId: session.user.id, courseId: course.id } },
   });
 
-  if (!enrollment) redirect('/dashboard');
+  if (!enrollment) redirect(`/${await getLocale()}/dashboard`);
+
+  // Enrolments from before per-lesson tracking get their old percentage
+  // turned into ticks once; from then on progress is derived from the rows.
+  await backfillLessonProgress(
+    enrollment.id,
+    enrollment.progressPercentage,
+    course.lessons.map((l) => l.id),
+  );
+  const doneRows = await prisma.lessonProgress.findMany({
+    where: { enrollmentId: enrollment.id },
+    select: { lessonId: true },
+  });
+  const { progressPercentage } = await syncProgress(enrollment.id, course.id);
 
   const moduleCount = new Set(course.lessons.map(l => l.moduleTitle)).size;
-  const progress = Math.round(enrollment.progressPercentage);
+  const progress = Math.round(progressPercentage);
 
   return (
     <>
@@ -62,7 +77,7 @@ export default async function CourseLearnPage({ params }: { params: Promise<{ sl
               <div className="flex-1 h-1.5 bg-canvas-card rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-teal-500 to-blue-600 rounded-full transition-all duration-500"
-                  style={{ width: `${enrollment.progressPercentage}%` }}
+                  style={{ width: `${progressPercentage}%` }}
                 />
               </div>
               <span className="text-xs text-ink-muted font-bold tabular-nums shrink-0">{progress}%</span>
@@ -82,8 +97,7 @@ export default async function CourseLearnPage({ params }: { params: Promise<{ sl
               orderIndex: l.orderIndex,
             }))}
             enrollmentId={enrollment.id}
-            progressPercentage={enrollment.progressPercentage}
-            totalLessons={course.lessons.length}
+            completedLessonIds={doneRows.map((r) => r.lessonId)}
           />
         </div>
       </div>

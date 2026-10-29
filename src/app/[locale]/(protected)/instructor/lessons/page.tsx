@@ -18,6 +18,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { fetchList } from '@/lib/fetch-list';
 
 interface Question {
   question: string;
@@ -241,7 +242,7 @@ export default function InstructorLessonsPage() {
   );
 
   useEffect(() => {
-    fetch('/api/instructor/courses').then(r => r.json()).then(setCourses);
+    fetchList('/api/instructor/courses').then(setCourses);
   }, []);
 
   const fetchLessons = useCallback(async () => {
@@ -343,10 +344,15 @@ export default function InstructorLessonsPage() {
   const saveLesson = async (lesson: LessonData) => {
     setSaving(true);
     const body = { ...lesson, orderIndex: Number(lesson.orderIndex), questions: lesson.lessonType === 'QUIZ' ? lesson.questions : null, videoUrl: lesson.lessonType === 'CONTENT' ? lesson.videoUrl : null };
-    if (lesson.id) {
-      await fetch(`/api/instructor/lessons/${lesson.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    } else {
-      await fetch('/api/instructor/lessons', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const res = lesson.id
+      ? await fetch(`/api/instructor/lessons/${lesson.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      : await fetch('/api/instructor/lessons', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!res.ok) {
+      // Keep the form open so nothing typed is lost, and say why.
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Could not save the lesson. Check the fields and try again.');
+      setSaving(false);
+      return;
     }
     await fetchLessons();
     setEmptyModules(prev => prev.filter(m => m !== lesson.moduleTitle));

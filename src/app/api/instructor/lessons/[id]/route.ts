@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { lessonSchema, formatZodError } from '@/lib/validations';
+import { lessonSchema, formatZodError, quizProblem } from '@/lib/validations';
 
 async function requireInstructorLessonOwnership(lessonId: string) {
   const session = await getServerSession(authOptions);
@@ -22,13 +22,19 @@ async function requireInstructorLessonOwnership(lessonId: string) {
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    await requireInstructorLessonOwnership(id);
+    const { lesson } = await requireInstructorLessonOwnership(id);
     const body = await req.json();
     
     const parsed = lessonSchema.partial().safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: formatZodError(parsed.error) }, { status: 400 });
     }
+    // A partial update: check the quiz as it will be after the change.
+    const problem = quizProblem(
+      parsed.data.lessonType ?? lesson.lessonType,
+      parsed.data.questions !== undefined ? parsed.data.questions : lesson.questions,
+    );
+    if (problem) return NextResponse.json({ error: problem }, { status: 400 });
 
     const { courseId, ...updateData } = parsed.data;
     

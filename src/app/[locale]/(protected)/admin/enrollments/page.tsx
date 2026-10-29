@@ -1,13 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Search, Download } from 'lucide-react';
+import { fetchList } from '@/lib/fetch-list';
+import { downloadCsv, toCsv } from '@/lib/csv';
 
 export default function AdminEnrollmentsPage() {
   const [enrollments, setEnrollments] = useState<any[]>([]);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch('/api/admin/enrollments').then(r => r.json()).then(setEnrollments);
+    fetchList('/api/admin/enrollments').then(setEnrollments);
   }, []);
 
   const filtered = enrollments.filter(e =>
@@ -22,11 +24,7 @@ export default function AdminEnrollmentsPage() {
       `${Math.round(e.progressPercentage)}%`, e.completed ? 'Yes' : 'No',
       new Date(e.createdAt).toLocaleDateString('en-GB'),
     ]);
-    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'enrollments.csv'; a.click();
+    downloadCsv('enrollments.csv', toCsv(headers, rows));
   };
 
   return (
