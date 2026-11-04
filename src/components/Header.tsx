@@ -93,7 +93,8 @@ export default function Header() {
     { href: '/get-started', label: t('whatWeOffer') },
     { href: '/services', label: t('services') },
     { href: '/ai', label: t('ai') },
-    { href: '/lab/video-effects', label: t('lab') },
+    // No "Lab" entry: the video-effects Lab was removed by request until it's
+    // ready to launch. It lives in git history.
     { href: '/#who-we-serve', label: t('whoWeServe'), anchor: '#who-we-serve' },
     { href: '/courses', label: t('courses') },
     { href: '/faq', label: t('faq') },
@@ -150,10 +151,9 @@ export default function Header() {
             aria-label={a('home')}
             data-cursor="hover"
           >
-            {/* The Living F mark: navy on the light pages, white over the
-                dark home hero. */}
+            {/* The Living F mark: white, since every page is navy now. */}
             <Image
-              src={overDarkHero ? '/brand/futureline-mark-white.svg' : '/brand/futureline-mark.svg'}
+              src="/brand/futureline-mark-white.svg"
               alt=""
               width={31}
               height={30}

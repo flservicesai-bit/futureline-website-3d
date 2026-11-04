@@ -42,12 +42,9 @@ const SIZE_CLASSES: Record<Size, string> = {
   xl: 'text-[2.5rem] sm:text-5xl md:text-[clamp(3rem,6vw,5rem)] lg:text-[clamp(3.25rem,6vw,5.5rem)]',
 };
 
-// The FutureLine wordmark gradient, in the Living F logo's blues: light
-// royal → royal → azure ("Line") → periwinkle (academy) → deep indigo. Both
-// brand poles in one mark, so it reads as "FL" on every page regardless of
-// which pole the page leans toward.
-const FL_GRADIENT =
-  'linear-gradient(90deg, #3D8FF0 0%, #1466DE 35%, #22A6F7 55%, #93AEFF 80%, #2A3475 100%)';
+// The heading gradient follows the surface (globals.css): cream with a faint
+// warm end on navy, navy into a lighter navy on cream.
+const FL_GRADIENT = 'var(--fl-heading-gradient)';
 
 export function BrandedHeading({
   as: Tag = 'h2',
@@ -70,7 +67,7 @@ export function BrandedHeading({
         backgroundImage: FL_GRADIENT,
         WebkitBackgroundClip: 'text',
         ...(shouldGlow
-          ? { filter: 'drop-shadow(0 0 32px rgba(91, 123, 251, 0.2))' }
+          ? { filter: 'drop-shadow(0 0 32px rgba(244, 237, 224, 0.12))' }
           : null),
       }}
     >

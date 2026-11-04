@@ -38,8 +38,8 @@ const FREEZE_TIME = 7.0;
 const FALLBACK_MS = 9_500;
 const AUTOPLAY_CHECK_MS = 2_500;
 
-/** Blue → cyan palette (RGB triplets) for rays, particles and trails. */
-const COLORS = ['120,240,255', '110,205,255', '150,222,255', '96,170,255'];
+/** Cream palette with one coral glint (RGB triplets) for rays, particles and trails. */
+const COLORS = ['244,237,224', '255,250,243', '244,237,224', '255,170,158'];
 
 export function EmergingWordmark({
   text,
@@ -95,7 +95,7 @@ export function EmergingWordmark({
       // 1 — a soft, wide glow on the open palm (a glow on the hand, NOT a
       // ball): flat, wider than tall, heavily blurred, and it fades away.
       const palmGlow = document.createElement('div');
-      palmGlow.style.cssText = `position:absolute;left:${ex}px;top:${ey}px;width:150px;height:78px;margin:-39px 0 0 -75px;border-radius:9999px;background:radial-gradient(ellipse at center,rgba(224,246,255,0.9) 0%,rgba(140,214,255,0.5) 40%,rgba(90,170,255,0) 72%);filter:blur(6px);opacity:0;will-change:transform,opacity;`;
+      palmGlow.style.cssText = `position:absolute;left:${ex}px;top:${ey}px;width:150px;height:78px;margin:-39px 0 0 -75px;border-radius:9999px;background:radial-gradient(ellipse at center,rgba(255,250,243,0.9) 0%,rgba(244,237,224,0.45) 40%,rgba(244,237,224,0) 72%);filter:blur(6px);opacity:0;will-change:transform,opacity;`;
       overlay.appendChild(palmGlow);
 
       // 2 — light rays fanning out of the palm centre. Longest straight up
@@ -133,7 +133,7 @@ export function EmergingWordmark({
         const s = 2.5 + Math.random() * 4;
         const trailLen = 16 + Math.random() * 26;
         const p = document.createElement('div');
-        p.style.cssText = `position:absolute;left:0;top:0;width:${s}px;height:${s}px;border-radius:9999px;background:rgba(224,246,255,0.98);box-shadow:0 0 ${7 + s * 2}px ${1 + s / 2}px rgba(${col},0.85);opacity:0;will-change:transform,opacity;`;
+        p.style.cssText = `position:absolute;left:0;top:0;width:${s}px;height:${s}px;border-radius:9999px;background:rgba(255,250,243,0.98);box-shadow:0 0 ${7 + s * 2}px ${1 + s / 2}px rgba(${col},0.85);opacity:0;will-change:transform,opacity;`;
         const trail = document.createElement('div');
         trail.style.cssText = `position:absolute;left:50%;top:${s}px;width:${Math.max(1.3, s * 0.4)}px;height:${trailLen}px;margin-left:${-Math.max(1.3, s * 0.4) / 2}px;background:linear-gradient(to bottom,rgba(${col},0.6),rgba(${col},0));border-radius:9999px;filter:blur(0.6px);`;
         p.appendChild(trail);
@@ -204,8 +204,8 @@ export function EmergingWordmark({
         },
         1.05,
       );
-      // Settle from the emergence glow toward the gradient's sky-blue mid…
-      tl.to(letters, { color: 'rgb(134,214,255)', textShadow: '0 0 0 rgba(0,0,0,0)', duration: 0.45 }, '>-0.15');
+      // Settle from the emergence glow toward the gradient's cream…
+      tl.to(letters, { color: 'rgb(244,237,224)', textShadow: '0 0 0 rgba(0,0,0,0)', duration: 0.45 }, '>-0.15');
       // …then hand off to the parent's gradient/light-sweep: clearing every
       // inline prop removes the transform/filter stacking contexts and the
       // explicit colour, so the clipped gradient takes over seamlessly.
@@ -252,8 +252,8 @@ export function EmergingWordmark({
             opacity: 0,
             transform: 'translateY(22px) scale(0.92)',
             filter: 'blur(12px)',
-            color: 'rgb(205,238,255)',
-            textShadow: '0 0 18px rgba(120,200,255,0.85)',
+            color: 'rgb(255,250,243)',
+            textShadow: '0 0 18px rgba(244,237,224,0.7)',
             willChange: 'transform, opacity, filter',
           }}
         >

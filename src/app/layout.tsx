@@ -9,7 +9,7 @@
  * Arabic render RTL.
  */
 import type { Metadata } from 'next';
-import { Inter, Space_Grotesk, Noto_Sans_Arabic } from 'next/font/google';
+import { Inter, Sora, Alexandria, Noto_Sans_Arabic } from 'next/font/google';
 import { GeistMono } from 'geist/font/mono';
 import { getLocale } from 'next-intl/server';
 import './globals.css';
@@ -19,15 +19,26 @@ import { SITE_NAME, SITE_URL, shareImage } from '@/lib/seo';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
-// Display face for headings and the wordmark treatment.
-const spaceGrotesk = Space_Grotesk({
+// Display pair for headings, nav and the wordmark: Sora for Latin, Alexandria
+// for Arabic. The `font-display` stack is Sora, then Alexandria, so Sora must
+// have no Arial fallback face: Arial carries Arabic glyphs and, sitting between
+// the two, would take every Arabic letter before Alexandria did. (`subsets`
+// only picks what is preloaded; next/font still emits every subset's
+// @font-face, so Alexandria cannot go first — its Latin face would win.)
+const sora = Sora({
   subsets: ['latin'],
-  weight: ['500', '600', '700'],
   variable: '--font-display',
   display: 'swap',
+  adjustFontFallback: false,
+});
+const alexandria = Alexandria({
+  subsets: ['arabic'],
+  variable: '--font-display-arabic',
+  display: 'swap',
+  adjustFontFallback: false,
 });
 
-// Arabic face. Non-optional: neither Inter nor Space Grotesk carries Arabic
+// Arabic face. Non-optional: neither Inter nor Sora carries Arabic
 // glyphs, so the bilingual copy would render as tofu without it.
 // next/font self-hosts these at build time — required here, because the app's
 // CSP sets font-src 'self' data:, which blocks the Google Fonts CDN outright.
@@ -62,7 +73,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang={locale}
       dir={dir}
-      className={`${inter.variable} ${spaceGrotesk.variable} ${notoArabic.variable} ${GeistMono.variable}`}
+      className={`${inter.variable} ${sora.variable} ${alexandria.variable} ${notoArabic.variable} ${GeistMono.variable}`}
     >
       <body className="font-sans antialiased">
         {/* No NextIntlClientProvider here: [locale]/layout.tsx provides the

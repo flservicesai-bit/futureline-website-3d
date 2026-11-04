@@ -120,7 +120,6 @@ type MetaKey =
   | 'servicesConsultation'
   | 'servicesAutomations'
   | 'ai'
-  | 'videoLab'
   | 'getStartedDetails'
   | 'getStartedSignin'
   | 'getStartedConfirm';

@@ -3,9 +3,9 @@ import { CoverImage } from './CoverImage';
 // Three glows so neighbouring cards don't look identical; a category always
 // gets the same one.
 const GLOWS = [
-  'radial-gradient(120% 90% at 100% 0%, rgba(20, 102, 222, 0.75) 0%, transparent 60%)',
-  'radial-gradient(110% 90% at 0% 100%, rgba(34, 166, 247, 0.5) 0%, transparent 60%)',
-  'radial-gradient(120% 90% at 100% 100%, rgba(91, 123, 251, 0.6) 0%, transparent 60%)',
+  'radial-gradient(120% 90% at 100% 0%, rgba(58, 82, 136, 0.85) 0%, transparent 60%)',
+  'radial-gradient(110% 90% at 0% 100%, rgba(244, 237, 224, 0.16) 0%, transparent 60%)',
+  'radial-gradient(120% 90% at 100% 100%, rgba(255, 107, 91, 0.4) 0%, transparent 60%)',
 ];
 
 function glowFor(key: string) {

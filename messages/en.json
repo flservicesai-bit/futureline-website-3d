@@ -16,8 +16,7 @@
     "signOut": "Sign out",
     "account": "Account",
     "services": "Services",
-    "ai": "AI",
-    "lab": "Lab"
+    "ai": "AI"
   },
   "hero": {
     "eyebrow": "AI Consulting · Applications · Training",
@@ -206,8 +205,7 @@
       "privacy": "Privacy",
       "terms": "Terms",
       "services": "Services",
-      "ai": "AI & Automation",
-      "lab": "Video Effects Lab"
+      "ai": "AI & Automation"
     }
   },
   "getStarted": {
@@ -2134,10 +2132,6 @@
       "title": "AI & Automation — FutureLine.ai",
       "description": "Practical AI for businesses. We don't build AI for the sake of AI — every model and automation we ship solves a real problem and pays its way."
     },
-    "videoLab": {
-      "title": "Video Effects Lab — FutureLine.ai",
-      "description": "Upload a short video, pick a generative look, get the result in seconds. An FL Lab demo of AI-built video tools."
-    },
     "getStartedDetails": {
       "title": "Submit — Get Started — FutureLine.ai",
       "description": "Tell us where you need us most, and submit your request."
@@ -2233,51 +2227,5 @@
     "mainNav": "Main",
     "toggleMenu": "Toggle menu",
     "progress": "Progress"
-  },
-  "videoLab": {
-    "eyebrow": "FL Lab · Demo",
-    "heading": "Apply Cinematic Effects to Your Video.",
-    "lede": "Upload a short clip, pick a look, download the result. The processing pipeline runs on FFmpeg. The effect graphs were prototyped with AI — exactly the workflow FL Academy teaches.",
-    "signInPrompt": "Sign in to try the lab. Videos are processed on our servers, so it's open to registered users.",
-    "signIn": "Sign in to continue",
-    "limits": "Max 50 MB · clipped to the first 30 seconds · MP4 output · inspired by the Saudi visual artist <artist>@abdullrhman_ha</artist>'s TouchDesigner-into-Claude workflow.",
-    "effects": {
-      "glow": {
-        "label": "Cinematic Glow",
-        "description": "Bloom around highlights + warm grade. Reads as polished, dreamy."
-      },
-      "neon": {
-        "label": "Neon Cyberpunk",
-        "description": "Lifted blues, crushed reds, grain. Reads as synthwave / dark city."
-      },
-      "dark": {
-        "label": "Dark Aesthetic",
-        "description": "Crushed shadows + vignette. Reads as moody portrait / editorial."
-      },
-      "vintage": {
-        "label": "Vintage Film",
-        "description": "Warm shift, low saturation, grain, vignette. Reads as Super-8 footage."
-      }
-    },
-    "tooLarge": "File too large. Max {mb} MB.",
-    "notVideo": "File must be a video.",
-    "serverError": "Server returned {status}.",
-    "networkError": "Network error. Please try again.",
-    "dropTitle": "Drop a video, or click to pick one.",
-    "dropHint": "MP4 / MOV / WebM up to 50 MB. The first 30 seconds get processed.",
-    "choose": "Choose video",
-    "loaded": "Loaded",
-    "chooseDifferent": "Choose a different file",
-    "pickLook": "Pick a look",
-    "selected": "selected",
-    "processingNote": "Processing runs server-side via FFmpeg. Typical time: 10–30s.",
-    "processing": "Processing…",
-    "apply": "Apply effect",
-    "before": "Before",
-    "after": "After",
-    "tryAnother": "Try another video",
-    "download": "Download",
-    "genericError": "Something went wrong.",
-    "startOver": "Start over"
   }
 }

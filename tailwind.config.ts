@@ -7,10 +7,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Palette from the Living F logo (docs/BRAND.md): its navy, the deep
-        // royal of its glow and the azure of "Line". The accent tokens keep
-        // their old names (teal, lab, mint) so the hundreds of class names
-        // that use them didn't have to change; they now hold the logo blues.
+        // Navy 60 / cream 30 / coral 10: navy page and section backgrounds,
+        // cream cards and bands, coral for small accents. The accent tokens
+        // keep their old names (teal, lab, mint) so the hundreds of class
+        // names that use them didn't have to change; they now hold the coral.
+        //
+        // The surface and text tokens (canvas, ink, hairline, the accent ink)
+        // are CSS variables that follow their surface: cream text on navy,
+        // navy text inside cream cards and bands. globals.css sets them.
         navy: {
           DEFAULT: '#011C41',
           light: '#0B2A5C',
@@ -19,55 +23,52 @@ const config: Config = {
         teal: {
           // Full scale too, so default-palette classes (teal-400, teal-500…)
           // follow the brand instead of staying green-blue.
-          50: '#EEF5FF',
-          100: '#D9E8FF',
-          200: '#BCD7FF',
-          300: '#8EBEFF',
-          400: '#59A0FB',
-          500: '#2A82F2',
-          600: '#1466DE',
-          700: '#0E50C0',
-          800: '#0E3F94',
-          900: '#0F3570',
-          950: '#0A2247',
-          DEFAULT: '#1466DE', // 5:1 on canvas, so it also works as text
-          light: '#3D8FF0',
-          dark: '#0E50C0',
-          ink: '#0E50C0', // small text and icons on light surfaces, 6.7:1
+          50: '#FFF3F1',
+          100: '#FFE3DF',
+          200: '#FFC9C2',
+          300: '#FFA59A',
+          400: '#FF8576',
+          500: '#FF6B5B',
+          600: '#EE4F3E',
+          700: '#C93C2D',
+          800: '#A33226',
+          900: '#852C23',
+          950: '#48130E',
+          DEFAULT: '#FF6B5B',
+          light: '#FF8A7D',
+          dark: '#E5503F',
+          ink: 'rgb(var(--fl-accent-ink) / <alpha-value>)', // coral text: light on navy, deep on cream
         },
-        // The bright end of the wordmark gradient: the logo's azure.
+        // The bright end of the wordmark gradient: a lighter coral.
         mint: {
-          DEFAULT: '#22A6F7',
-          light: '#7CC8FB',
+          DEFAULT: '#FF8A7D',
+          light: '#FFC2B9',
         },
-        // Light-surface palette, tinted toward the logo's blue.
+        // Surfaces: canvas is the navy page, alt and card are cream.
         // Reads as `bg-canvas text-ink border-hairline`.
         canvas: {
-          DEFAULT: '#F6F8FC',
-          alt: '#EDF2FA',
-          card: '#FFFFFF',
+          DEFAULT: 'rgb(var(--fl-canvas) / <alpha-value>)',
+          alt: 'rgb(var(--fl-canvas-alt) / <alpha-value>)',
+          card: 'rgb(var(--fl-canvas-card) / <alpha-value>)',
         },
         ink: {
-          // Body text is the brand navy rather than a neutral black.
-          DEFAULT: '#011C41',
-          muted: '#52627A',
+          DEFAULT: 'rgb(var(--fl-ink) / <alpha-value>)',
+          muted: 'rgb(var(--fl-ink-muted) / <alpha-value>)',
         },
-        hairline: 'rgba(1, 28, 65, 0.10)',
-        // Two-pole accent system (Lab vs Academy). Lab is the logo's royal
-        // blue, the same values as teal.
+        hairline: 'rgb(var(--fl-hairline) / var(--fl-hairline-alpha))',
+        // Two-pole accent system (Lab vs Academy). Lab is the coral, the same
+        // values as teal.
         lab: {
-          DEFAULT: '#1466DE',
-          light: '#3D8FF0',
-          dark: '#0E50C0',
-          ink: '#0E50C0',
+          DEFAULT: '#FF6B5B',
+          light: '#FF8A7D',
+          dark: '#E5503F',
+          ink: 'rgb(var(--fl-accent-ink) / <alpha-value>)',
         },
-        // Academy pole — wordmark's blue end (lavender → deep navy).
-        // Replaces the off-brand amber so Academy and Lab read as the
-        // two poles already present in the FutureLine wordmark.
+        // Academy pole: cream on navy, a lighter navy inside cream surfaces.
         academy: {
-          DEFAULT: '#5B7BFB',
-          light: '#93AEFF',
-          dark: '#2A3475',
+          DEFAULT: 'rgb(var(--fl-academy) / <alpha-value>)',
+          light: '#8FA0C6',
+          dark: '#011C41',
         },
         // Mirrors the reference repo's brand.* namespace so verbatim section
         // components compile. bg/fg/muted use the reference's black canvas;
@@ -79,11 +80,11 @@ const config: Config = {
           surface: '#0a0a0a',
           fg: '#fafafa',
           muted: '#a1a1aa',
-          accent: '#1466DE',
-          accent2: '#3D8FF0',
+          accent: '#FF6B5B',
+          accent2: '#FF8A7D',
         },
         gray: {
-          soft: '#F4F6F9',
+          soft: '#EFE6D6',
         },
         surface: {
           DEFAULT: '#031231',
@@ -110,9 +111,11 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-geist-mono)', 'ui-monospace', 'monospace'],
-        // Display face for headings and the wordmark treatment.
-        display: ['var(--font-display)', 'var(--font-inter)', 'system-ui', 'sans-serif'],
-        // Arabic face — Inter and Space Grotesk have no Arabic coverage, so
+        // Display face for headings and the wordmark treatment: Sora for Latin,
+        // Alexandria for the Arabic letters Sora lacks. Order matters; see
+        // layout.tsx.
+        display: ['var(--font-display)', 'var(--font-display-arabic)', 'var(--font-inter)', 'system-ui', 'sans-serif'],
+        // Arabic face — Inter and Sora have no Arabic coverage, so
         // any Arabic string without this renders as tofu.
         arabic: ['var(--font-arabic)', 'system-ui', 'sans-serif'],
       },
@@ -126,10 +129,11 @@ const config: Config = {
         'out-expo': 'cubic-bezier(.16,1,.3,1)',
       },
       backgroundImage: {
-        'brand-gradient': 'linear-gradient(135deg, #0B2A5C, #1466DE)',
-        'brand-gradient-hover': 'linear-gradient(135deg, #011C41, #0E50C0)',
-        'lab-glow': 'radial-gradient(ellipse at center, rgba(20, 102, 222, 0.25), transparent 70%)',
-        'academy-glow': 'radial-gradient(ellipse at center, rgba(91, 123, 251, 0.28), transparent 70%)',
+        // Buttons carry white text, so they stay navy (white on coral is 2.8:1).
+        'brand-gradient': 'linear-gradient(135deg, #011C41, #0B2A5C)',
+        'brand-gradient-hover': 'linear-gradient(135deg, #000E26, #011C41)',
+        'lab-glow': 'radial-gradient(ellipse at center, rgba(255, 107, 91, 0.25), transparent 70%)',
+        'academy-glow': 'radial-gradient(ellipse at center, rgba(58, 82, 136, 0.22), transparent 70%)',
       },
       animation: {
         spotlight: 'spotlight 2s ease .75s 1 forwards',

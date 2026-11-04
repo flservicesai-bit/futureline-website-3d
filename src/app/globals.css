@@ -6,8 +6,69 @@
   /* The site's default canvas is now light. Surfaces that are still dark
      (admin, instructor, dashboard, auth) set their own background — see the
      .fl-dark-surface helper below — so they are unaffected by this flip. */
+  /* Navy 60 / cream 30 / coral 10. The surface and text tokens in
+     tailwind.config.ts read these variables, so one class name gives the
+     right colour on either surface:
+       - navy surfaces (the page, bg-canvas, bg-navy): cream text
+       - cream surfaces (bg-canvas-card, bg-canvas-alt, bg-white): navy text
+     Coral text is the light coral on navy (7.4:1) and the deep coral on
+     cream (4.9:1). Values are RGB triplets for Tailwind's <alpha-value>. */
+  :root {
+    --fl-canvas: 1 28 65; /* navy #011C41 */
+    --fl-canvas-alt: 244 237 224; /* cream #F4EDE0 */
+    --fl-canvas-card: 244 237 224;
+  }
+  :root,
+  .bg-canvas,
+  .bg-navy {
+    --fl-ink: 244 237 224; /* cream on navy, 14.5:1 */
+    --fl-ink-muted: 190 183 171; /* 8.5:1 on navy */
+    --fl-heading: 244 237 224;
+    --fl-hairline: 244 237 224;
+    --fl-hairline-alpha: 0.14;
+    --fl-accent-ink: 255 138 125; /* #FF8A7D */
+    --fl-academy: 233 220 198;
+    --fl-btn-bg: 244 237 224;
+    --fl-btn-fg: 1 28 65;
+    --fl-heading-gradient: linear-gradient(90deg, #f4ede0 0%, #f4ede0 64%, #ffcfc7 100%);
+  }
+  .bg-canvas-card,
+  .bg-canvas-alt,
+  .bg-white,
+  .bg-white\/95 {
+    --fl-ink: 1 28 65; /* navy on cream, 14.5:1 */
+    --fl-ink-muted: 82 90 107; /* 6:1 on cream */
+    --fl-heading: 1 28 65;
+    --fl-hairline: 1 28 65;
+    --fl-hairline-alpha: 0.12;
+    --fl-accent-ink: 184 58 42; /* #B83A2A */
+    --fl-academy: 58 82 136;
+    --fl-btn-bg: 1 28 65;
+    --fl-btn-fg: 244 237 224;
+    --fl-heading-gradient: linear-gradient(90deg, #011c41 0%, #0b2a5c 70%, #3a5288 100%);
+  }
+  /* Children without their own text colour inherit the surface's, not the
+     body's. In the base layer, so a text-* utility on the element wins. */
+  .bg-canvas,
+  .bg-navy,
+  .bg-canvas-card,
+  .bg-canvas-alt,
+  .bg-white,
+  .bg-white\/95 {
+    color: rgb(var(--fl-ink));
+  }
+
   body {
     @apply bg-canvas text-ink antialiased;
+  }
+
+  /* Every heading uses the display face unless it opts out with a font
+     utility; several (BrandedHeading, the course pages) used to inherit
+     Inter, so the site had two headline faces. */
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
   }
 
   /* Lenis baseline — disable native smooth scroll, allow Lenis to take over */
@@ -27,7 +88,7 @@
 
   /* Selection — light canvas default. */
   ::selection {
-    background: rgba(20, 102, 222, 0.25);
+    background: rgba(255, 107, 91, 0.3);
     color: #011c41;
   }
 }
@@ -35,7 +96,7 @@
 @layer components {
   /* Shared component classes. Light canvas since the redesign. */
   .btn-primary {
-    @apply bg-gradient-to-r from-teal-500 to-blue-600 text-white px-6 py-3 rounded-lg font-bold
+    @apply bg-gradient-to-r from-navy to-navy-light text-white px-6 py-3 rounded-lg font-bold
            transition-all duration-300 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
@@ -90,11 +151,13 @@
            transition-colors focus:border-teal/60 focus:outline-none focus:ring-1 focus:ring-teal/25;
   }
 
+  /* Cream on navy, navy on cream: whichever surface the form sits on. */
   .fl-submit {
-    @apply flex w-full items-center justify-center gap-2 rounded-full
-           bg-gradient-to-r from-navy via-teal-ink to-teal px-6 py-3.5
-           text-sm font-medium text-white transition-opacity
-           hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5
+           text-sm font-medium transition-opacity
+           hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50;
+    background-color: rgb(var(--fl-btn-bg));
+    color: rgb(var(--fl-btn-fg));
   }
 
   .fl-submit-ghost {
@@ -108,8 +171,24 @@
    a plain selector to match the light control. */
 .fl-select > option,
 select.fl-input > option {
-  background: #fff;
+  background: #fffbf4;
   color: #011c41;
+}
+
+/* Coral (#FF6B5B) is a fill colour, 2.4:1 on cream: too faint for text. The
+   bare text utilities of the coral tokens take the surface's readable coral
+   instead. `text-navy` was written as "heading colour on a light page"
+   (287 uses); on navy surfaces it must be cream, so it follows the surface
+   too, as do its hover variants. bg-navy keeps the real navy.
+   Unlayered, so these land after the utilities and win at equal specificity. */
+.text-teal,
+.text-lab {
+  color: rgb(var(--fl-accent-ink));
+}
+.text-navy,
+.hover\:text-navy:hover,
+.group:hover .group-hover\:text-navy {
+  color: rgb(var(--fl-heading));
 }
 
 /* ============================================================================
@@ -126,16 +205,16 @@ select.fl-input > option {
    ========================================================================== */
 @layer components {
   .fl-light {
-    --fl-glass-bg: rgba(255, 255, 255, 0.62);
-    --fl-glass-bg-strong: rgba(255, 255, 255, 0.78);
-    --fl-glass-border: rgba(255, 255, 255, 0.55);
+    --fl-glass-bg: rgba(1, 28, 65, 0.62);
+    --fl-glass-bg-strong: rgba(1, 28, 65, 0.86);
+    --fl-glass-border: rgba(244, 237, 224, 0.12);
     --fl-glass-blur: 18px;
 
     /* Teal-tinted rather than neutral grey — a neutral shadow on a light
        surface reads as dirt, a brand-tinted one reads as depth. */
     --fl-elev-1: 0 1px 2px rgba(1, 28, 65, 0.05), 0 1px 3px rgba(1, 28, 65, 0.06);
-    --fl-elev-2: 0 8px 24px -8px rgba(20, 102, 222, 0.22), 0 2px 8px rgba(1, 28, 65, 0.07);
-    --fl-elev-3: 0 24px 48px -16px rgba(1, 28, 65, 0.28), 0 8px 20px -8px rgba(20, 102, 222, 0.18);
+    --fl-elev-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.2);
+    --fl-elev-3: 0 24px 48px -16px rgba(0, 0, 0, 0.55), 0 8px 20px -8px rgba(0, 0, 0, 0.3);
   }
 
   /* Frosted panel. The saturate() is what stops the glass going grey over a
@@ -162,11 +241,11 @@ select.fl-input > option {
   .fl-aurora {
     background: conic-gradient(
       from 0deg,
-      rgba(34, 166, 247, 0.2),
+      rgba(58, 82, 136, 0.35),
       rgba(1, 28, 65, 0.1),
-      rgba(20, 102, 222, 0.22),
-      rgba(124, 200, 251, 0.16),
-      rgba(34, 166, 247, 0.2)
+      rgba(244, 237, 224, 0.08),
+      rgba(255, 107, 91, 0.08),
+      rgba(58, 82, 136, 0.35)
     );
     filter: blur(64px);
   }
@@ -174,8 +253,8 @@ select.fl-input > option {
   /* Perspective grid receding to the horizon. Decorative — always aria-hidden. */
   .fl-grid-floor {
     background-image:
-      linear-gradient(rgba(20, 102, 222, 0.13) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(20, 102, 222, 0.13) 1px, transparent 1px);
+      linear-gradient(rgba(244, 237, 224, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(244, 237, 224, 0.07) 1px, transparent 1px);
     background-size: 46px 46px;
     transform: perspective(700px) rotateX(61deg);
     transform-origin: center bottom;
@@ -186,8 +265,8 @@ select.fl-input > option {
   /* Flat tech grid, faded out from the top of the page. */
   .fl-tech-grid {
     background-image:
-      linear-gradient(rgba(1, 28, 65, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(1, 28, 65, 0.05) 1px, transparent 1px);
+      linear-gradient(rgba(244, 237, 224, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(244, 237, 224, 0.04) 1px, transparent 1px);
     background-size: 56px 56px;
     -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
     mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
@@ -204,11 +283,11 @@ select.fl-input > option {
   .fl-text-gradient {
     background-image: linear-gradient(
       90deg,
-      #011c41 0%,
-      #1466de 28%,
-      #22a6f7 50%,
-      #1466de 72%,
-      #011c41 100%
+      rgb(var(--fl-heading)) 0%,
+      rgb(var(--fl-heading)) 40%,
+      rgb(var(--fl-accent-ink)) 50%,
+      rgb(var(--fl-heading)) 60%,
+      rgb(var(--fl-heading)) 100%
     );
     background-size: 220% 100%;
     -webkit-background-clip: text;
@@ -220,21 +299,21 @@ select.fl-input > option {
      narrow highlight band (first layer) is animated across the base
      gradient (second layer); both are clipped to the text so the letters
      briefly catch the light as it passes.
-     The base gradient is deliberately BRIGHT at every stop (ice-white →
-     sky → cyan-blue, symmetric) so all letters read clearly on the dark
-     hero — the old navy end-stops made the first/last letters vanish into
-     the background — and the blue-cyan family matches the scene's neon. */
+     The base gradient is deliberately BRIGHT at every stop (cream to near
+     white, symmetric) so all letters read clearly on the dark hero — the
+     old navy end-stops made the first/last letters vanish into the
+     background. The passing highlight carries the only coral: a warm glint. */
   .fl-text-sweep {
     background-image:
       linear-gradient(
         105deg,
         transparent 38%,
         rgba(255, 255, 255, 0.5) 46%,
-        rgba(215, 245, 255, 0.95) 50%,
+        rgba(255, 190, 178, 0.95) 50%,
         rgba(255, 255, 255, 0.5) 54%,
         transparent 62%
       ),
-      linear-gradient(90deg, #dff4ff 0%, #93d8ff 26%, #56bdf9 50%, #93d8ff 74%, #dff4ff 100%);
+      linear-gradient(90deg, #f4ede0 0%, #fbf6ee 30%, #ffffff 50%, #fbf6ee 70%, #f4ede0 100%);
     background-size:
       260% 100%,
       100% 100%;
@@ -250,7 +329,7 @@ select.fl-input > option {
 
   /* Light-surface selection colour, scoped so dark pages keep theirs. */
   .fl-light ::selection {
-    background: rgba(20, 102, 222, 0.25);
+    background: rgba(255, 107, 91, 0.3);
     color: #011c41;
   }
 
@@ -261,7 +340,7 @@ select.fl-input > option {
     @apply bg-[#030d1a] text-white;
   }
   .fl-dark-surface ::selection {
-    background: rgba(20, 102, 222, 0.35);
+    background: rgba(255, 107, 91, 0.4);
     color: #fff;
   }
 }
@@ -370,6 +449,14 @@ select.fl-input > option {
 [dir='rtl'] [class*='tracking-'],
 [dir='rtl'] .fl-label {
   letter-spacing: 0;
+}
+
+/* Arabic headings need more line height than Latin ones: at the tight
+   leading-[0.95]…[1.05] the display headings use, Alexandria's dots and tall
+   letters (أ، ل، ك) ran into the line above. (0,1,1) beats the leading-*
+   utilities. */
+[dir='rtl'] :is(h1, h2, h3) {
+  line-height: 1.35;
 }
 
 /* Mono labels on Arabic pages. Geist Mono has no Arabic glyphs, and its
