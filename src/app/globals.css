@@ -28,9 +28,14 @@
     --fl-hairline-alpha: 0.14;
     --fl-accent-ink: 255 138 125; /* #FF8A7D */
     --fl-academy: 233 220 198;
+    --fl-heading-gradient: linear-gradient(90deg, #f4ede0 0%, #f4ede0 64%, #ffcfc7 100%);
+  }
+  /* Button colours are not reset on .bg-navy: a navy button reads them from
+     the surface it sits on (see a.bg-navy below). */
+  :root,
+  .bg-canvas {
     --fl-btn-bg: 244 237 224;
     --fl-btn-fg: 1 28 65;
-    --fl-heading-gradient: linear-gradient(90deg, #f4ede0 0%, #f4ede0 64%, #ffcfc7 100%);
   }
   .bg-canvas-card,
   .bg-canvas-alt,
@@ -189,6 +194,20 @@ select.fl-input > option {
 .hover\:text-navy:hover,
 .group:hover .group-hover\:text-navy {
   color: rgb(var(--fl-heading));
+}
+
+/* Solid navy buttons (`bg-navy text-white`: the Services, AI and service-page
+   heroes, the error page, empty states) vanished into navy pages. They take
+   the surface's button colours, like .fl-submit: cream on navy, navy on
+   cream. (0,2,1) also beats their hover:bg-* utilities, so hover dims. */
+a.bg-navy.text-white,
+button.bg-navy.text-white {
+  background-color: rgb(var(--fl-btn-bg));
+  color: rgb(var(--fl-btn-fg));
+}
+a.bg-navy.text-white:hover,
+button.bg-navy.text-white:hover {
+  opacity: 0.9;
 }
 
 /* ============================================================================
