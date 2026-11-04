@@ -105,13 +105,13 @@ export async function GlobeHero() {
         >
           <EmergingWordmark
             text="FutureLine"
-            className="fl-text-sweep drop-shadow-[0_0_28px_rgba(86,189,249,0.45)]"
+            className="fl-text-sweep drop-shadow-[0_0_28px_rgba(244,237,224,0.22)]"
           />
         </h1>
 
         <DecodeText
           text={t('tagline')}
-          className="mb-6 font-display text-[clamp(0.9rem,2vw,1.25rem)] font-semibold tracking-[0.4em] text-[#7cc9f8]"
+          className="mb-6 font-display text-[clamp(0.9rem,2vw,1.25rem)] font-semibold tracking-[0.4em] text-[#ff8a7d]"
         />
 
         <p className="mb-9 max-w-xl text-lg leading-relaxed text-white/75">{t('lede')}</p>
@@ -125,7 +125,7 @@ export async function GlobeHero() {
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
             href="/get-started"
-            className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-pill bg-gradient-to-r from-navy via-teal to-mint px-7 py-3.5 font-display text-base font-semibold text-white shadow-[0_10px_24px_-8px_rgba(20,102,222,0.5)] transition-transform duration-300 hover:-translate-y-0.5"
+            className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-pill bg-canvas-card px-7 py-3.5 font-display text-base font-semibold text-navy shadow-[0_10px_24px_-8px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:-translate-y-0.5"
             data-cursor="magnetic"
           >
             {t('secondaryCta')}

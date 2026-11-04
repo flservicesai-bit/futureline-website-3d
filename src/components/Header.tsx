@@ -151,10 +151,9 @@ export default function Header() {
             aria-label={a('home')}
             data-cursor="hover"
           >
-            {/* The Living F mark: navy on the light pages, white over the
-                dark home hero. */}
+            {/* The Living F mark: white, since every page is navy now. */}
             <Image
-              src={overDarkHero ? '/brand/futureline-mark-white.svg' : '/brand/futureline-mark.svg'}
+              src="/brand/futureline-mark-white.svg"
               alt=""
               width={31}
               height={30}

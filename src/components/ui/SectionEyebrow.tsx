@@ -29,13 +29,13 @@ const PALETTE: Record<Accent, {
   lab: {
     text: 'text-lab-ink',
     dot: 'bg-lab',
-    dotGlow: '0 0 10px 2px rgba(20, 102, 222, 0.55)',
+    dotGlow: '0 0 10px 2px rgba(255, 107, 91, 0.55)',
     hairline: 'from-lab/60',
   },
   academy: {
     text: 'text-academy',
     dot: 'bg-academy',
-    dotGlow: '0 0 10px 2px rgba(91, 123, 251, 0.55)',
+    dotGlow: '0 0 10px 2px rgba(58, 82, 136, 0.5)',
     hairline: 'from-academy/60',
   },
 };
