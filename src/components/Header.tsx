@@ -93,7 +93,8 @@ export default function Header() {
     { href: '/get-started', label: t('whatWeOffer') },
     { href: '/services', label: t('services') },
     { href: '/ai', label: t('ai') },
-    { href: '/lab/video-effects', label: t('lab') },
+    // No "Lab" entry: the video-effects Lab was removed by request until it's
+    // ready to launch. It lives in git history.
     { href: '/#who-we-serve', label: t('whoWeServe'), anchor: '#who-we-serve' },
     { href: '/courses', label: t('courses') },
     { href: '/faq', label: t('faq') },
