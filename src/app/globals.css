@@ -10,6 +10,15 @@
     @apply bg-canvas text-ink antialiased;
   }
 
+  /* Every heading uses the display face unless it opts out with a font
+     utility; several (BrandedHeading, the course pages) used to inherit
+     Inter, so the site had two headline faces. */
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+  }
+
   /* Lenis baseline — disable native smooth scroll, allow Lenis to take over */
   html.lenis,
   html.lenis body {
@@ -370,6 +379,14 @@ select.fl-input > option {
 [dir='rtl'] [class*='tracking-'],
 [dir='rtl'] .fl-label {
   letter-spacing: 0;
+}
+
+/* Arabic headings need more line height than Latin ones: at the tight
+   leading-[0.95]…[1.05] the display headings use, Alexandria's dots and tall
+   letters (أ، ل، ك) ran into the line above. (0,1,1) beats the leading-*
+   utilities. */
+[dir='rtl'] :is(h1, h2, h3) {
+  line-height: 1.35;
 }
 
 /* Mono labels on Arabic pages. Geist Mono has no Arabic glyphs, and its

@@ -110,9 +110,11 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-geist-mono)', 'ui-monospace', 'monospace'],
-        // Display face for headings and the wordmark treatment.
-        display: ['var(--font-display)', 'var(--font-inter)', 'system-ui', 'sans-serif'],
-        // Arabic face — Inter and Space Grotesk have no Arabic coverage, so
+        // Display face for headings and the wordmark treatment: Sora for Latin,
+        // Alexandria for the Arabic letters Sora lacks. Order matters; see
+        // layout.tsx.
+        display: ['var(--font-display)', 'var(--font-display-arabic)', 'var(--font-inter)', 'system-ui', 'sans-serif'],
+        // Arabic face — Inter and Sora have no Arabic coverage, so
         // any Arabic string without this renders as tofu.
         arabic: ['var(--font-arabic)', 'system-ui', 'sans-serif'],
       },
