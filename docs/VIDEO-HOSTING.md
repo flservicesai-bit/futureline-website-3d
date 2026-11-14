@@ -67,6 +67,9 @@ The lesson form says which kind of link was pasted.
   same link stops working anywhere.
 - `GET /api/lessons/<id>/player` as a learner who isn't enrolled: `403`.
 
+Course documents (PDFs, prompt files) work the same way, uploaded in the Course
+Builder and stamped with each learner's name: see `docs/LESSON-FILES.md`.
+
 ## Limits
 
 Nothing on the web stops someone filming their screen; the watermark makes such

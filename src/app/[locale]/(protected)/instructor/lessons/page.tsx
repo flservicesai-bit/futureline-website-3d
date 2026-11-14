@@ -21,6 +21,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { fetchList } from '@/lib/fetch-list';
 import { extractEmbedSrc } from '@/lib/video-source';
 import VideoLinkHint from '@/components/admin/VideoLinkHint';
+import AttachmentsField from '@/components/admin/AttachmentsField';
 
 interface Question {
   question: string;
@@ -498,7 +499,7 @@ function LessonForm({ lesson, onChange, onSave, onCancel, saving }: {
               placeholder="Video URL: Bunny Stream, YouTube or Vimeo (optional)" className="input-field" />
             <VideoLinkHint value={lesson.videoUrl} />
             <textarea value={lesson.content} onChange={e => onChange({ ...lesson, content: e.target.value })} placeholder="Lesson Notes (shown to students)" className="input-field" rows={4} />
-            <input value={lesson.resources} onChange={e => onChange({ ...lesson, resources: e.target.value })} placeholder="Attachment URLs (one per line, optional)" className="input-field" />
+            <AttachmentsField value={lesson.resources} onChange={resources => onChange({ ...lesson, resources })} />
           </div>
         )}
 

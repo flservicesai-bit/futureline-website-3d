@@ -24,3 +24,6 @@ logs/
 # out of the repo (218 MB that every server checkout carried).
 /reference/
 /attached_assets/
+
+# Uploaded lesson attachments (lib/lesson-files.ts): served only through the enrolment check
+/private/

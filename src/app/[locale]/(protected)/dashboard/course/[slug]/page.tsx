@@ -7,6 +7,7 @@ import { ArrowLeft, Users } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { getLocale } from 'next-intl/server';
 import { backfillLessonProgress, syncProgress } from '@/lib/progress';
+import { parseAttachments } from '@/lib/attachments';
 
 export const dynamic = 'force-dynamic';
 
@@ -92,7 +93,12 @@ export default async function CourseLearnPage({ params }: { params: Promise<{ sl
               lessonType: l.lessonType,
               content: l.content,
               hasVideo: Boolean(l.videoUrl),
-              resources: l.resources,
+              // Uploaded files only go out through the enrolment-checked download route.
+              attachments: parseAttachments(l.resources).map((a) =>
+                a.kind === 'file'
+                  ? { name: a.name, href: `/api/lessons/${l.id}/files/${a.fileId}`, protected: true }
+                  : { name: a.name, href: a.kind === 'link' ? a.url : null, protected: false },
+              ),
               questions: l.questions as any,
               orderIndex: l.orderIndex,
             }))}
