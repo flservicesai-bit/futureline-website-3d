@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { quizProblem, withScheme } from '@/lib/validations';
+import { quizProblem } from '@/lib/validations';
+import { normalizeVideoUrl } from '@/lib/video-source';
 
 export async function GET(req: Request) {
   try {
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
       lessonTitle: data.lessonTitle,
       lessonType: data.lessonType || 'CONTENT',
       orderIndex: data.orderIndex,
-      videoUrl: withScheme(data.videoUrl) || null,
+      videoUrl: normalizeVideoUrl(data.videoUrl) || null,
       content: data.content || null,
       resources: data.resources || null,
       questions: data.questions || null,

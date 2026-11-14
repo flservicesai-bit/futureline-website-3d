@@ -19,7 +19,7 @@ function addSecurityHeaders(response: NextResponse) {
   );
   response.headers.set(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https://player.vimeo.com https://www.youtube.com"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https://player.vimeo.com https://www.youtube.com https://iframe.mediadelivery.net https://player.mediadelivery.net"
   );
   return response;
 }

@@ -19,6 +19,8 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { fetchList } from '@/lib/fetch-list';
+import { extractEmbedSrc } from '@/lib/video-source';
+import VideoLinkHint from '@/components/admin/VideoLinkHint';
 
 interface Question {
   question: string;
@@ -778,19 +780,13 @@ function LessonForm({
             <input
               value={lesson.videoUrl}
               onChange={e => {
-                let val = e.target.value;
-                if (val.includes('<iframe')) {
-                  const match = val.match(/src="([^"]+)"/);
-                  if (match) val = match[1];
-                }
-                onChange({ ...lesson, videoUrl: val });
+                const val = e.target.value;
+                onChange({ ...lesson, videoUrl: val.includes('<iframe') ? extractEmbedSrc(val) : val });
               }}
-              placeholder="YouTube or Vimeo URL (optional)"
+              placeholder="Video URL: Bunny Stream, YouTube or Vimeo (optional)"
               className="input-field"
             />
-            <p className="text-[10px] text-ink-muted mt-1">
-              Paste a Vimeo/YouTube link, player URL, or full embed code.
-            </p>
+            <VideoLinkHint value={lesson.videoUrl} />
             <textarea
               value={lesson.content}
               onChange={e => onChange({ ...lesson, content: e.target.value })}

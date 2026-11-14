@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { PASSWORD_MIN_LENGTH } from '@/lib/password';
+import { normalizeVideoUrl } from '@/lib/video-source';
 
 /**
  * Emails are stored trimmed and lower-case. The column is case-sensitive, so
@@ -76,17 +77,6 @@ export const courseSchema = z.object({
 });
 
 /**
- * Adds https:// to a pasted link that has no scheme ("youtu.be/abc",
- * "www.youtube.com/..."). Without it the URL check failed and the builder
- * threw away the whole lesson the instructor had typed.
- */
-export function withScheme(value: unknown) {
-  if (typeof value !== 'string') return value;
-  const v = value.trim();
-  return v && !/^[a-z][a-z0-9+.-]*:/i.test(v) ? `https://${v}` : value;
-}
-
-/**
  * Why a quiz could not be completed as saved, or null when it can. Learners
  * finish a quiz by answering every question correctly, so each question needs
  * text, at least two options and a correct option that isn't blank.
@@ -111,7 +101,8 @@ export const lessonSchema = z.object({
   moduleTitle: z.string().min(1, 'Module title is required').max(200),
   lessonTitle: z.string().min(1, 'Lesson title is required').max(200),
   lessonType: z.enum(['CONTENT', 'QUIZ']).optional(),
-  videoUrl: z.preprocess(withScheme, z.string().url().optional().nullable().or(z.literal(''))),
+  // Embed code reduced to its link; a Bunny link loses any pasted token (lib/video-source).
+  videoUrl: z.preprocess(normalizeVideoUrl, z.string().url().optional().nullable().or(z.literal(''))),
   content: z.string().max(50000).optional().nullable(),
   resources: z.string().max(5000).optional().nullable(),
   questions: z.any().optional().nullable(),
