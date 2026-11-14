@@ -1787,6 +1787,8 @@
     "moduleLessons": "{count} دروس · {done}/{total} مكتمل",
     "quiz": "اختبار",
     "videoAvailable": "يتوفر محتوى فيديو لهذا الدرس.",
+    "videoLoading": "جارٍ تحميل الفيديو…",
+    "videoError": "تعذّر تحميل الفيديو. تحقّق من اتصالك وحاول مرة أخرى.",
     "instructions": "التعليمات",
     "lessonNotes": "ملاحظات الدرس",
     "attachments": "المرفقات",

@@ -64,6 +64,11 @@ GOOGLE_CLIENT_SECRET="<client-secret>"
 # Proxies in front of the app (rate limits trust only what they add to
 # X-Forwarded-For). 1 = nginx only. Use 2 if Cloudflare sits in front of nginx.
 TRUSTED_PROXY_COUNT="1"
+
+# Course videos on Bunny Stream: the library's token authentication key
+# (Stream > library > Security). Signs each learner's player link so it expires.
+# See docs/VIDEO-HOSTING.md.
+BUNNY_STREAM_TOKEN_KEY="<token-authentication-key>"
 ```
 
 ### 3. First boot

@@ -19,6 +19,8 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { fetchList } from '@/lib/fetch-list';
+import { extractEmbedSrc } from '@/lib/video-source';
+import VideoLinkHint from '@/components/admin/VideoLinkHint';
 
 interface Question {
   question: string;
@@ -492,9 +494,9 @@ function LessonForm({ lesson, onChange, onSave, onCancel, saving }: {
         {lesson.lessonType === 'CONTENT' && (
           <div className="space-y-3">
             <input value={lesson.videoUrl}
-              onChange={e => { let val = e.target.value; if (val.includes('<iframe')) { const m = val.match(/src="([^"]+)"/); if (m) val = m[1]; } onChange({ ...lesson, videoUrl: val }); }}
-              placeholder="YouTube or Vimeo URL (optional)" className="input-field" />
-            <p className="text-[10px] text-ink-muted mt-1">Paste a Vimeo/YouTube link, player URL, or full embed code.</p>
+              onChange={e => { const val = e.target.value; onChange({ ...lesson, videoUrl: val.includes('<iframe') ? extractEmbedSrc(val) : val }); }}
+              placeholder="Video URL: Bunny Stream, YouTube or Vimeo (optional)" className="input-field" />
+            <VideoLinkHint value={lesson.videoUrl} />
             <textarea value={lesson.content} onChange={e => onChange({ ...lesson, content: e.target.value })} placeholder="Lesson Notes (shown to students)" className="input-field" rows={4} />
             <input value={lesson.resources} onChange={e => onChange({ ...lesson, resources: e.target.value })} placeholder="Attachment URLs (one per line, optional)" className="input-field" />
           </div>

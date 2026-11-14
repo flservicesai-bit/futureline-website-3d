@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { BookOpen, CheckCircle, Play, FileText, ChevronDown, ChevronRight, Download, StickyNote, HelpCircle, CircleDot } from 'lucide-react';
@@ -16,47 +16,89 @@ interface Lesson {
   lessonTitle: string;
   lessonType: string;
   content: string | null;
-  videoUrl: string | null;
+  /** The link itself stays on the server: the player URL is fetched when the lesson opens. */
+  hasVideo: boolean;
   resources: string | null;
   questions: Question[] | null;
   orderIndex: number;
 }
 
-function getEmbedUrl(url: string): { embedUrl: string; type: 'youtube' | 'vimeo' } | null {
-  if (!url) return null;
+/**
+ * A lesson's video. The player link is asked for when the lesson opens
+ * (/api/lessons/:id/player checks the enrolment and signs Bunny links to
+ * expire), so the page never carries links that could be copied and shared.
+ * The learner's email drifts over the picture to make screen recordings traceable.
+ */
+function LessonVideo({ lessonId, title, watermark }: { lessonId: string; title: string; watermark: string | null }) {
+  const t = useTranslations('lessonViewer');
+  const [attempt, setAttempt] = useState(0);
+  const [state, setState] = useState<{ status: 'loading' | 'unsupported' | 'error' } | { status: 'ready'; url: string }>({
+    status: 'loading',
+  });
 
-  try {
-    const trimmed = url.trim();
-    if (trimmed.includes('player.vimeo.com/video/')) {
-      const match = trimmed.match(/https?:\/\/player\.vimeo\.com\/video\/[^\s"']+/);
-      if (match) return { embedUrl: match[0], type: 'vimeo' };
-    }
-    if (trimmed.includes('youtube.com/embed/')) {
-      const match = trimmed.match(/https?:\/\/www\.youtube\.com\/embed\/[^\s"']+/);
-      if (match) return { embedUrl: match[0], type: 'youtube' };
-    }
+  useEffect(() => {
+    let alive = true;
+    setState({ status: 'loading' });
+    fetch(`/api/lessons/${lessonId}/player`, { cache: 'no-store' })
+      .then(async (res) => {
+        if (res.status === 422) return { status: 'unsupported' as const };
+        if (!res.ok) throw new Error(`Player link failed: ${res.status}`);
+        const data: { url?: string } = await res.json();
+        return data.url ? { status: 'ready' as const, url: data.url } : { status: 'error' as const };
+      })
+      .catch(() => ({ status: 'error' as const }))
+      .then((next) => {
+        if (alive) setState(next);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [lessonId, attempt]);
 
-    const parsed = new URL(trimmed);
-    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
-  } catch {
-    // may be iframe snippet
+  if (state.status === 'unsupported') {
+    return (
+      <div className="mb-6 bg-canvas-card border border-hairline rounded-xl p-5 flex items-center gap-3 text-ink-muted">
+        <Play size={18} />
+        <span className="text-sm">{t('videoAvailable')}</span>
+      </div>
+    );
   }
 
-  const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  if (ytMatch) {
-    return { embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?rel=0&modestbranding=1`, type: 'youtube' };
-  }
-
-  const vimeoMatch = url.match(/vimeo\.com\/(\d+)(?:\/([a-zA-Z0-9]+))?/);
-  if (vimeoMatch) {
-    const videoId = vimeoMatch[1];
-    const hash = vimeoMatch[2];
-    let embedUrl = `https://player.vimeo.com/video/${videoId}?title=0&byline=0&portrait=0`;
-    if (hash) embedUrl += `&h=${hash}`;
-    return { embedUrl, type: 'vimeo' };
-  }
-
-  return null;
+  return (
+    <div className="mb-6 rounded-xl overflow-hidden bg-black border border-hairline">
+      <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+        {state.status === 'ready' && (
+          <iframe
+            src={state.url}
+            className="absolute inset-0 w-full h-full"
+            allow="accelerometer; gyroscope; autoplay; clipboard-write; encrypted-media; picture-in-picture"
+            allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
+            title={title}
+          />
+        )}
+        {state.status === 'loading' && (
+          <div className="absolute inset-0 flex items-center justify-center text-sm text-white/60">{t('videoLoading')}</div>
+        )}
+        {state.status === 'error' && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center text-sm text-white/70">
+            <span>{t('videoError')}</span>
+            <button
+              onClick={() => setAttempt((n) => n + 1)}
+              className="px-4 py-1.5 rounded-lg border border-white/20 text-xs font-bold uppercase tracking-widest hover:bg-white/10"
+            >
+              {t('tryAgain')}
+            </button>
+          </div>
+        )}
+        {state.status === 'ready' && watermark && (
+          <span aria-hidden="true" className="lesson-watermark">
+            {watermark}
+          </span>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function parseResources(resources: string): { name: string; url: string }[] {
@@ -174,11 +216,14 @@ export default function LessonViewer({
   lessons,
   enrollmentId,
   completedLessonIds,
+  viewerEmail,
 }: {
   lessons: Lesson[];
   enrollmentId: string;
   /** Lessons this learner has completed, from the server. */
   completedLessonIds: string[];
+  /** Shown over lesson videos as a watermark. */
+  viewerEmail: string | null;
 }) {
   const t = useTranslations('lessonViewer');
   const router = useRouter();
@@ -306,30 +351,9 @@ export default function LessonViewer({
                         <div className="px-5 py-6 bg-canvas-alt border-t border-hairline">
 
                           {/* Video */}
-                          {!isQuiz && lesson.videoUrl && (() => {
-                            const embed = getEmbedUrl(lesson.videoUrl);
-                            if (embed) {
-                              return (
-                                <div className="mb-6 rounded-xl overflow-hidden bg-black border border-hairline">
-                                  <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
-                                    <iframe
-                                      src={embed.embedUrl}
-                                      className="absolute inset-0 w-full h-full"
-                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                      allowFullScreen
-                                      title={lesson.lessonTitle}
-                                    />
-                                  </div>
-                                </div>
-                              );
-                            }
-                            return (
-                              <div className="mb-6 bg-canvas-card border border-hairline rounded-xl p-5 flex items-center gap-3 text-ink-muted">
-                                <Play size={18} />
-                                <span className="text-sm">{t('videoAvailable')}</span>
-                              </div>
-                            );
-                          })()}
+                          {!isQuiz && lesson.hasVideo && (
+                            <LessonVideo lessonId={lesson.id} title={lesson.lessonTitle} watermark={viewerEmail} />
+                          )}
 
                           {/* Notes / instructions */}
                           {lesson.content && (

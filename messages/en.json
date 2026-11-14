@@ -1787,6 +1787,8 @@
     "moduleLessons": "{count} lessons · {done}/{total} completed",
     "quiz": "Quiz",
     "videoAvailable": "Video content is available for this lesson.",
+    "videoLoading": "Loading video…",
+    "videoError": "The video didn't load. Check your connection and try again.",
     "instructions": "Instructions",
     "lessonNotes": "Lesson Notes",
     "attachments": "Attachments",
