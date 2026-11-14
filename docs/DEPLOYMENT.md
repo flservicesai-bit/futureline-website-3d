@@ -69,6 +69,10 @@ TRUSTED_PROXY_COUNT="1"
 # (Stream > library > Security). Signs each learner's player link so it expires.
 # See docs/VIDEO-HOSTING.md.
 BUNNY_STREAM_TOKEN_KEY="<token-authentication-key>"
+
+# Optional: where uploaded lesson attachments are kept (docs/LESSON-FILES.md).
+# Default: private/lesson-files in the app directory.
+# LESSON_FILES_DIR="/var/lib/futureline/lesson-files"
 ```
 
 ### 3. First boot
@@ -178,6 +182,13 @@ npm ci --legacy-peer-deps && npm run build && pm2 reload futureline-web
 pm2 logs futureline-web --lines 100
 pm2 status
 ```
+
+### Uploaded lesson files
+
+Course attachments uploaded in the Course Builder live in
+`/opt/futureline/private/lesson-files` (or `LESSON_FILES_DIR`), not in git and
+not in the database. They survive deploys, but they are the only copies on the
+server: back that folder up with the database. See `docs/LESSON-FILES.md`.
 
 ### Secrets hygiene
 

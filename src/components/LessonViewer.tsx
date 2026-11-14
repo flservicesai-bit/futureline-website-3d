@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
-import { BookOpen, CheckCircle, Play, FileText, ChevronDown, ChevronRight, Download, StickyNote, HelpCircle, CircleDot } from 'lucide-react';
+import { BookOpen, CheckCircle, Play, FileText, ChevronDown, ChevronRight, Download, StickyNote, HelpCircle, CircleDot, Lock } from 'lucide-react';
 
 interface Question {
   question: string;
@@ -18,7 +18,11 @@ interface Lesson {
   content: string | null;
   /** The link itself stays on the server: the player URL is fetched when the lesson opens. */
   hasVideo: boolean;
-  resources: string | null;
+  /**
+   * Built on the server (lib/attachments). An uploaded file's href is the
+   * enrolled-only download route, which stamps the learner's name into it.
+   */
+  attachments: { name: string; href: string | null; protected: boolean }[];
   questions: Question[] | null;
   orderIndex: number;
 }
@@ -99,20 +103,6 @@ function LessonVideo({ lessonId, title, watermark }: { lessonId: string; title: 
       </div>
     </div>
   );
-}
-
-function parseResources(resources: string): { name: string; url: string }[] {
-  return resources.split('\n').filter(Boolean).map(line => {
-    const parts = line.split('|');
-    if (parts.length === 2) return { name: parts[0].trim(), url: parts[1].trim() };
-    try {
-      new URL(line.trim());
-      const filename = line.trim().split('/').pop() || 'Download';
-      return { name: filename, url: line.trim() };
-    } catch {
-      return { name: line.trim(), url: '' };
-    }
-  });
 }
 
 /**
@@ -381,19 +371,31 @@ export default function LessonViewer({
                           )}
 
                           {/* Resources */}
-                          {!isQuiz && lesson.resources && (
+                          {!isQuiz && lesson.attachments.length > 0 && (
                             <div className="mb-6">
                               <div className="flex items-center gap-2 mb-3">
                                 <Download className="text-[#1466de]" size={16} />
                                 <h4 className="font-bold text-navy text-xs uppercase tracking-widest">{t('attachments')}</h4>
                               </div>
                               <div className="space-y-2">
-                                {parseResources(lesson.resources).map((resource, i) => (
+                                {lesson.attachments.map((resource, i) => (
                                   <div key={i} className="flex items-center gap-3 bg-canvas-card border border-hairline rounded-lg p-3">
-                                    <FileText className="text-ink-muted flex-shrink-0" size={15} />
-                                    {resource.url ? (
+                                    {resource.protected ? (
+                                      <Lock className="text-ink-muted flex-shrink-0" size={15} />
+                                    ) : (
+                                      <FileText className="text-ink-muted flex-shrink-0" size={15} />
+                                    )}
+                                    {resource.href && resource.protected ? (
                                       <a
-                                        href={resource.url}
+                                        href={resource.href}
+                                        className="text-sm text-teal-400 hover:text-teal-300 transition-colors font-medium"
+                                        download
+                                      >
+                                        {resource.name}
+                                      </a>
+                                    ) : resource.href ? (
+                                      <a
+                                        href={resource.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-sm text-teal-400 hover:text-teal-300 transition-colors font-medium"
@@ -407,6 +409,9 @@ export default function LessonViewer({
                                   </div>
                                 ))}
                               </div>
+                              {lesson.attachments.some((a) => a.protected) && (
+                                <p className="mt-2 text-[11px] text-ink-muted">{t('attachmentsLicensed')}</p>
+                              )}
                             </div>
                           )}
 
