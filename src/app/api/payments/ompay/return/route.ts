@@ -25,7 +25,7 @@ export async function GET(req: Request) {
   const reference = url.searchParams.get('reference_number');
   const orderId = url.searchParams.get('order');
   const order = reference
-    ? await prisma.order.findUnique({ where: { gatewayReference: reference }, select: { id: true, paymentMethod: true } })
+    ? await prisma.order.findFirst({ where: { gatewayReference: reference }, select: { id: true, paymentMethod: true } })
     : orderId
       ? await prisma.order.findUnique({ where: { id: orderId }, select: { id: true, paymentMethod: true } })
       : null;

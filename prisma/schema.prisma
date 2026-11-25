@@ -144,7 +144,10 @@ model Order {
   // Card payments through OMPay's hosted payment page (paymentMethod "OMPAY").
   // Every "Pay by card" click is its own order, because OMPay rejects a
   // reference_number it has seen before. All four stay null for bank transfers.
-  gatewayReference String?      @unique // our reference_number sent to OMPay
+  // gatewayReference is indexed, not @unique, for the same reason as
+  // User.verifyToken: a new unique constraint makes `prisma db push` (run by
+  // deploy.sh) stop with a data-loss prompt. References carry 64 random bits.
+  gatewayReference String?               // our reference_number sent to OMPay
   gatewayTxnId     String?               // OMPay's transaction_id
   gatewayStatus    String?               // last status OMPay reported, e.g. SUCCESSFUL
   paidAt           DateTime?
@@ -154,6 +157,7 @@ model Order {
 
   @@index([userId])
   @@index([courseId])
+  @@index([gatewayReference])
 }
 
 model Enrollment {
