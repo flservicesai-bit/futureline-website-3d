@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { notifyNewEnrollment, notifyOrderRejected } from '@/lib/notifications';
+import { OMPAY_METHOD, settleOmpayOrder } from '@/lib/ompay-orders';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -14,13 +15,29 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
     const { action } = await req.json();
 
-    if (!['approve', 'reject'].includes(action)) {
+    if (!['approve', 'reject', 'sync'].includes(action)) {
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
 
     const order = await prisma.order.findUnique({ where: { id } });
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    // Card orders are decided by OMPay, not by hand: approving one would enrol
+    // someone who may not have paid. "Check status" asks OMPay instead.
+    if (order.paymentMethod === OMPAY_METHOD) {
+      if (action !== 'sync') {
+        return NextResponse.json(
+          { error: 'Card payments settle automatically. Use "Check status" to ask OMPay.' },
+          { status: 409 },
+        );
+      }
+      await settleOmpayOrder(order.id);
+      return NextResponse.json(await prisma.order.findUnique({ where: { id } }));
+    }
+    if (action === 'sync') {
+      return NextResponse.json({ error: 'Only card orders can be checked with OMPay.' }, { status: 400 });
     }
     // Only a pending order can be decided. Approving twice re-sent the
     // enrolment email; rejecting a completed order kept the learner enrolled
