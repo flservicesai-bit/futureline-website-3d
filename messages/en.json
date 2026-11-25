@@ -1765,22 +1765,19 @@
   "enroll": {
     "processing": "Processing…",
     "enrolForFree": "Enrol for Free",
-    "payViaBankTransfer": "Pay via Bank Transfer",
-    "cardComingSoon": "Card payment coming soon",
-    "requestSubmitted": "Request Submitted",
     "pendingApproval": "Your enrolment request is pending admin approval. You will receive access within 12 hours.",
     "paymentPending": "Payment pending approval",
     "youAreEnrolled": "You're enrolled in this course",
     "goToCourse": "Go to course",
-    "close": "Close",
-    "bankTransferPayment": "Bank Transfer Payment",
-    "bankInstructions": "Please make bank payment to <strong>{name}</strong>. You <strong>MUST</strong> send the receipt to WhatsApp with your full name to <strong>{phone}</strong>. Your enrolment will be approved within 12 hours.",
-    "submitting": "Submitting…",
-    "iHavePaid": "I Have Paid — Submit My Request",
     "somethingWentWrong": "Something went wrong",
     "failedToProcess": "Failed to process enrolment",
     "somethingWentWrongRetry": "Something went wrong. Please try again.",
-    "failedToSubmit": "Failed to submit request. Please try again."
+    "payByCard": "Pay by Card",
+    "redirectingToPayment": "Opening secure payment…",
+    "securedByOmpay": "Card payments are processed securely by OMPay",
+    "cardPaymentFailed": "Your card payment wasn't completed. Please try again.",
+    "cardPaymentPending": "We're still confirming your payment with the bank. Refresh this page in a minute. Please don't pay again.",
+    "cardUnavailable": "Card payment is unavailable right now. Please try again shortly."
   },
   "lessonViewer": {
     "moduleLabel": "Module {number}: {name}",
@@ -1806,7 +1803,7 @@
       "eyebrow": "Legal",
       "title": "Privacy Policy",
       "updatedLabel": "Last updated",
-      "updated": "25 August 2026",
+      "updated": "25 November 2026",
       "intro": "FutureLine (FutureLine.ai) is an Omani company providing AI consulting, custom application development, and professional training. This policy explains exactly what personal information futureline.ai collects, why we collect it, who else can see it, and what you can ask us to do with it. It describes what our website actually does — not a generic template. If anything here is unclear, write to us at flservices.ai@gmail.com.",
       "contactNote": "Questions about this policy, or want to access, correct or delete your data? Write to us at",
       "sections": [
@@ -1837,7 +1834,7 @@
           "heading": "Enrolment, orders and payment",
           "body": [
             "When you enrol in a course, we record the enrolment (which account, which course, the date, your progress percentage, and whether you have completed it). For paid courses we create an order record holding your account, the course, the amount, the payment method, and the payment status.",
-            "We do not take card payments on this website and we do not collect, process, or store card numbers, CVV codes, or bank credentials anywhere on the site. Paid enrolments are arranged by bank transfer, handled outside the website; an administrator marks the order as paid once the transfer is confirmed. Any payment details you share with your bank stay with your bank.",
+            "Paid courses are paid by card through OMPay, an Omani payment gateway. You enter your card details on OMPay's secure payment page, not on this website, so we never see, collect or store your card number, CVV code or bank credentials. OMPay tells us whether the payment succeeded, and we keep the payment reference and the transaction status it returns with your order.",
             "For instructors, we also keep earnings records linking an instructor and a course to an amount, the platform and instructor shares, and the period the earnings relate to."
           ]
         },
@@ -1868,7 +1865,7 @@
         {
           "heading": "Service providers and international transfers",
           "body": [
-            "We share personal data only with the providers we need to operate the site: Google, if you choose to sign in with your Google account; Resend, which delivers our transactional emails and therefore handles your email address and the content of those messages; and our hosting and database provider, which stores the application and its PostgreSQL database on our behalf. Each of these acts on our instructions for the purposes described above.",
+            "We share personal data only with the providers we need to operate the site: Google, if you choose to sign in with your Google account; Resend, which delivers our transactional emails and therefore handles your email address and the content of those messages; OMPay, our payment gateway, which processes your card payment and receives from us the order amount and a payment reference; and our hosting and database provider, which stores the application and its PostgreSQL database on our behalf. Each of these acts on our instructions for the purposes described above.",
             "These providers operate internationally, so your information may be stored or processed on servers outside the Sultanate of Oman. We choose established providers that offer contractual and technical safeguards for the data they hold for us.",
             "We may also disclose information where we are legally required to do so by a competent Omani authority or court. We do not share your data with advertisers or data brokers."
           ]
@@ -1925,7 +1922,7 @@
       "eyebrow": "Legal",
       "title": "Terms of Service",
       "updatedLabel": "Last updated",
-      "updated": "12 October 2026",
+      "updated": "25 November 2026",
       "intro": "These Terms of Service govern your use of futureline.ai and the services offered through it, including our course platform, enquiry forms, and the public FL Lab demo tools. FutureLine is a company established in the Sultanate of Oman providing AI consulting, custom application development, and training. Please read these terms carefully — they set out what you can expect from us and what we expect from you.",
       "contactNote": "Questions about these terms? Write to us at",
       "sections": [
@@ -1972,7 +1969,7 @@
         {
           "heading": "Paying for Courses, Refunds and Cancellations",
           "body": [
-            "Paid courses are currently purchased by bank transfer only. When you choose to enrol, the site displays the transfer instructions and records your enrolment request as a pending order. You then make the transfer yourself through your own bank. Our team checks that the funds have arrived and either approves the order — at which point your enrolment is created and you receive a confirmation email — or declines it and notifies you. Access is not granted until that manual approval happens, so allow time for it.",
+            "Paid courses are purchased by card through OMPay's secure payment page. When you choose to pay, you are taken to OMPay to enter your card details and then brought back to this website. Your enrolment is created as soon as OMPay confirms the payment, and you receive a confirmation email. If the payment is declined or not completed, no enrolment is created and you can try again. Confirmation occasionally takes a few minutes, so please do not pay twice for the same course.",
             "We do not currently accept card payments. The card option shown on course pages is marked \"coming soon\" and is disabled; no card details are collected, stored, or processed anywhere on this site. If that changes, we will update these terms and the checkout accordingly. Prices are shown on each course page, and where a discounted price is displayed, that is the amount payable.",
             "Refunds are handled manually. If a course is cancelled by us, or you are charged for a course you were not enrolled in, contact us at flservices.ai@gmail.com and we will refund the amount paid. For requests to withdraw from a course you have enrolled in, contact us before the course start date and we will consider the request in good faith, taking into account how much of the material you have already accessed. Live cohort and workshop dates can shift; if a date changes materially, we will tell you and you may request a refund or a transfer to a later cohort."
           ]

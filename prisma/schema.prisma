@@ -141,6 +141,13 @@ model Order {
   paymentStatus   PaymentStatus @default(PENDING)
   paymentMethod   String        @default("BANK_TRANSFER")
   stripeSessionId String?
+  // Card payments through OMPay's hosted payment page (paymentMethod "OMPAY").
+  // Every "Pay by card" click is its own order, because OMPay rejects a
+  // reference_number it has seen before. All four stay null for bank transfers.
+  gatewayReference String?      @unique // our reference_number sent to OMPay
+  gatewayTxnId     String?               // OMPay's transaction_id
+  gatewayStatus    String?               // last status OMPay reported, e.g. SUCCESSFUL
+  paidAt           DateTime?
   createdAt       DateTime      @default(now())
   course          Course        @relation(fields: [courseId], references: [id])
   user            User          @relation(fields: [userId], references: [id])

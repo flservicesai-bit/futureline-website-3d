@@ -36,7 +36,8 @@ export default async function DashboardPage() {
   });
 
   const orders = await prisma.order.findMany({
-    where: { userId: session.user.id },
+    // An abandoned card attempt never took money: leave it out of the history.
+    where: { userId: session.user.id, NOT: { paymentMethod: 'OMPAY', paymentStatus: 'FAILED' } },
     include: { course: { select: { title: true } } },
     orderBy: { createdAt: 'desc' },
   });

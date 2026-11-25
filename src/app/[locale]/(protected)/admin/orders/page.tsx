@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
-import { Search, CheckCircle, XCircle } from 'lucide-react';
+import { Search, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 
 export default function AdminOrdersPage() {
@@ -18,7 +18,7 @@ export default function AdminOrdersPage() {
 
   useEffect(() => { fetchOrders(); }, []);
 
-  const handleAction = async (orderId: string, action: 'approve' | 'reject') => {
+  const handleAction = async (orderId: string, action: 'approve' | 'reject' | 'sync') => {
     // Rejecting can't be undone and emails the customer.
     if (action === 'reject' && !confirm('Reject this order? The customer will be emailed.')) return;
     setActionLoading(`${orderId}-${action}`);
@@ -119,8 +119,13 @@ export default function AdminOrdersPage() {
                   <td className="px-6 py-4 text-sm font-medium text-navy">{formatPrice(o.amount)}</td>
                   <td className="px-6 py-4">
                     <span className="text-xs font-medium text-ink-muted">
-                      {o.paymentMethod === 'BANK_TRANSFER' ? 'Bank Transfer' : o.paymentMethod || '—'}
+                      {o.paymentMethod === 'BANK_TRANSFER' ? 'Bank Transfer' : o.paymentMethod === 'OMPAY' ? 'Card (OMPay)' : o.paymentMethod || '—'}
                     </span>
+                    {o.gatewayReference && (
+                      <div className="text-[10px] font-mono text-ink-muted" title={o.gatewayStatus ? `OMPay status: ${o.gatewayStatus}` : undefined}>
+                        {o.gatewayReference}
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${
@@ -135,7 +140,17 @@ export default function AdminOrdersPage() {
                     {new Date(o.createdAt).toLocaleDateString('en-GB')}
                   </td>
                   <td className="px-6 py-4">
-                    {o.paymentStatus === 'PENDING' ? (
+                    {o.paymentStatus === 'PENDING' && o.paymentMethod === 'OMPAY' ? (
+                      <button
+                        onClick={() => handleAction(o.id, 'sync')}
+                        disabled={actionLoading !== null}
+                        title="Ask OMPay whether this card payment went through"
+                        className="flex items-center gap-1 text-xs font-semibold text-teal-400 hover:text-teal-300 disabled:opacity-40"
+                      >
+                        <RefreshCw size={14} />
+                        {actionLoading === `${o.id}-sync` ? 'Checking...' : 'Check status'}
+                      </button>
+                    ) : o.paymentStatus === 'PENDING' ? (
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleAction(o.id, 'approve')}

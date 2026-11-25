@@ -18,7 +18,6 @@ import {
 } from 'lucide-react';
 import EnrollButton, { type EnrollState } from '@/components/EnrollButton';
 import { formatCoursePrice } from '@/lib/utils';
-import { getBrandSettings } from '@/lib/brand';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { pageMetadata } from '@/lib/seo';
@@ -27,6 +26,8 @@ import { videoEmbedUrl } from '@/lib/video-embed';
 import { courseImage } from '@/lib/course-image';
 import { CourseCover } from '@/components/courses/CourseCover';
 import { CourseCard, courseCardSelect } from '@/components/courses/CourseCard';
+import { ompayConfigured } from '@/lib/ompay';
+import { OMPAY_METHOD, settleOpenOmpayOrders } from '@/lib/ompay-orders';
 
 export const dynamic = 'force-dynamic';
 
@@ -61,13 +62,14 @@ const SECTION_HEADING = 'text-2xl font-semibold tracking-tight text-navy';
 
 export default async function CourseDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; slug: string }>;
+  searchParams: Promise<{ payment?: string }>;
 }) {
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: 'courseDetail' });
   const tc = await getTranslations({ locale, namespace: 'coursesPage' });
-  const brand = await getBrandSettings();
   const course = await prisma.course.findUnique({
     where: { slug },
     include: {
@@ -92,22 +94,39 @@ export default async function CourseDetailPage({
     awaitingApproval = true;
   }
 
-  // Enrolled visitors get "Go to course"; a bank transfer awaiting approval
-  // shows as pending instead of offering to pay again.
+  // Enrolled visitors get "Go to course". A bank-transfer request from before
+  // card payment replaced bank transfer still shows as awaiting approval.
   let enrollState: EnrollState = 'none';
   if (session?.user.id) {
-    const [enrollment, pendingOrder] = await Promise.all([
+    const [enrollment, pendingTransfer, openCardOrder] = await Promise.all([
       prisma.enrollment.findUnique({
         where: { userId_courseId: { userId: session.user.id, courseId: course.id } },
         select: { id: true },
       }),
       prisma.order.findFirst({
-        where: { userId: session.user.id, courseId: course.id, paymentStatus: 'PENDING' },
+        where: {
+          userId: session.user.id,
+          courseId: course.id,
+          paymentStatus: 'PENDING',
+          paymentMethod: 'BANK_TRANSFER',
+        },
+        select: { id: true },
+      }),
+      prisma.order.findFirst({
+        where: { userId: session.user.id, courseId: course.id, paymentStatus: 'PENDING', paymentMethod: OMPAY_METHOD },
         select: { id: true },
       }),
     ]);
-    enrollState = enrollment ? 'enrolled' : pendingOrder ? 'pending' : 'none';
+    // A card payment that never came back to the site (closed tab): ask OMPay
+    // now, so a learner who paid sees "Go to course" rather than "Pay".
+    const paidByCard =
+      !enrollment && !!openCardOrder && (await settleOpenOmpayOrders(session.user.id, course.id));
+    enrollState = enrollment || paidByCard ? 'enrolled' : pendingTransfer ? 'pending' : 'none';
   }
+
+  // Set by the OMPay return route when a card payment failed or is unconfirmed.
+  const paymentParam = (await searchParams).payment;
+  const paymentNotice = paymentParam === 'failed' || paymentParam === 'pending' ? paymentParam : undefined;
 
   // Up to three more courses: the same category first, topped up with the
   // newest others so the section isn't empty when a category has one course.
@@ -343,8 +362,8 @@ export default async function CourseDetailPage({
                   slug={course.slug}
                   price={charged}
                   state={enrollState}
-                  bankPayee={brand.bankPayee}
-                  receiptWhatsapp={brand.receiptWhatsapp}
+                  cardEnabled={ompayConfigured()}
+                  paymentNotice={enrollState === 'enrolled' ? undefined : paymentNotice}
                 />
 
                 <div className="border-t border-hairline pt-5">
