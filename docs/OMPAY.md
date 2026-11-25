@@ -30,7 +30,7 @@ anywhere.
    settled by:
    - the course page, the next time that learner opens it,
    - a new card attempt for the same course (so nobody pays twice), and
-   - the hourly reconcile cron (below).
+   - the hourly reconcile job (below).
 
    Card orders still unresolved after 7 days are closed as `FAILED` /
    `EXPIRED`.
@@ -43,6 +43,10 @@ reference. They have **Check status** instead of Approve/Reject, because only
 OMPay decides whether a card payment went through.
 
 ## Server setup (once)
+
+Steps 1, 2 and 4 were done on 25 November 2026 for the futureline.ai VPS
+(38.54.116.46). The `.env` from before is kept as
+`/opt/futureline/.env.bak-20261125-pre-ompay`.
 
 1. **Whitelist the server's IP in OMPay.** Merchant portal → Developer →
    IP Whitelisting → add the VPS's public IP. Production keys refuse every
@@ -59,11 +63,24 @@ OMPay decides whether a card payment went through.
 3. **Deploy.** `deploy.sh` runs `prisma db push`, which adds the four new
    nullable `Order` columns (`gatewayReference`, `gatewayTxnId`,
    `gatewayStatus`, `paidAt`). It's additive, so existing orders are untouched.
-4. **Add the hourly reconcile cron** (`crontab -e` as the app user):
+4. **The hourly reconcile job.** The VPS has no `cron`, so a systemd timer
+   runs it: `futureline-ompay-reconcile.timer` (hourly) starts
+   `futureline-ompay-reconcile.service`, which runs
+   `/usr/local/bin/futureline-ompay-reconcile`. That script reads
+   `OMPAY_RECONCILE_SECRET` from `/opt/futureline/.env` and POSTs to
+   `http://127.0.0.1:5000/api/payments/ompay/reconcile`. Check it with:
 
    ```bash
-   0 * * * * . /opt/futureline/.env && curl -fsS -X POST -H "Authorization: Bearer $OMPAY_RECONCILE_SECRET" http://127.0.0.1:5000/api/payments/ompay/reconcile >/dev/null
+   systemctl list-timers futureline-ompay-reconcile.timer
    ```
+
+   ```bash
+   journalctl -u futureline-ompay-reconcile -n 20
+   ```
+
+   Each run logs one line, e.g. `HTTP 200 {"checked":0,"paid":0,...}`.
+   Before this code is deployed the endpoint doesn't exist yet, so runs log
+   `HTTP 404` and show as failed; that stops at the first deploy.
 
 5. **Make one small real payment** on a cheap course and check that it lands
    on the course and shows `COMPLETED` in Admin → Orders. Refund it from the
