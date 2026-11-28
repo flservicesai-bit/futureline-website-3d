@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { registerSchema, formatZodError } from '@/lib/validations';
 import { rateLimit, getRateLimitHeaders, getClientIp } from '@/lib/rateLimit';
 import { notifyWelcome } from '@/lib/notifications';
+import { alertNewSignup } from '@/lib/admin-alerts';
 import { findUserByEmail } from '@/lib/user-email';
 import { issueVerifyToken } from '@/lib/email-verification';
 import { siteLink } from '@/lib/site-link';
@@ -41,6 +42,7 @@ export async function POST(req: Request) {
     notifyWelcome({ name: `${user.firstName} ${user.lastName}`.trim(), email: user.email }, verifyUrl).catch((err) =>
       console.error('[Register] Failed to send welcome email:', err)
     );
+    alertNewSignup({ name: `${user.firstName} ${user.lastName}`.trim(), email: user.email, method: 'password' });
 
     return NextResponse.json({ id: user.id, email: user.email });
   } catch (error) {

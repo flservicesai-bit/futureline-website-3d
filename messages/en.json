@@ -1803,7 +1803,7 @@
       "eyebrow": "Legal",
       "title": "Privacy Policy",
       "updatedLabel": "Last updated",
-      "updated": "25 November 2026",
+      "updated": "28 November 2026",
       "intro": "FutureLine (FutureLine.ai) is an Omani company providing AI consulting, custom application development, and professional training. This policy explains exactly what personal information futureline.ai collects, why we collect it, who else can see it, and what you can ask us to do with it. It describes what our website actually does — not a generic template. If anything here is unclear, write to us at flservices.ai@gmail.com.",
       "contactNote": "Questions about this policy, or want to access, correct or delete your data? Write to us at",
       "sections": [
@@ -1865,7 +1865,7 @@
         {
           "heading": "Service providers and international transfers",
           "body": [
-            "We share personal data only with the providers we need to operate the site: Google, if you choose to sign in with your Google account; Resend, which delivers our transactional emails and therefore handles your email address and the content of those messages; OMPay, our payment gateway, which processes your card payment and receives from us the order amount and a payment reference; and our hosting and database provider, which stores the application and its PostgreSQL database on our behalf. Each of these acts on our instructions for the purposes described above.",
+            "We share personal data only with the providers we need to operate the site: Google, if you choose to sign in with your Google account; Resend, which delivers our transactional emails and therefore handles your email address and the content of those messages; OMPay, our payment gateway, which processes your card payment and receives from us the order amount and a payment reference; Telegram, which delivers internal alerts to our team about new enquiries, sign-ups, enrolments and payments, including the names and contact details involved; Anthropic, whose AI assistant Claude our administrators may use to look up and summarise site records such as enquiries, accounts, orders and enrolments; and our hosting and database provider, which stores the application and its PostgreSQL database on our behalf. Each of these acts on our instructions for the purposes described above.",
             "These providers operate internationally, so your information may be stored or processed on servers outside the Sultanate of Oman. We choose established providers that offer contractual and technical safeguards for the data they hold for us.",
             "We may also disclose information where we are legally required to do so by a competent Omani authority or court. We do not share your data with advertisers or data brokers."
           ]
@@ -1882,6 +1882,7 @@
           "body": [
             "We keep enquiry records, including internal notes and follow-up history, for as long as needed to handle the enquiry and to maintain a reasonable record of our business dealings with you. Account, enrolment, and order records are kept for as long as your account is active, and afterwards only where we need them for legitimate accounting or record-keeping reasons.",
             "Password reset tokens expire after one hour and are deleted as soon as they are used. Rate-limiting counters are short-lived and reset within minutes. Operational logs are retained only as long as they are useful for security and troubleshooting.",
+            "We also keep a record of each email the site sends you: the address, subject, type of message and whether it was delivered, but not the message itself. It is kept with your account and enquiry records.",
             "If you ask us to delete your data, we will do so unless we are required to retain specific records by law, and we will tell you if that applies."
           ]
         },

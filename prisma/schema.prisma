@@ -47,39 +47,39 @@ model User {
 }
 
 model Course {
-  id                String              @id @default(cuid())
-  title             String
-  slug              String              @unique
-  shortDescription  String
-  fullDescription   String
-  deliveryType      DeliveryType
+  id                 String              @id @default(cuid())
+  title              String
+  slug               String              @unique
+  shortDescription   String
+  fullDescription    String
+  deliveryType       DeliveryType
   // Course format — how this course is delivered in TIME:
   //   COHORT     → live cohort with fixed start/end dates
   //   SELF_PACED → recorded / on-demand / always available
   //   WORKSHOP   → one-time live event (no end date, single session)
   // Existing rows default to COHORT so the migration is safe.
-  courseFormat      CourseFormat        @default(COHORT)
+  courseFormat       CourseFormat        @default(COHORT)
   // For COHORT / WORKSHOP courses: is the schedule confirmed?
   //   SCHEDULED → admin has set concrete dates
   //   TBC       → cohort planned, dates announced soon
   //   COMPLETED → past cohort, no current schedule
   // Ignored when courseFormat = SELF_PACED.
-  scheduleStatus    ScheduleStatus      @default(SCHEDULED)
-  category          String
-  level             String
-  price             Float
-  discountPrice     Float?
-  durationHours     Int
-  startDate         DateTime?
-  endDate           DateTime?
-  seatCapacity      Int?
-  location          String?
-  instructorId      String?
-  thumbnail         String?
-  marketingVideoUrl String?
-  status            CourseStatus        @default(DRAFT)
-  approvalStatus    ApprovalStatus      @default(APPROVED)
-  rejectionReason   String?
+  scheduleStatus     ScheduleStatus      @default(SCHEDULED)
+  category           String
+  level              String
+  price              Float
+  discountPrice      Float?
+  durationHours      Int
+  startDate          DateTime?
+  endDate            DateTime?
+  seatCapacity       Int?
+  location           String?
+  instructorId       String?
+  thumbnail          String?
+  marketingVideoUrl  String?
+  status             CourseStatus        @default(DRAFT)
+  approvalStatus     ApprovalStatus      @default(APPROVED)
+  rejectionReason    String?
   // Featured slot on the home-page NeuralPathway scene. Values 1, 2,
   // or 3 → mapped to the three featurable course positions in
   // `NeuralPathway.tsx`. Slot 4 is reserved for the centered
@@ -87,36 +87,36 @@ model Course {
   // @@unique enforces one course per slot at the DB level; the API
   // route transactionally clears the slot from any prior holder so
   // newest assignment wins.
-  featuredSlot      Int?                @unique
+  featuredSlot       Int?                @unique
   // Optional "What you'll learn" overrides rendered ON THE HOME PAGE
   // when this course is featured (via featuredSlot). When null/empty
   // the slot's hardcoded defaults in NeuralPathway.tsx are used.
   // These don't render anywhere else — they're home-page specific.
-  highlightStatValue  String?           // e.g. "8 wks", "Live", "10 hrs"
-  highlightStatLabel  String?           // e.g. "Cohort length", "Format"
-  highlightBullets    String[]          // up to ~4 short lines
-  createdAt         DateTime            @default(now())
-  instructor        User?               @relation("InstructorCourses", fields: [instructorId], references: [id])
-  enrollments       Enrollment[]
-  earnings          InstructorEarning[]
-  lessons           Lesson[]
-  orders            Order[]
+  highlightStatValue String? // e.g. "8 wks", "Live", "10 hrs"
+  highlightStatLabel String? // e.g. "Cohort length", "Format"
+  highlightBullets   String[] // up to ~4 short lines
+  createdAt          DateTime            @default(now())
+  instructor         User?               @relation("InstructorCourses", fields: [instructorId], references: [id])
+  enrollments        Enrollment[]
+  earnings           InstructorEarning[]
+  lessons            Lesson[]
+  orders             Order[]
 
   @@index([instructorId])
 }
 
 model Lesson {
-  id          String     @id @default(cuid())
+  id          String           @id @default(cuid())
   courseId    String
   moduleTitle String
   lessonTitle String
-  lessonType  LessonType @default(CONTENT)
+  lessonType  LessonType       @default(CONTENT)
   videoUrl    String?
   content     String?
   resources   String?
   questions   Json?
   orderIndex  Int
-  course      Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   progress    LessonProgress[]
 
   @@index([courseId])
@@ -134,26 +134,26 @@ model Service {
 }
 
 model Order {
-  id              String        @id @default(cuid())
-  userId          String
-  courseId        String
-  amount          Float
-  paymentStatus   PaymentStatus @default(PENDING)
-  paymentMethod   String        @default("BANK_TRANSFER")
-  stripeSessionId String?
+  id               String        @id @default(cuid())
+  userId           String
+  courseId         String
+  amount           Float
+  paymentStatus    PaymentStatus @default(PENDING)
+  paymentMethod    String        @default("BANK_TRANSFER")
+  stripeSessionId  String?
   // Card payments through OMPay's hosted payment page (paymentMethod "OMPAY").
   // Every "Pay by card" click is its own order, because OMPay rejects a
   // reference_number it has seen before. All four stay null for bank transfers.
   // gatewayReference is indexed, not @unique, for the same reason as
   // User.verifyToken: a new unique constraint makes `prisma db push` (run by
   // deploy.sh) stop with a data-loss prompt. References carry 64 random bits.
-  gatewayReference String?               // our reference_number sent to OMPay
-  gatewayTxnId     String?               // OMPay's transaction_id
-  gatewayStatus    String?               // last status OMPay reported, e.g. SUCCESSFUL
+  gatewayReference String? // our reference_number sent to OMPay
+  gatewayTxnId     String? // OMPay's transaction_id
+  gatewayStatus    String? // last status OMPay reported, e.g. SUCCESSFUL
   paidAt           DateTime?
-  createdAt       DateTime      @default(now())
-  course          Course        @relation(fields: [courseId], references: [id])
-  user            User          @relation(fields: [userId], references: [id])
+  createdAt        DateTime      @default(now())
+  course           Course        @relation(fields: [courseId], references: [id])
+  user             User          @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([courseId])
@@ -161,14 +161,14 @@ model Order {
 }
 
 model Enrollment {
-  id                 String   @id @default(cuid())
+  id                 String           @id @default(cuid())
   userId             String
   courseId           String
-  progressPercentage Float    @default(0)
-  completed          Boolean  @default(false)
-  createdAt          DateTime @default(now())
-  course             Course   @relation(fields: [courseId], references: [id])
-  user               User     @relation(fields: [userId], references: [id])
+  progressPercentage Float            @default(0)
+  completed          Boolean          @default(false)
+  createdAt          DateTime         @default(now())
+  course             Course           @relation(fields: [courseId], references: [id])
+  user               User             @relation(fields: [userId], references: [id])
   lessonProgress     LessonProgress[]
 
   @@unique([userId, courseId])
@@ -218,18 +218,18 @@ model Testimonial {
 }
 
 model BrandSettings {
-  id           String  @id @default(cuid())
-  logo         String?
-  primaryColor String  @default("#011C41")
-  accentColor  String  @default("#1466DE")
-  companyName  String  @default("FutureLine")
-  tagline      String  @default("Design • Deploy • Evolve")
-  contactEmail String  @default("flservices.ai@gmail.com")
-  tourismEmail String  @default("authentic.tour.om@gmail.com")
+  id              String  @id @default(cuid())
+  logo            String?
+  primaryColor    String  @default("#011C41")
+  accentColor     String  @default("#1466DE")
+  companyName     String  @default("FutureLine")
+  tagline         String  @default("Design • Deploy • Evolve")
+  contactEmail    String  @default("flservices.ai@gmail.com")
+  tourismEmail    String  @default("authentic.tour.om@gmail.com")
   // Bank-transfer checkout: who customers pay (as they should see it) and the
   // WhatsApp number they send the receipt to. Admin > Brand edits both.
-  bankPayee       String @default("Musab Al Sabahi, 96532326")
-  receiptWhatsapp String @default("96532326")
+  bankPayee       String  @default("Musab Al Sabahi, 96532326")
+  receiptWhatsapp String  @default("96532326")
 }
 
 model AISettings {
@@ -334,17 +334,17 @@ enum DeliveryType {
 // How a course is delivered in TIME — orthogonal to DeliveryType
 // (which is about WHERE — online / in-person / hybrid).
 enum CourseFormat {
-  COHORT       // Live cohort with fixed start/end dates
-  SELF_PACED   // Recorded / on-demand / always available
-  WORKSHOP     // One-time live event (single session)
+  COHORT // Live cohort with fixed start/end dates
+  SELF_PACED // Recorded / on-demand / always available
+  WORKSHOP // One-time live event (single session)
 }
 
 // For cohort & workshop courses: is the schedule confirmed yet?
 // Self-paced courses ignore this — they're always available.
 enum ScheduleStatus {
-  SCHEDULED  // Admin set concrete dates
-  TBC        // Cohort planned, dates announced soon
-  COMPLETED  // Past cohort, no current schedule
+  SCHEDULED // Admin set concrete dates
+  TBC // Cohort planned, dates announced soon
+  COMPLETED // Past cohort, no current schedule
 }
 
 enum CourseStatus {
@@ -387,4 +387,83 @@ enum LeadPriority {
   MEDIUM
   HIGH
   URGENT
+}
+
+// Every email the site sends (see sendEmail in lib/notifications.ts), so the
+// admin and the Claude connector can see what went out. The body is never
+// stored: it can hold password-reset and verification links.
+model EmailLog {
+  id         String   @id @default(cuid())
+  to         String
+  subject    String
+  type       String? // the notification's metadata.type, e.g. welcome, admin_new_lead
+  status     String // SENT | FAILED | NOT_SENT | LOGGED (development, printed only)
+  providerId String? // Resend's email id
+  error      String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([to])
+  @@index([createdAt])
+}
+
+// ── Claude connector (OAuth 2.1 for the MCP endpoint at /api/mcp) ──────────
+// Only admins can approve a connection. Codes and tokens are stored as
+// SHA-256 hashes, never in the clear. See docs/CLAUDE-CONNECTOR.md.
+model OAuthClient {
+  id           String       @id @default(cuid())
+  clientId     String       @unique
+  secretHash   String? // only for clients that asked for client_secret_* auth
+  authMethod   String       @default("none")
+  name         String
+  redirectUris String[]
+  createdAt    DateTime     @default(now())
+  codes        OAuthCode[]
+  tokens       OAuthToken[]
+}
+
+model OAuthCode {
+  id            String      @id @default(cuid())
+  codeHash      String      @unique
+  clientId      String
+  userId        String
+  redirectUri   String
+  codeChallenge String
+  scope         String
+  expiresAt     DateTime
+  usedAt        DateTime?
+  createdAt     DateTime    @default(now())
+  client        OAuthClient @relation(fields: [clientId], references: [clientId], onDelete: Cascade)
+}
+
+model OAuthToken {
+  id               String      @id @default(cuid())
+  accessHash       String      @unique
+  refreshHash      String?     @unique
+  clientId         String
+  userId           String
+  scope            String
+  // The user's sessionVersion when issued: a password change or reset bumps
+  // it, which cuts Claude off too.
+  sessionVersion   Int
+  expiresAt        DateTime
+  refreshExpiresAt DateTime?
+  revokedAt        DateTime?
+  lastUsedAt       DateTime?
+  createdAt        DateTime    @default(now())
+  client           OAuthClient @relation(fields: [clientId], references: [clientId], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// One row per tool call through the Claude connector.
+model McpAuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  clientId  String?
+  tool      String
+  args      Json?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
 }

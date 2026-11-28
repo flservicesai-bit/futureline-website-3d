@@ -1,4 +1,6 @@
 import { Resend } from 'resend';
+import { prisma } from '@/lib/prisma';
+import { alertEmailFailed } from '@/lib/admin-alerts';
 
 export interface EmailNotification {
   to: string;
@@ -7,8 +9,16 @@ export interface EmailNotification {
   metadata?: Record<string, any>;
 }
 
+/** What a provider reports for one email; recorded in EmailLog by sendEmail. */
+export interface SendResult {
+  /** SENT: handed to Resend. LOGGED: printed in development. NOT_SENT: no provider. FAILED: Resend refused. */
+  status: 'SENT' | 'LOGGED' | 'NOT_SENT' | 'FAILED';
+  providerId?: string;
+  error?: string;
+}
+
 export interface NotificationProvider {
-  sendEmail(notification: EmailNotification): Promise<boolean>;
+  sendEmail(notification: EmailNotification): Promise<SendResult>;
 }
 
 /**
@@ -19,12 +29,12 @@ export interface NotificationProvider {
  * bodies anyway, for local testing against a production build only.
  */
 class ConsoleNotificationProvider implements NotificationProvider {
-  async sendEmail(notification: EmailNotification): Promise<boolean> {
+  async sendEmail(notification: EmailNotification): Promise<SendResult> {
     if (process.env.NODE_ENV === 'production' && process.env.EMAIL_LOG_BODIES !== 'true') {
       console.error(
         `[Notification] NOT SENT (RESEND_API_KEY is not set): "${notification.subject}" to ${notification.to}`,
       );
-      return false;
+      return { status: 'NOT_SENT', error: 'RESEND_API_KEY is not set' };
     }
     console.log('[Notification] Email would be sent:');
     console.log(`  To: ${notification.to}`);
@@ -33,7 +43,7 @@ class ConsoleNotificationProvider implements NotificationProvider {
     if (notification.metadata) {
       console.log(`  Metadata: ${JSON.stringify(notification.metadata)}`);
     }
-    return true;
+    return { status: 'LOGGED' };
   }
 }
 
@@ -52,7 +62,7 @@ class ResendNotificationProvider implements NotificationProvider {
     }
   }
 
-  async sendEmail(notification: EmailNotification): Promise<boolean> {
+  async sendEmail(notification: EmailNotification): Promise<SendResult> {
     try {
       // futureline.ai has no inbound MX, so a reply to the From address would
       // bounce. Point replies at a mailbox that actually receives — the brand
@@ -69,14 +79,14 @@ class ResendNotificationProvider implements NotificationProvider {
 
       if (error) {
         console.error('[Resend] Error sending email:', error);
-        return false;
+        return { status: 'FAILED', error: error.message || String(error) };
       }
 
       console.log(`[Resend] Email sent successfully to ${notification.to}, id: ${data?.id}`);
-      return true;
+      return { status: 'SENT', providerId: data?.id };
     } catch (err) {
       console.error('[Resend] Exception sending email:', err);
-      return false;
+      return { status: 'FAILED', error: (err as Error).message };
     }
   }
 }
@@ -94,13 +104,41 @@ export function getNotificationProvider(): NotificationProvider {
   return provider;
 }
 
+/**
+ * Sends one email and records it in EmailLog: recipient, subject, type and
+ * outcome, never the body (it can hold reset and verification links). A
+ * failure also raises a Telegram alert. Neither can stop or fail the send.
+ */
 export async function sendEmail(notification: EmailNotification): Promise<boolean> {
+  let result: SendResult;
   try {
-    return await provider.sendEmail(notification);
+    result = await provider.sendEmail(notification);
   } catch (error) {
     console.error('[Notification] Failed to send email:', error);
-    return false;
+    result = { status: 'FAILED', error: (error as Error)?.message || String(error) };
   }
+
+  const type = typeof notification.metadata?.type === 'string' ? notification.metadata.type : null;
+  try {
+    await prisma.emailLog.create({
+      data: {
+        to: notification.to,
+        subject: notification.subject.slice(0, 500),
+        type,
+        status: result.status,
+        providerId: result.providerId ?? null,
+        error: result.error ? result.error.slice(0, 1000) : null,
+        metadata: notification.metadata ?? undefined,
+      },
+    });
+  } catch (err) {
+    console.error('[Notification] Could not record the email in EmailLog:', (err as Error).message);
+  }
+
+  if (result.status === 'FAILED' || result.status === 'NOT_SENT') {
+    alertEmailFailed({ to: notification.to, subject: notification.subject, type, reason: result.error });
+  }
+  return result.status === 'SENT' || result.status === 'LOGGED';
 }
 
 export async function notifyWelcome(user: { name: string; email: string }, verifyUrl?: string) {
