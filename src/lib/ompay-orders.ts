@@ -11,6 +11,7 @@
 import { randomBytes } from 'node:crypto';
 import { prisma } from '@/lib/prisma';
 import { notifyNewEnrollment } from '@/lib/notifications';
+import { alertCardPayment } from '@/lib/admin-alerts';
 import { inquire, outcomeOf, OmpayError, type OmpayOutcome } from '@/lib/ompay';
 
 export const OMPAY_METHOD = 'OMPAY';
@@ -93,6 +94,13 @@ export async function settleOmpayOrder(orderId: string): Promise<SettleResult | 
         { name: `${order.user.firstName} ${order.user.lastName}`.trim() || 'Student', email: order.user.email },
         { title: order.course.title, slug: courseSlug },
       ).catch((err) => console.error('[OMPay] Failed to send enrolment email:', err));
+      alertCardPayment({
+        amount: order.amount,
+        course: order.course.title,
+        name: `${order.user.firstName} ${order.user.lastName}`.trim() || 'Student',
+        email: order.user.email,
+        reference: order.gatewayReference,
+      });
     }
     return { outcome: 'paid', courseSlug };
   }

@@ -6,6 +6,7 @@ import { HONEYPOT_FIELD } from '@/components/Honeypot';
 import { leadSchema, formatZodError } from '@/lib/validations';
 import { rateLimit, getRateLimitHeaders, getClientIp } from '@/lib/rateLimit';
 import { notifyLeadConfirmation, notifyAdminNewLead } from '@/lib/notifications';
+import { alertNewLead } from '@/lib/admin-alerts';
 
 export async function POST(req: Request) {
   try {
@@ -81,6 +82,17 @@ export async function POST(req: Request) {
       tourType: tourType || 'General Enquiry',
       message,
       source: source || 'Website',
+    });
+
+    alertNewLead({
+      id: lead.id,
+      name: `${firstName} ${lastName}`.trim(),
+      email,
+      phone,
+      company,
+      topic: tourType,
+      source: source || 'Website',
+      message,
     });
 
     return NextResponse.json({ success: true, id: lead.id });

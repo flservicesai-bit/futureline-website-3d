@@ -28,6 +28,17 @@ const nextConfig = {
       ]
     }
   },
+  // OAuth discovery for the Claude connector (src/lib/oauth.ts). Clients try
+  // both the bare path and the path-suffixed form (RFC 9728 / RFC 8414).
+  async rewrites() {
+    return [
+      { source: '/.well-known/oauth-protected-resource', destination: '/api/oauth/metadata/resource' },
+      { source: '/.well-known/oauth-protected-resource/:path*', destination: '/api/oauth/metadata/resource' },
+      { source: '/.well-known/oauth-authorization-server', destination: '/api/oauth/metadata/server' },
+      { source: '/.well-known/oauth-authorization-server/:path*', destination: '/api/oauth/metadata/server' },
+      { source: '/.well-known/openid-configuration', destination: '/api/oauth/metadata/server' },
+    ];
+  },
   async headers() {
     // Public media is served with max-age=0 by default, so every visit
     // re-checked the hero video. A week of caching, then a background

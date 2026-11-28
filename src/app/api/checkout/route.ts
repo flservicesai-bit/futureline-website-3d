@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { notifyNewEnrollment } from '@/lib/notifications';
+import { alertFreeEnrollment } from '@/lib/admin-alerts';
 import { rateLimit, getRateLimitHeaders } from '@/lib/rateLimit';
 import { locales } from '@/i18n/routing';
 import { createHostedPayment, ompayConfigured, OmpayError } from '@/lib/ompay';
@@ -175,6 +176,11 @@ export async function POST(req: Request) {
       { name: `${(session.user as any).firstName || ''} ${(session.user as any).lastName || ''}`.trim() || 'Student', email: session.user.email || '' },
       { title: course.title, slug: course.slug }
     );
+    alertFreeEnrollment({
+      course: course.title,
+      name: `${(session.user as any).firstName || ''} ${(session.user as any).lastName || ''}`.trim() || 'Student',
+      email: session.user.email || '',
+    });
 
     return NextResponse.json({ enrolled: true, slug: course.slug });
   } catch (error) {

@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import { prisma } from './prisma';
 import { findUserByEmail, normalizeEmail } from './user-email';
 import { notifyGoogleTookOver, notifyWelcome } from './notifications';
+import { alertNewSignup } from './admin-alerts';
 
 const randomPasswordHash = () => bcrypt.hash(randomBytes(24).toString('hex'), 12);
 
@@ -52,6 +53,7 @@ export async function linkGoogleAccount(input: {
       name: `${nameParts[0] ?? ''} ${nameParts.slice(1).join(' ')}`.trim() || 'there',
       email,
     }).catch((err) => console.error('[AUTH] Welcome email failed:', err));
+    alertNewSignup({ name: (input.name ?? '').trim(), email, method: 'google' });
     return true;
   }
 

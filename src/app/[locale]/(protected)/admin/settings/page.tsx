@@ -1,6 +1,7 @@
 'use client';
 import ChangePasswordForm from '@/components/ChangePasswordForm';
 import { Shield } from 'lucide-react';
+import ClaudeConnections from '@/components/admin/ClaudeConnections';
 
 export default function AdminSettingsPage() {
   return (
@@ -36,6 +37,8 @@ export default function AdminSettingsPage() {
             </li>
           </ul>
         </div>
+
+        <ClaudeConnections />
       </div>
     </div>
   );
